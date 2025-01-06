@@ -59,19 +59,15 @@ services:
 
   # MySQL Master
   -master:
-    # We'll use the latest MySQL image from Docker Hub
     image: mysql:8.0.40
-    # Give it a cool name (mysql-master is pretty clear, right?)
-    container_name: openmrs_prod
     # Extra commands to configure the master for replication
     command: --server-id=1 --log-bin=mysql-bin --binlog-format=row
     # Set some environment variables for passwords and database details
-    # Remember to replace these with your own strong passwords!
     environment:
-      MYSQL_ROOT_PASSWORD: contra123
-      MYSQL_DATABASE: openmrs_db # Feel free to change this database name
-      MYSQL_USER: openmrs # This user will handle replication
-      MYSQL_PASSWORD: dev123
+      MYSQL_ROOT_PASSWORD: ${OPENMRS_DB_PASSWORD:-openmrs}
+      MYSQL_DATABASE: openmrs
+      MYSQL_USER: ${OPENMRS_DB_USER:-openmrs}
+      MYSQL_PASSWORD: ${OPENMRS_DB_PASSWORD:-openmrs}
     # Map the container port (3306) to your host machine's port (also 3306)
     # This lets you access the master server from your machine
     ports:
@@ -81,19 +77,17 @@ services:
   db-slave:
     # Same image as the master
     image: mysql:8.0.40
-    # Another cool name (can you guess what it is?)
-    container_name: openmrs_prod_repl
     # This tells the replica to wait for the master to be ready before starting
     depends_on:
       - openmrs-master
     # Similar commands and environment variables as the master
     command: --server-id=2 --log-bin=mysql-bin --binlog-format=row
     environment:
-      MYSQL_ROOT_PASSWORD: contra123 # Same password for both
-      MYSQL_DATABASE: openmrs_db
-      MYSQL_USER: openmrs
-      MYSQL_PASSWORD: dev123
-    # Map the container port (3306) to a different host machine port (3307 in this case)
+      MYSQL_ROOT_PASSWORD: ${OPENMRS_DB_PASSWORD:-openmrs}
+      MYSQL_DATABASE: openmrs
+      MYSQL_USER: ${OPENMRS_DB_USER:-openmrs}
+      MYSQL_PASSWORD: ${OPENMRS_DB_PASSWORD:-openmrs}
+
     ports:
       - "3307:3306"
 
