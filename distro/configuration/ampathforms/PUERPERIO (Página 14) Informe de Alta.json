@@ -1,0 +1,157 @@
+{
+  "name": "PUERPERIO (Página 14) Informe de Alta",
+  "pages": [
+    {
+      "label": "Informe de Alta",
+      "sections": [
+        {
+          "label": "DATOS GENERALES",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "9e0d18fa-5118-4b1b-8e60-97de442a5fe3"
+              },
+              "id": "nombreDePaciente",
+              "label": "Nombre de paciente"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "83f2f6b1-e33e-4bf2-84f6-bd7ffe9d59fe"
+              },
+              "id": "dniDelPaciente",
+              "label": "DNI del paciente"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "ad57b0e5-5d81-4b9a-b7a7-d92b762c7710",
+                "min": "0"
+              },
+              "id": "edadDelPaciente",
+              "label": "Edad del paciente"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "842b0f9b-7b08-4094-8bbc-802a181b4b98"
+              },
+              "id": "fechaDeIngreso",
+              "label": "Fecha de Ingreso",
+              "datePickerFormat": "calendar"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "ce1ec9a4-28f4-413d-bd80-f8a0156f05c1"
+              },
+              "id": "fechaDeEgreso",
+              "label": "Fecha de Egreso",
+              "datePickerFormat": "calendar"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "2c67cd3d-407c-4f4d-bdf7-0f32b42ccfb4"
+              },
+              "id": "hora",
+              "label": "Hora",
+              "datePickerFormat": "timer"
+            }
+          ]
+        },
+        {
+          "label": "INFORME",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "2cbd4e3a-c513-48ee-99dc-8f073e1e4a64",
+                "rows": 2
+              },
+              "id": "motivoDelIngreso",
+              "label": "Motivo del Ingreso",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "d9473339-af67-4625-8d0d-5a1766567f43",
+                "rows": 2
+              },
+              "id": "exploracióN",
+              "label": "Exploración"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "7dcd7251-eea4-4886-9081-1276555ec8c3",
+                "rows": 2
+              },
+              "id": "pruebasComplementarias",
+              "label": "Pruebas Complementarias"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "c093c0ec-d1fd-406f-8c65-eeb079665853",
+                "rows": 2
+              },
+              "id": "diagnóStico",
+              "label": "Diagnóstico"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "b52aea72-ef5f-41a5-a798-349b3db43349",
+                "rows": 2
+              },
+              "id": "tratamiento",
+              "label": "Tratamiento"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "af5ac8e2-21b3-4d1f-b167-f54cdcf7188d",
+                "rows": 2
+              },
+              "id": "motivoDelAlta",
+              "label": "Motivo del Alta"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "643c7023-c2f4-4796-9920-a2ed0f79ba35",
+                "rows": 4
+              },
+              "id": "observaciones",
+              "label": "Observaciones"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "processor": "EncounterFormProcessor",
+  "encounterType": "2v3w4x5y-2234-5678-9101-abcdefghij22",
+  "referencedForms": [],
+  "uuid": "b2b80565-ed7d-4a85-b9c0-dc7a03a36687",
+  "description": "Pagina 14",
+  "version": "1.2"
+}

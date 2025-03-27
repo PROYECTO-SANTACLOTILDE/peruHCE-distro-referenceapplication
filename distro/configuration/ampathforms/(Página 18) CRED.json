@@ -1,0 +1,1806 @@
+{
+  "name": "(Página 18) CRED",
+  "pages": [
+    {
+      "label": " ",
+      "sections": [
+        {
+          "label": " ",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "65d698ca-cc62-449f-997b-5d6a68546fc8",
+                "min": "0"
+              },
+              "id": "n°HistoriaClinica",
+              "label": "N° Historia Clínica",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "c6f0c0b7-d70f-4273-bb16-45b62595c17b",
+                "minLength": "",
+                "rows": 1
+              },
+              "id": "sis",
+              "label": "SIS",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "fb3f4592-1ec5-4bb0-a7ea-4864df29afd1"
+              },
+              "id": "establecimientoDeSalud",
+              "label": "Establecimiento de Salud",
+              "required": true
+            }
+          ]
+        },
+        {
+          "label": "DATOS GENERALES",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "ec64966c-8904-410b-97cb-531db3bcc0e8",
+                "rows": 1
+              },
+              "id": "apellidosYNombreDelNiñO",
+              "label": "Apellidos y Nombre del Niño",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "b30ad531-71dc-402f-8ac4-2238d1ee58c2",
+                "answers": [
+                  {
+                    "concept": "4e751a15-d872-445f-8b9a-c19e208a4fce",
+                    "label": "Varón"
+                  },
+                  {
+                    "concept": "fb682be9-e459-4f74-b38b-ce36bdc0dd1e",
+                    "label": "Mujer"
+                  }
+                ]
+              },
+              "id": "sexo",
+              "label": "Sexo",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "concept": "ad57b0e5-5d81-4b9a-b7a7-d92b762c7710",
+                "rendering": "number"
+              },
+              "id": "edad",
+              "required": true,
+              "label": "Edad"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "c7016ba1-840d-424e-9838-8695f3ffb084"
+              },
+              "id": "fechaDeNacimiento",
+              "label": "Fecha de nacimiento",
+              "datePickerFormat": "calendar",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "8c19ba2b-503f-4559-9079-0b861f3865c2"
+              },
+              "id": "lugarDeNacimiento",
+              "label": "Lugar de Nacimiento",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "4c43824f-3322-4c44-b90f-13b54a8ade9c"
+              },
+              "id": "domicilio/Referencia",
+              "label": "Domicilio/Referencia",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "83f2f6b1-e33e-4bf2-84f6-bd7ffe9d59fe"
+              },
+              "id": "cui/Dni",
+              "label": "CUI/DNI",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "2a3e3a8b-6eb1-4498-b193-6f65b64082d7"
+              },
+              "id": "gs",
+              "label": "GS",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "6d65e5b1-915a-439d-9962-f6702600834e"
+              },
+              "id": "rh",
+              "label": "Rh",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "c6c95abe-3b29-479c-ae0c-116dfc917207",
+                "rows": 2
+              },
+              "id": "nombreYApellidosDeLaMadre",
+              "label": "Nombre y Apellidos de la Madre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "dcc62b2c-2fc7-4053-9239-0e79335ecdbc"
+              },
+              "id": "edadDeLaMadre",
+              "label": "Edad de la madre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "1dd42049-ce9b-41df-a167-491adad5c11a"
+              },
+              "id": "dniDeLaMadre",
+              "label": "DNI de la madre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "a93b1001-beee-499b-8086-c19a1a8cd041"
+              },
+              "id": "teléFono/MóVilDeLaMadre",
+              "label": "Teléfono/móvil de la madre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "fe4c07c9-405d-4fcc-85ce-7f93667257ea"
+              },
+              "id": "gradoDeInstruccióNDeLaMadre",
+              "label": "Grado de instrucción de la madre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "c6eb629e-35a3-48c1-a9fe-a19cfd81bd72"
+              },
+              "id": "ocupacióNDeLaMadre",
+              "label": "Ocupación de la madre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "aa345a81-3811-4e9c-be18-d6be727623e0",
+                "answers": [
+                  {
+                    "concept": "798d5304-a301-4fb9-9a55-c568ab843c2d",
+                    "label": "Soltero(a)"
+                  },
+                  {
+                    "concept": "a10b6eeb-287f-4580-8ba7-9c8ee78a6ffc",
+                    "label": "Divorciado"
+                  },
+                  {
+                    "concept": "b8e84a87-3dca-4c0b-a524-ef2b124166d4",
+                    "label": "Viudo(a)"
+                  },
+                  {
+                    "concept": "bff95b64-d1b5-45ec-b5ad-a736c38a4cc1",
+                    "label": "Conviviente"
+                  },
+                  {
+                    "concept": "c40e34a1-47b4-4627-945f-bea67f9017df",
+                    "label": "Casado(a)"
+                  },
+                  {
+                    "concept": "d9a46e39-1de3-4aeb-9194-6921aadb911a",
+                    "label": "Separado"
+                  },
+                  {
+                    "concept": "3a88104a-3f04-4a43-8835-bc976b950527",
+                    "label": "No indicado"
+                  }
+                ]
+              },
+              "id": "estadoCivilDeLaMadre",
+              "label": "Estado Civil de la madre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "concept": "6de6d87e-5af8-41d9-98d2-b660fabf25d9",
+                "rendering": "select",
+                "answers": [
+                  {
+                    "concept": "69637a30-4015-4fb1-8344-2380133985ba",
+                    "label": "Adventista"
+                  },
+                  {
+                    "concept": "83cd5067-2f11-4fca-9e0b-3ee1fad2f5c2",
+                    "label": "Bautista"
+                  },
+                  {
+                    "concept": "6370fd16-9dc1-4b2a-ab7a-c678606daff6",
+                    "label": "Budismo"
+                  },
+                  {
+                    "concept": "2b8aef4c-ee43-4c17-bc7a-dd7efce65753",
+                    "label": "Católico"
+                  },
+                  {
+                    "concept": "7fbaaf47-8dbc-47b1-85d6-769a46c1af45",
+                    "label": "Cristianismo (no católico)"
+                  },
+                  {
+                    "concept": "05fb5906-c275-46ba-bcbb-297ad31455ff",
+                    "label": "Hinduismo"
+                  },
+                  {
+                    "concept": "dcede5df-c87c-4069-8759-24125f7d61e8",
+                    "label": "Metodista"
+                  },
+                  {
+                    "concept": "5bf5fb38-b891-429a-a9f6-3148705bf677",
+                    "label": "Musulmán"
+                  },
+                  {
+                    "concept": "a2f71e3e-879e-4da6-b8d5-4691560ce362",
+                    "label": "Nazareno"
+                  },
+                  {
+                    "concept": "10008046-15a4-40e7-8e0d-5b48dc3f6000",
+                    "label": "Pentecostal"
+                  },
+                  {
+                    "concept": "2f215b5f-d66c-441d-b746-9ced7a203c65",
+                    "label": "Presbiteriana"
+                  },
+                  {
+                    "concept": "5e5178af-f4f5-4089-9d56-6bc0cffb0aef",
+                    "label": "Protestante"
+                  },
+                  {
+                    "concept": "f55dd98d-0e02-4b69-9096-0431447868a7",
+                    "label": "Testigo de Jehová"
+                  },
+                  {
+                    "concept": "9dfedf8a-c9d3-4ca7-adc4-0c45b1ea7871",
+                    "label": "Vudú"
+                  },
+                  {
+                    "concept": "4546ecd2-5260-4695-a61a-8196058f6401",
+                    "label": "OTRO"
+                  }
+                ]
+              },
+              "id": "religióNDeLaMadre",
+              "label": "Religión de la madre"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "b80d6e15-2ff5-474d-83a0-5a3c7893e08e",
+                "rows": 2
+              },
+              "id": "nombreYApellidosDelPadre",
+              "label": "Nombre y Apellidos del Padre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "fd59964c-92db-4ba9-bdc1-0b6f25c942ac"
+              },
+              "id": "edadDelPadre",
+              "label": "Edad del padre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "793a4349-1d96-40b2-8656-a41332733f74"
+              },
+              "id": "dniDelPadre",
+              "label": "DNI del padre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "d8d255ec-434f-4e7e-8a85-992f2235183b"
+              },
+              "id": "teléFono/MóVilDelPadre",
+              "label": "Teléfono/móvil del padre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "96eaee46-1043-43da-85bd-ebc9e36fb0c1"
+              },
+              "id": "gradoDeInstruccióNDelPadre",
+              "label": "Grado de instrucción del padre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "c6eb629e-35a3-48c1-a9fe-a19cfd81bd72"
+              },
+              "id": "ocupacióNDelPadre",
+              "label": "Ocupación del padre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "aa345a81-3811-4e9c-be18-d6be727623e0",
+                "answers": [
+                  {
+                    "concept": "798d5304-a301-4fb9-9a55-c568ab843c2d",
+                    "label": "Soltero(a)"
+                  },
+                  {
+                    "concept": "a10b6eeb-287f-4580-8ba7-9c8ee78a6ffc",
+                    "label": "Divorciado"
+                  },
+                  {
+                    "concept": "b8e84a87-3dca-4c0b-a524-ef2b124166d4",
+                    "label": "Viudo(a)"
+                  },
+                  {
+                    "concept": "bff95b64-d1b5-45ec-b5ad-a736c38a4cc1",
+                    "label": "Conviviente"
+                  },
+                  {
+                    "concept": "c40e34a1-47b4-4627-945f-bea67f9017df",
+                    "label": "Casado(a)"
+                  },
+                  {
+                    "concept": "d9a46e39-1de3-4aeb-9194-6921aadb911a",
+                    "label": "Separado"
+                  },
+                  {
+                    "concept": "3a88104a-3f04-4a43-8835-bc976b950527",
+                    "label": "No indicado"
+                  }
+                ]
+              },
+              "id": "estadoCivilDelPadre",
+              "label": "Estado Civil del padre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "concept": "6de6d87e-5af8-41d9-98d2-b660fabf25d9",
+                "rendering": "select",
+                "answers": [
+                  {
+                    "concept": "69637a30-4015-4fb1-8344-2380133985ba",
+                    "label": "Adventista"
+                  },
+                  {
+                    "concept": "83cd5067-2f11-4fca-9e0b-3ee1fad2f5c2",
+                    "label": "Bautista"
+                  },
+                  {
+                    "concept": "6370fd16-9dc1-4b2a-ab7a-c678606daff6",
+                    "label": "Budismo"
+                  },
+                  {
+                    "concept": "2b8aef4c-ee43-4c17-bc7a-dd7efce65753",
+                    "label": "Católico"
+                  },
+                  {
+                    "concept": "7fbaaf47-8dbc-47b1-85d6-769a46c1af45",
+                    "label": "Cristianismo (no católico)"
+                  },
+                  {
+                    "concept": "05fb5906-c275-46ba-bcbb-297ad31455ff",
+                    "label": "Hinduismo"
+                  },
+                  {
+                    "concept": "dcede5df-c87c-4069-8759-24125f7d61e8",
+                    "label": "Metodista"
+                  },
+                  {
+                    "concept": "5bf5fb38-b891-429a-a9f6-3148705bf677",
+                    "label": "Musulmán"
+                  },
+                  {
+                    "concept": "a2f71e3e-879e-4da6-b8d5-4691560ce362",
+                    "label": "Nazareno"
+                  },
+                  {
+                    "concept": "10008046-15a4-40e7-8e0d-5b48dc3f6000",
+                    "label": "Pentecostal"
+                  },
+                  {
+                    "concept": "2f215b5f-d66c-441d-b746-9ced7a203c65",
+                    "label": "Presbiteriana"
+                  },
+                  {
+                    "concept": "5e5178af-f4f5-4089-9d56-6bc0cffb0aef",
+                    "label": "Protestante"
+                  },
+                  {
+                    "concept": "f55dd98d-0e02-4b69-9096-0431447868a7",
+                    "label": "Testigo de Jehová"
+                  },
+                  {
+                    "concept": "9dfedf8a-c9d3-4ca7-adc4-0c45b1ea7871",
+                    "label": "Vudú"
+                  },
+                  {
+                    "concept": "4546ecd2-5260-4695-a61a-8196058f6401",
+                    "label": "OTRO"
+                  }
+                ]
+              },
+              "id": "religióNDelPadre",
+              "label": "Religión del padre"
+            }
+          ]
+        },
+        {
+          "label": "Antecedentes",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "c48c7ac2-7c67-4129-a97c-6fa76c7b3770",
+                "min": "0"
+              },
+              "id": "pesoMaterno",
+              "label": "Peso Materno",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "6cce201f-26eb-46d0-a8cb-f17ef045af78",
+                "min": "0"
+              },
+              "id": "n°DeHijos",
+              "label": "N° de Hijos",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "927ea9b2-f804-47b7-8f49-8ad92884543e",
+                "min": "0"
+              },
+              "id": "tallaMaterno",
+              "label": "Talla materno",
+              "required": true
+            }
+          ]
+        },
+        {
+          "label": "Antecedentes Perinatales",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "c3443414-e107-43b5-87de-d4793e48279f",
+                "answers": [
+                  {
+                    "concept": "b63373dd-1333-492f-9326-e1adb0885b82",
+                    "label": "Embarazo Normal"
+                  },
+                  {
+                    "concept": "e7169776-afcb-44cf-aa55-c718e6827771",
+                    "label": "embarazo complicado"
+                  }
+                ]
+              },
+              "id": "embarazo",
+              "label": "Embarazo",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "5b55fef6-8464-49f1-a905-91822d293ee7",
+                "answers": [
+                  {
+                    "concept": "14bb53e2-fed0-465c-8470-f4d07333a1fc",
+                    "label": "Embarazo de riesgo"
+                  },
+                  {
+                    "concept": "3d7256ec-f836-4888-bdbd-836a51bf5376",
+                    "label": "Infecciones Intrauterinas, vaginales, ITU"
+                  },
+                  {
+                    "concept": "8b5cd484-77e2-4a74-8977-924ce0b9ec86",
+                    "label": "Diabetes gestacional"
+                  },
+                  {
+                    "concept": "bca5971b-3029-4e0e-a352-d48bcb7b3586",
+                    "label": "Eclampsia"
+                  },
+                  {
+                    "concept": "81dfe443-87d7-43a3-975a-17fc3c47e908",
+                    "label": "Pre-eclampsia"
+                  },
+                  {
+                    "concept": "82e4809f-801f-4fc8-8872-f180cf7fcb3c",
+                    "label": "Anemia"
+                  }
+                ]
+              },
+              "id": "patologíAsDuranteLaGestacióN",
+              "label": "Patologías durante la gestación",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "9156b8d5-e5d3-4c2b-b8fc-1faafeda8f6c",
+                "min": "0"
+              },
+              "id": "n°Cpn",
+              "label": "N° CPN",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "8c19ba2b-503f-4559-9079-0b861f3865c2"
+              },
+              "id": "lugarDeNacimiento2",
+              "label": "Lugar de nacimiento",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "6a1214d4-b30c-4569-9a32-85d81724c62f",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "controlPrenatal",
+              "label": "Control Prenatal",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "f96649ed-fca4-4b97-a9c2-509a1bd14f54"
+              },
+              "id": "n°DeEmbarazo",
+              "label": "N° de embarazo",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "52a2755e-7510-473e-96d9-4875d7435f8d"
+              },
+              "id": "lugarControlPrenatal",
+              "label": "Lugar control prenatal",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "c6567881-4659-4624-8adf-ba0c15cbc4c6",
+                "answers": [
+                  {
+                    "concept": "7303702f-f67e-4fd2-bf41-f58fb364b132",
+                    "label": "Parto eutópico"
+                  },
+                  {
+                    "concept": "3d233e4b-d756-498c-9a2a-99bec850fbac",
+                    "label": "Parto distócico"
+                  }
+                ]
+              },
+              "id": "parto",
+              "label": "Parto",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "a5d543d7-52de-49d6-8c64-fc21302fb46f",
+                "rows": 3
+              },
+              "id": "complicacionesDelParto",
+              "label": "Complicaciones del parto",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "b4c79dec-245b-4d9f-ae52-2db757c4561a",
+                "answers": [
+                  {
+                    "concept": "a60d6efa-8bb3-4a48-b027-745cd6d74c20",
+                    "label": "Sala de Parto"
+                  },
+                  {
+                    "concept": "7bc0bfa1-37fc-4ea2-acd1-a57fd19d8d43",
+                    "label": "Domicilio"
+                  }
+                ]
+              },
+              "id": "lugarDeParto",
+              "label": "Lugar de parto",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "13262b16-7521-43e9-b824-1a8255c1d3b0",
+                "answers": [
+                  {
+                    "concept": "dedad580-8891-41cc-9651-75e2daaa3fdc",
+                    "label": "Profesional de Salud"
+                  },
+                  {
+                    "concept": "ae91a9a1-f3ab-461c-9c1e-d79c57d64428",
+                    "label": "Técnico"
+                  },
+                  {
+                    "concept": "1b6f1537-bc9f-4481-89f9-f99c4d564ec5",
+                    "label": "ACS"
+                  },
+                  {
+                    "concept": "ceaaec9f-b581-4a66-af7d-17d1c69da2a0",
+                    "label": "Familiar"
+                  },
+                  {
+                    "concept": "7c01b85b-06d6-4279-99e7-38b4176f53ce",
+                    "label": "Otro (Especificar)"
+                  }
+                ]
+              },
+              "id": "atendidoPor:",
+              "label": "Atendido por:",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "ab7ab078-3e67-4714-a101-857c7e9e01f2",
+                "answers": [
+                  {
+                    "concept": "c21d82cb-674a-4f11-9faf-8838ac192a90",
+                    "label": "Menos de 3 minutos"
+                  },
+                  {
+                    "concept": "3b3eb7e3-6dec-4ea3-9129-cd3f281c6b24",
+                    "label": "3 minutos a más"
+                  }
+                ]
+              },
+              "id": "corteTardíODelCordóNUmbilical",
+              "label": "Corte tardío del cordón umbilical",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "3bbebee4-ccc8-4a01-a5e8-14f9222a6827",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "contactoPielAPiel",
+              "label": "Contacto piel a piel",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "838d31f0-277b-4ddf-9197-176053522f63",
+                "answers": [
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  },
+                  {
+                    "concept": "b0ab328f-373e-4404-ac01-ce83b7859aa3",
+                    "label": "15 a 30 minutos"
+                  },
+                  {
+                    "concept": "d655df1a-81ef-488c-bf2c-dda1e1033490",
+                    "label": "45 minutos a más"
+                  }
+                ]
+              },
+              "id": "lactanciaPrecoz",
+              "label": "Lactancia precoz",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "98360dd3-0000-4b58-a21c-fe0189302d1a",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "alojamientoConjunto",
+              "label": "Alojamiento Conjunto",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "2eb9b2c4-cd08-4e6f-a11f-e1e6dc3cb54f",
+                "min": "0"
+              },
+              "id": "edadGestanteAlNacer(Sem)",
+              "label": "Edad Gestante al Nacer (sem)",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "95f6e826-fc2b-468f-b728-59a3277b66b1"
+              },
+              "id": "áTéRmino(37A40)",
+              "label": "Á término (37 a 40)",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "8a27dd5e-4877-4910-a52e-aa7d9ec5ea59"
+              },
+              "id": "pretéRmino(36<)",
+              "label": "Pretérmino (36<)",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "b73d4e54-1c0a-419e-a241-dae1724fe41f"
+              },
+              "id": "pesoAlNacer(Gr)",
+              "label": "Peso al nacer (gr)",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "14e7654a-5448-40d8-a822-aa2438468d63"
+              },
+              "id": "tallaAlNacer(Cm)",
+              "label": "Talla al nacer (cm)",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "911eb398-e7de-4270-af63-e4c615ec22a9"
+              },
+              "id": "períMetroToráCico",
+              "label": "Perímetro torácico",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "c4d39248-c896-433a-bc69-e24d04b7f0e5"
+              },
+              "id": "períMetroCefáLico",
+              "label": "Perímetro cefálico",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "e562765d-013d-4ba7-87f1-03af5eb5c5ae"
+              },
+              "id": "sufrimientoFetal",
+              "label": "Sufrimiento Fetal",
+              "required": true
+            }
+          ]
+        },
+        {
+          "label": "Respiración y llanto al nacer",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "concept": "623d0910-d619-4d68-a03e-3f94d10ed9ad",
+                "rendering": "select",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "fueInmediato",
+              "label": "Fue inmediato",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "a2010a1f-d7ca-4d6f-9255-f53da4fa5c3f"
+              },
+              "id": "apgar",
+              "label": "APGAR 1min",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "0f3be2f6-986f-4928-8761-b531044c1f36"
+              },
+              "id": "apgar5min",
+              "label": "APGAR 5min",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "f621e8d3-2c34-48fc-95c1-50ad0606ed68"
+              },
+              "id": "apgar10min",
+              "label": "APGAR 10min",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "b0519662-33c5-4a13-8d4b-6837dcdbb07e",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "reanimacióNNeonatal",
+              "label": "Reanimación Neonatal",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "b69b4167-c293-40dd-a605-a9e82c138b8d",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "patologíANeonatal",
+              "label": "Patología Neonatal",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "a3b55a52-203b-41cc-ae12-adc839b2e8b9",
+                "rows": 1
+              },
+              "id": "especifique",
+              "label": "Especifique"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "d18507ca-8084-4ae6-bb4d-506d15a94e13",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "hospitalizacióN",
+              "label": "Hospitalización",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "0b9dcf14-5acb-427b-a017-71794d320d22"
+              },
+              "id": "tiempoDeHospitalizacióN",
+              "label": "Tiempo de Hospitalización"
+            }
+          ]
+        },
+        {
+          "label": "Después del nacimiento",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "checkbox",
+                "concept": "9b971ec1-2b46-43ae-ba89-76d26ddb5e9e",
+                "answers": [
+                  {
+                    "concept": "b232d30b-ceb8-472c-9628-a25bde5ed8ed",
+                    "label": "Hipoglucemia"
+                  },
+                  {
+                    "concept": "dd13158a-7088-4adc-8116-f18a47e7f347",
+                    "label": "Infección"
+                  },
+                  {
+                    "concept": "57c0c29c-3394-430b-b137-532c73346ec7",
+                    "label": "Hiperbilirrubinamia"
+                  },
+                  {
+                    "concept": "0b117fdc-b17a-40eb-8117-6c05f6992d63",
+                    "label": "Cirugías"
+                  },
+                  {
+                    "concept": "4852a80f-fa06-4b5d-857b-4a4ed3b40518",
+                    "label": "Retinopatía"
+                  }
+                ]
+              },
+              "id": "patologíAs",
+              "label": "Patologías",
+              "required": false
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "a3b55a52-203b-41cc-ae12-adc839b2e8b9",
+                "rows": 1
+              },
+              "id": "otros",
+              "label": "Otros"
+            }
+          ]
+        },
+        {
+          "label": "Antecedentes Patológicos del niño",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "2a2fd23c-17d2-4a9d-b2a2-492c854d07ca",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "tbc",
+              "label": "TBC",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "f4a710a0-2b6d-4914-bff1-3b92041aef04",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "sobas/Asma",
+              "label": "SOBAS/Asma",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "c9255332-2efe-492f-9eb2-da1b8912c0bd",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "transfusióNSanguíNea",
+              "label": "Transfusión Sanguínea",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "c678d4ed-0d47-4eb9-b855-086d3e2348a1",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "neurolóGica",
+              "label": "Neurológica",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "42d3e5df-b453-415e-a80a-451898059b45",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "alergiaAMedicamentos",
+              "label": "Alergia a medicamentos",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "a3b55a52-203b-41cc-ae12-adc839b2e8b9"
+              },
+              "id": "otros(Especifique)",
+              "label": "Otros (Especifique)",
+              "required": false
+            }
+          ]
+        },
+        {
+          "label": "Antecedentes familiares",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "87a2c324-2c1c-46a1-8bcc-c21a7f47a0dd",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "tuberculosis",
+              "label": "Tuberculosis",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "db6e056c-af11-4890-ac6b-48b99c8d5b0e",
+                "answers": [
+                  {
+                    "concept": "142c368c-0bcc-4af9-9f7c-632216bddebf",
+                    "label": "Padre"
+                  },
+                  {
+                    "concept": "fce43033-7532-49dc-b3c7-127877dfd569",
+                    "label": "Madre"
+                  },
+                  {
+                    "concept": "993ededb-3dd7-4a8f-b02e-76d29f6f2788",
+                    "label": "Abuela/Abuelo"
+                  },
+                  {
+                    "concept": "a0013bc9-80e3-426f-86b7-a001b599014d",
+                    "label": "Hijo"
+                  }
+                ]
+              },
+              "id": "quien",
+              "label": "Quien",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "0dbdcd70-4cc3-4a3c-b7cc-2be9708aa667",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "vih-Sida",
+              "label": "VIH-SIDA",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "db6e056c-af11-4890-ac6b-48b99c8d5b0e",
+                "answers": [
+                  {
+                    "concept": "142c368c-0bcc-4af9-9f7c-632216bddebf",
+                    "label": "Padre"
+                  },
+                  {
+                    "concept": "fce43033-7532-49dc-b3c7-127877dfd569",
+                    "label": "Madre"
+                  },
+                  {
+                    "concept": "993ededb-3dd7-4a8f-b02e-76d29f6f2788",
+                    "label": "Abuela/Abuelo"
+                  },
+                  {
+                    "concept": "a0013bc9-80e3-426f-86b7-a001b599014d",
+                    "label": "Hijo"
+                  }
+                ]
+              },
+              "id": "quienDuplicate",
+              "label": "Quien",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "6a210831-f803-4754-96a1-13e5e62760e2",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "diabetes",
+              "label": "Diabetes",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "db6e056c-af11-4890-ac6b-48b99c8d5b0e",
+                "answers": [
+                  {
+                    "concept": "142c368c-0bcc-4af9-9f7c-632216bddebf",
+                    "label": "Padre"
+                  },
+                  {
+                    "concept": "fce43033-7532-49dc-b3c7-127877dfd569",
+                    "label": "Madre"
+                  },
+                  {
+                    "concept": "993ededb-3dd7-4a8f-b02e-76d29f6f2788",
+                    "label": "Abuela/Abuelo"
+                  },
+                  {
+                    "concept": "a0013bc9-80e3-426f-86b7-a001b599014d",
+                    "label": "Hijo"
+                  }
+                ]
+              },
+              "id": "quienDuplicate",
+              "label": "Quien",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "7e15a311-6914-4406-88fc-15f8fa928b54",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "epilepsia",
+              "label": "Epilepsia",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "db6e056c-af11-4890-ac6b-48b99c8d5b0e",
+                "answers": [
+                  {
+                    "concept": "142c368c-0bcc-4af9-9f7c-632216bddebf",
+                    "label": "Padre"
+                  },
+                  {
+                    "concept": "fce43033-7532-49dc-b3c7-127877dfd569",
+                    "label": "Madre"
+                  },
+                  {
+                    "concept": "993ededb-3dd7-4a8f-b02e-76d29f6f2788",
+                    "label": "Abuela/Abuelo"
+                  },
+                  {
+                    "concept": "a0013bc9-80e3-426f-86b7-a001b599014d",
+                    "label": "Hijo"
+                  }
+                ]
+              },
+              "id": "quienDuplicate",
+              "label": "Quien",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "42d3e5df-b453-415e-a80a-451898059b45",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "alergiaAMedicinas",
+              "label": "Alergia a medicinas",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "db6e056c-af11-4890-ac6b-48b99c8d5b0e",
+                "answers": [
+                  {
+                    "concept": "142c368c-0bcc-4af9-9f7c-632216bddebf",
+                    "label": "Padre"
+                  },
+                  {
+                    "concept": "fce43033-7532-49dc-b3c7-127877dfd569",
+                    "label": "Madre"
+                  },
+                  {
+                    "concept": "993ededb-3dd7-4a8f-b02e-76d29f6f2788",
+                    "label": "Abuela/Abuelo"
+                  },
+                  {
+                    "concept": "a0013bc9-80e3-426f-86b7-a001b599014d",
+                    "label": "Hijo"
+                  }
+                ]
+              },
+              "id": "quienDuplicate",
+              "label": "Quien",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "313baa99-a2e3-449c-bc5f-3230d2508695",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "violenciaFamiliar",
+              "label": "Violencia familiar",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "db6e056c-af11-4890-ac6b-48b99c8d5b0e",
+                "answers": [
+                  {
+                    "concept": "142c368c-0bcc-4af9-9f7c-632216bddebf",
+                    "label": "Padre"
+                  },
+                  {
+                    "concept": "fce43033-7532-49dc-b3c7-127877dfd569",
+                    "label": "Madre"
+                  },
+                  {
+                    "concept": "993ededb-3dd7-4a8f-b02e-76d29f6f2788",
+                    "label": "Abuela/Abuelo"
+                  },
+                  {
+                    "concept": "a0013bc9-80e3-426f-86b7-a001b599014d",
+                    "label": "Hijo"
+                  }
+                ]
+              },
+              "id": "quienDuplicate",
+              "label": "Quien",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "0c51acfb-cb32-4c56-a63b-0edc3decdda4",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "alcoholismo",
+              "label": "Alcoholismo",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "db6e056c-af11-4890-ac6b-48b99c8d5b0e",
+                "answers": [
+                  {
+                    "concept": "142c368c-0bcc-4af9-9f7c-632216bddebf",
+                    "label": "Padre"
+                  },
+                  {
+                    "concept": "fce43033-7532-49dc-b3c7-127877dfd569",
+                    "label": "Madre"
+                  },
+                  {
+                    "concept": "993ededb-3dd7-4a8f-b02e-76d29f6f2788",
+                    "label": "Abuela/Abuelo"
+                  },
+                  {
+                    "concept": "a0013bc9-80e3-426f-86b7-a001b599014d",
+                    "label": "Hijo"
+                  }
+                ]
+              },
+              "id": "quienDuplicate",
+              "label": "Quien",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "6fc6191a-7bd5-4003-af5d-8812490edb01",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "drogadiccióN",
+              "label": "Drogadicción",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "db6e056c-af11-4890-ac6b-48b99c8d5b0e",
+                "answers": [
+                  {
+                    "concept": "142c368c-0bcc-4af9-9f7c-632216bddebf",
+                    "label": "Padre"
+                  },
+                  {
+                    "concept": "fce43033-7532-49dc-b3c7-127877dfd569",
+                    "label": "Madre"
+                  },
+                  {
+                    "concept": "993ededb-3dd7-4a8f-b02e-76d29f6f2788",
+                    "label": "Abuela/Abuelo"
+                  },
+                  {
+                    "concept": "a0013bc9-80e3-426f-86b7-a001b599014d",
+                    "label": "Hijo"
+                  }
+                ]
+              },
+              "id": "quienDuplicate",
+              "label": "Quien",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "30d8e334-b9c7-4aa3-851e-44a89a2ede53",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "hepatitisB",
+              "label": "Hepatitis B",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "db6e056c-af11-4890-ac6b-48b99c8d5b0e",
+                "answers": [
+                  {
+                    "concept": "142c368c-0bcc-4af9-9f7c-632216bddebf",
+                    "label": "Padre"
+                  },
+                  {
+                    "concept": "fce43033-7532-49dc-b3c7-127877dfd569",
+                    "label": "Madre"
+                  },
+                  {
+                    "concept": "993ededb-3dd7-4a8f-b02e-76d29f6f2788",
+                    "label": "Abuela/Abuelo"
+                  },
+                  {
+                    "concept": "a0013bc9-80e3-426f-86b7-a001b599014d",
+                    "label": "Hijo"
+                  }
+                ]
+              },
+              "id": "quienDuplicate",
+              "label": "Quien",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "04518aa2-fd57-4d2e-9438-db52e92b6343",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "malformacióN/Gemelar",
+              "label": "Malformación/Gemelar",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "db6e056c-af11-4890-ac6b-48b99c8d5b0e",
+                "answers": [
+                  {
+                    "concept": "142c368c-0bcc-4af9-9f7c-632216bddebf",
+                    "label": "Padre"
+                  },
+                  {
+                    "concept": "fce43033-7532-49dc-b3c7-127877dfd569",
+                    "label": "Madre"
+                  },
+                  {
+                    "concept": "993ededb-3dd7-4a8f-b02e-76d29f6f2788",
+                    "label": "Abuela/Abuelo"
+                  },
+                  {
+                    "concept": "a0013bc9-80e3-426f-86b7-a001b599014d",
+                    "label": "Hijo"
+                  }
+                ]
+              },
+              "id": "quienDuplicate",
+              "label": "Quien",
+              "required": true
+            }
+          ]
+        },
+        {
+          "label": "Factores de riesgo social",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "text",
+                "concept": "34221fb3-aaae-4285-b4e8-53c14f5172b8"
+              },
+              "id": "cuidadorDelNiñO/A",
+              "label": "Cuidador del niño/a",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "0bcb40eb-922d-455f-9382-564023c9b7a2",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "apoyoDeFamiliares",
+              "label": "Apoyo de familiares",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "3c10ed91-0a6b-4516-b630-556e209fd67c",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "embarazoAdolescente",
+              "label": "Embarazo adolescente",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "6cce201f-26eb-46d0-a8cb-f17ef045af78",
+                "answers": [
+                  {
+                    "concept": "f6eb1303-dd8e-4b44-813b-b5d83999b855",
+                    "label": "un hijo"
+                  },
+                  {
+                    "concept": "07f468c7-f129-4571-94dd-dfd2c44cc1d1",
+                    "label": "2 a 3 hijos"
+                  },
+                  {
+                    "concept": "dfde0f07-1b33-42f6-b58e-4931ab1f3467",
+                    "label": "más de 3 hijos"
+                  }
+                ]
+              },
+              "id": "núMeroDeHijos",
+              "label": "Número de hijos",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "3298499b-a996-4077-b0a5-c375d5e44bfe",
+                "answers": [
+                  {
+                    "concept": "d054ba12-fbf7-43fa-b798-92563d9f4f71",
+                    "label": "Menos de 2 embarazos"
+                  },
+                  {
+                    "concept": "eee5e355-9816-4eec-815a-87109377ef78",
+                    "label": "De 2 a 5 embarazos"
+                  },
+                  {
+                    "concept": "08f42041-afe9-46af-b584-3e9ac081361a",
+                    "label": "6 a más embarazos"
+                  }
+                ]
+              },
+              "id": "úLtimosEmbarazosEspecificados",
+              "label": "Últimos embarazos especificados",
+              "required": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "processor": "EncounterFormProcessor",
+  "encounterType": "2v3w4x5y-2234-5678-9101-abcdefghij22",
+  "referencedForms": [],
+  "uuid": "be031192-6b92-401f-b3de-f7446e27129a",
+  "description": "Formulario Pagina 18 - Curso de Vida Niño",
+  "version": "1.2"
+}

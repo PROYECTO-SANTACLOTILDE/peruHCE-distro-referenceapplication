@@ -1,0 +1,514 @@
+{
+  "name": "(Página 2) Historia Clínica Neonatal",
+  "pages": [
+    {
+      "label": "Historia Clínica Neonatal",
+      "sections": [
+        {
+          "label": "Datos de los Padres",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "b80d6e15-2ff5-474d-83a0-5a3c7893e08e",
+                "rows": 1
+              },
+              "id": "nombreDelPadre",
+              "label": "Nombre del Padre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "793a4349-1d96-40b2-8656-a41332733f74",
+                "rows": 1
+              },
+              "id": "dniDelPadre",
+              "label": "DNI del Padre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "fd59964c-92db-4ba9-bdc1-0b6f25c942ac",
+                "rows": 1,
+                "min": "0"
+              },
+              "id": "edadDelPadre",
+              "label": "Edad del Padre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "c6c95abe-3b29-479c-ae0c-116dfc917207",
+                "rows": 1
+              },
+              "id": "nombreDeLaMadre",
+              "label": "Nombre de la Madre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "1dd42049-ce9b-41df-a167-491adad5c11a",
+                "rows": 1
+              },
+              "id": "dniDeLaMadre",
+              "required": true,
+              "label": "DNI de la Madre"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "dcc62b2c-2fc7-4053-9239-0e79335ecdbc",
+                "min": "0"
+              },
+              "id": "edadDeLaMadre",
+              "label": "Edad de la Madre",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "7bc0bfa1-37fc-4ea2-acd1-a57fd19d8d43",
+                "rows": 2
+              },
+              "id": "direccióN",
+              "label": "Dirección",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "f63bc4a5-3370-4049-a553-5146cbdaae75",
+                "rows": 1,
+                "min": "0"
+              },
+              "id": "teléFono",
+              "label": "Teléfono",
+              "required": true
+            }
+          ]
+        },
+        {
+          "label": "Datos del Recién Nacido",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "be12a755-494f-4d68-b8c1-03252fd0a5ed",
+                "rows": 2
+              },
+              "id": "nombreYApellidoDelReciéNNacido",
+              "label": "Nombre y Apellido del Recién Nacido",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "a6b44617-9c39-42ea-a200-cd3d4e7e1dba",
+                "min": ""
+              },
+              "id": "egXCapurro",
+              "label": "EG X Capurro"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "3f6056ed-17e9-4b3b-98a7-18dc431a7e99",
+                "rows": 1
+              },
+              "id": "grupoYFactor",
+              "label": "Grupo y Factor",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "9a9c73d0-76e6-4b84-b20c-dfe8efea9542"
+              },
+              "id": "hcto",
+              "label": "Hcto"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "0ffe780c-a3ee-4c9c-b4dd-bf2e0f79dc7f"
+              },
+              "id": "hb",
+              "label": "HB",
+              "required": false
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "96a1c868-1852-4606-9999-9602f1a93cd6"
+              },
+              "id": "glucosa",
+              "label": "Glucosa"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "date",
+                "concept": "c7016ba1-840d-424e-9838-8695f3ffb084"
+              },
+              "id": "fechaYHoraDeNacimiento",
+              "label": "Fecha y Hora de Nacimiento",
+              "required": true,
+              "datePickerFormat": "both"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "b30ad531-71dc-402f-8ac4-2238d1ee58c2",
+                "answers": [
+                  {
+                    "concept": "4e751a15-d872-445f-8b9a-c19e208a4fce",
+                    "label": "Varón"
+                  },
+                  {
+                    "concept": "fb682be9-e459-4f74-b38b-ce36bdc0dd1e",
+                    "label": "Mujer"
+                  }
+                ]
+              },
+              "id": "sexo",
+              "label": "Sexo",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "a2010a1f-d7ca-4d6f-9255-f53da4fa5c3f"
+              },
+              "id": "apgar1''",
+              "label": "Apgar 1''"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "0f3be2f6-986f-4928-8761-b531044c1f36"
+              },
+              "id": "apgar5''",
+              "label": "Apgar 5''"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "f621e8d3-2c34-48fc-95c1-50ad0606ed68"
+              },
+              "id": "apgar10''",
+              "label": "Apgar 10''"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "5a7f6473-ce0b-4ae5-95e1-3cb93ffaae65",
+                "min": "0"
+              },
+              "id": "peso",
+              "label": "Peso",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "14e7654a-5448-40d8-a822-aa2438468d63",
+                "min": "0"
+              },
+              "id": "talla",
+              "label": "Talla",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "concept": "c4d39248-c896-433a-bc69-e24d04b7f0e5",
+                "rendering": "number"
+              },
+              "id": "perimetroCefáLico",
+              "label": "Perimetro Cefálico"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "number",
+                "concept": "911eb398-e7de-4270-af63-e4c615ec22a9"
+              },
+              "id": "períMetroToráCico",
+              "label": "Perímetro Torácico"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "radio",
+                "concept": "590f32e5-d78a-47c6-98fc-9e4ddb3e7ede",
+                "answers": [
+                  {
+                    "concept": "f1d1cac0-40f9-4940-9fe1-0423ed31b5d5",
+                    "label": "Parto Vaginal Distócico"
+                  },
+                  {
+                    "concept": "19f5ff09-9299-42a4-8bf6-1c591e78b8ae",
+                    "label": "Parto Vaginal Eutócico"
+                  },
+                  {
+                    "concept": "844e7a1f-0cdf-4ede-9cd1-861f085a2249",
+                    "label": "Parto por Cesárea"
+                  },
+                  {
+                    "concept": "d99c00b0-f318-4d90-8e57-da6c71b33b74",
+                    "label": "Podálico"
+                  },
+                  {
+                    "concept": "1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Desconocido"
+                  }
+                ]
+              },
+              "id": "tipoDeParto",
+              "label": "Tipo de parto",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "11eae98f-1fe6-4d40-9633-cd4dbc74bac5",
+                "rows": 1
+              },
+              "id": "cnv",
+              "required": true,
+              "label": "CNV"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "83f2f6b1-e33e-4bf2-84f6-bd7ffe9d59fe",
+                "rows": 1
+              },
+              "id": "dni",
+              "label": "DNI",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "c6f0c0b7-d70f-4273-bb16-45b62595c17b",
+                "rows": 1
+              },
+              "id": "sisDelReciéNNacido",
+              "label": "SIS del recién nacido"
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "f065ac98-af4c-4850-9c10-92f80b526988",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "tamizajeNeonatal",
+              "label": "Tamizaje Neonatal",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "8f634c38-562a-441e-bf8c-097cbddb78bd",
+                "rows": 1
+              },
+              "id": "resultado",
+              "label": "Resultado",
+              "required": true
+            }
+          ]
+        },
+        {
+          "label": "Vacunas",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "440ed35a-7bb9-4ef3-aa06-78bc70cc5923",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "bcg",
+              "label": "BCG",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "30d8e334-b9c7-4aa3-851e-44a89a2ede53",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "hepatitisB",
+              "label": "Hepatitis B",
+              "required": true
+            }
+          ]
+        },
+        {
+          "label": "Atención del parto",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "13262b16-7521-43e9-b824-1a8255c1d3b0",
+                "rows": 1
+              },
+              "id": "atencióN",
+              "label": "Atención",
+              "required": true
+            }
+          ]
+        },
+        {
+          "label": "Referencia",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "select",
+                "concept": "d131b00d-b3f3-4668-8620-7b1bef497c77",
+                "answers": [
+                  {
+                    "concept": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Sí"
+                  },
+                  {
+                    "concept": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "label": "Falso"
+                  }
+                ]
+              },
+              "id": "referido",
+              "label": "Referido",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "c093c0ec-d1fd-406f-8c65-eeb079665853",
+                "rows": 2
+              },
+              "id": "dx",
+              "label": "Dx",
+              "required": true
+            },
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "74551e57-2773-4eaa-8219-74e65b74410e",
+                "rows": 1
+              },
+              "id": "destino",
+              "label": "Destino",
+              "required": true
+            }
+          ]
+        },
+        {
+          "label": "Atención del recién nacido",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "rows": 1
+              },
+              "id": "atencióNDelReciéNNacido",
+              "label": "Atención"
+            }
+          ]
+        },
+        {
+          "label": "Observación",
+          "isExpanded": "true",
+          "questions": [
+            {
+              "type": "obs",
+              "questionOptions": {
+                "rendering": "textarea",
+                "concept": "f947a4ad-3d8d-4516-8e6b-67b3dca4e227",
+                "rows": 3
+              },
+              "id": "obs",
+              "label": "OBS",
+              "required": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "processor": "EncounterFormProcessor",
+  "encounterType": "3w4x5y6z-3234-5678-9101-abcdefghij23",
+  "referencedForms": [],
+  "uuid": "4af9da6f-cae6-4342-8801-621b13c5ae0b",
+  "description": "Datos del Recien Nacido - CRED",
+  "version": "1.1"
+}
