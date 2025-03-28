@@ -103,4 +103,8 @@ for index, indication in enumerate(servicesIndications) :
 print()
 user_input = input("\nEnter the service you want to rebuild from scratch: ")
 print(user_input)
+if int(user_input) <= len(enumerate(servicesIndications)) and int(user_input) > 0:
+    print("OK")
+else:
+    print("NO")
 
