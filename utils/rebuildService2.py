@@ -106,5 +106,5 @@ print(user_input)
 if int(user_input) <= len(enumerate(servicesIndications)) and int(user_input) > 0:
     print("OK")
 else:
-    print("NO")
+    print("NOXD")
 
