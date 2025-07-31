@@ -1,20 +1,20 @@
 # keycloak/Dockerfile
-ARG KEYCLOAK_VERSION=26.3.2
-FROM quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
+FROM quay.io/keycloak/keycloak:26.3.2
 
-# Variables por defecto (se pueden sobreescribir desde docker-compose)
-ENV KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN:-admin}
-ENV KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-changeme}
+# Variables por defecto (sobreescribibles desde docker-compose)
+ENV KEYCLOAK_ADMIN=admin
+ENV KEYCLOAK_ADMIN_PASSWORD=admin123
 ENV KC_DB=postgres
-ENV KC_DB_URL=jdbc:postgresql://${KC_DB_HOST:-keycloak-db}:${KC_DB_PORT:-5432}/${KC_DB_DATABASE:-keycloak}
-ENV KC_DB_USERNAME=${KC_DB_USERNAME:-keycloak}
-ENV KC_DB_PASSWORD=${KC_DB_PASSWORD:-keycloak}
-ENV KC_HOSTNAME=${KC_HOSTNAME:-keycloak.local}
-ENV KC_HOSTNAME_STRICT=${KC_HOSTNAME_STRICT:-false}
-# Permite importar automáticamente el realm al arrancar
+ENV KC_DB_URL=jdbc:postgresql://keycloak-db:5432/keycloak
+ENV KC_DB_USERNAME=keycloak
+ENV KC_DB_PASSWORD=keycloak123
+ENV KC_HOSTNAME=localhost
+ENV KC_HOSTNAME_STRICT=false
+
+# Import automático de realm
 ENV KEYCLOAK_IMPORT=/opt/keycloak/data/import/realm-export.json
 
-# Copiamos el realm y el tema custom
+# Copiamos el realm duro y el tema custom
 COPY realm-export.json /opt/keycloak/data/import/realm-export.json
 COPY themes/ /opt/keycloak/themes/
 
@@ -23,8 +23,8 @@ USER root
 RUN chown -R 1000:0 /opt/keycloak/data /opt/keycloak/themes
 USER 1000
 
-# Pre-compilamos con PostgreSQL para acelerar el startup
+# Pre-compilación para PostgreSQL
 RUN /opt/keycloak/bin/kc.sh build --db=${KC_DB}
 
-# Al arrancar, arranca en modo dev e importa el realm
+# Arranca en modo dev e importa el realm
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start-dev", "--import-realm"]
