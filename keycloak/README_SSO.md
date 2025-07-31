@@ -48,19 +48,49 @@ Los siguientes usuarios se crean automáticamente:
 
 ## Despliegue
 
-### Con SSO (Keycloak)
+### Usando script fullInit.sh (Recomendado)
+
 ```bash
-docker-compose up -d
+# Solo OpenMRS (setup original)
+cd utils/
+./fullInit.sh -m development
+
+# OpenMRS + Keycloak SSO
+cd utils/
+./fullInit.sh -m development --sso
+
+# Producción con SSO (requiere archivo enviromentVariables.env)
+./fullInit.sh -m production --sso
 ```
 
-### Solo aplicación existente (sin SSO)
+### Manual con docker-compose
+
 ```bash
-docker-compose up -d gateway frontend backend db db-replic dns fua-generator fua-generator-db portainer
+# Con SSO (Keycloak)
+docker-compose up -d
+
+# Solo aplicación existente (sin SSO)
+docker-compose up -d portainer gateway frontend backend db db-replic dns fua-generator fua-generator-db
 ```
 
 ## Configuración OAuth2
 
-El módulo `oauth2login` se configura automáticamente con:
+### Configuración Automática
+
+Después de iniciar los servicios, ejecute:
+
+```bash
+cd utils/
+./setup-oauth2.sh
+```
+
+Este script:
+1. Copia la configuración OAuth2 desde Keycloak al contenedor OpenMRS
+2. Proporciona instrucciones para completar la configuración
+
+### Configuración Manual
+
+Si prefiere configurar manualmente, el archivo `oauth2.properties` debe copiarse al directorio de datos de OpenMRS (`/openmrs/data/`) con:
 
 - **Authorization URL**: http://localhost:8081/realms/openmrs/protocol/openid-connect/auth
 - **Token URL**: http://localhost:8081/realms/openmrs/protocol/openid-connect/token
