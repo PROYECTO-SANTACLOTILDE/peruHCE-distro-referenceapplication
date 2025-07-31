@@ -86,6 +86,22 @@
             <value>10</value>
         </globalProperty>
 
+        <!-- OAuth2 SSO Configuration -->
+        <globalProperty>
+            <property>oauth2.enabled</property>
+            <value>true</value>
+        </globalProperty>
+
+        <globalProperty>
+            <property>oauth2.loginUrl</property>
+            <value>/openmrs/oauth2/authorization</value>
+        </globalProperty>
+
+        <globalProperty>
+            <property>oauth2.logoutUrl</property>
+            <value>/openmrs/oauth2/logout</value>
+        </globalProperty>
+
 
     </globalProperties>
 </config>

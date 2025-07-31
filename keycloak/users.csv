@@ -1,0 +1,5 @@
+username,password,email,firstName,lastName,roles
+admin,Admin123,admin@openmrs.org,System,Administrator,System Developer
+clerk,Clerk123,clerk@openmrs.org,Data,Clerk,Data Assistant
+doctor,Doctor123,doctor@openmrs.org,Dr,Smith,Provider
+nurse,Nurse123,nurse@openmrs.org,Nurse,Johnson,Provider

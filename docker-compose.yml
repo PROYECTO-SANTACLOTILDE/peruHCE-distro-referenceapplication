@@ -182,6 +182,43 @@ services:
     volumes:
       - db-fua-generator:/var/lib/postgresql/data
 
+  # Keycloak SSO
+  keycloak:
+    container_name: peruHCE-keycloak
+    build: ./keycloak
+    restart: "unless-stopped"
+    ports:
+      - "8081:8080"
+    depends_on:
+      - keycloak-db
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_DB: postgres
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB_URL_DATABASE: ${POSTGRES_DB:-keycloak}
+      KC_DB_USERNAME: ${POSTGRES_USER:-keycloak}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-keycloak}
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-openmrs}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-openmrs}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-openmrs-secret}
+
+  keycloak-db:
+    container_name: peruHCE-keycloak-db
+    image: postgres:15
+    restart: "unless-stopped"
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-keycloak}
+      POSTGRES_USER: ${POSTGRES_USER:-keycloak}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-keycloak}
+    volumes:
+      - keycloak-db-data:/var/lib/postgresql/data
+
 volumes:
   openmrs-frontend: ~
   openmrs-data: ~
@@ -190,6 +227,7 @@ volumes:
   db-data-r: ~  
   db-backup-r: ~
   db-fua-generator: ~
+  keycloak-db-data: ~
   gateway-data: ~
   portainer-data: ~
   pihole-data: ~
