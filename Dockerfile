@@ -42,3 +42,8 @@ COPY --from=dev /openmrs/distribution/openmrs-distro.properties /openmrs/distrib
 COPY --from=dev /openmrs/distribution/openmrs_modules /openmrs/distribution/openmrs_modules
 COPY --from=dev /openmrs/distribution/openmrs_owas /openmrs/distribution/openmrs_owas
 COPY --from=dev  /openmrs/distribution/openmrs_config /openmrs/distribution/openmrs_config
+
+# Fix
+COPY --chmod=0755 ./startup-oauth2.sh /openmrs/
+COPY --chmod=0755 ./startup.sh /openmrs/
+CMD ["/openmrs/startup-oauth2.sh"]

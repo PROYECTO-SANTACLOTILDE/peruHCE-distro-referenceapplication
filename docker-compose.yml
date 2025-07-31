@@ -184,40 +184,23 @@ services:
 
   # Keycloak SSO
   keycloak:
-    container_name: peruHCE-keycloak
-    build: ./keycloak
-    restart: "unless-stopped"
+#    image: ghcr.io/icrc/openmrs-distro-sso/keycloak-24.0.3:latest
+    build:
+      context: keycloak
     ports:
-      - "8081:8080"
-    depends_on:
-      - keycloak-db
+      - "8081:8081"
     environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER:-admin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
-      KC_DB: postgres
-      KC_DB_URL_HOST: keycloak-db
-      KC_DB_URL_DATABASE: ${KEYCLOAK_DB_NAME:-keycloak}
-      KC_DB_USERNAME: ${KEYCLOAK_DB_USER:-keycloak}
-      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloak}
+      KEYCLOAK_ADMIN: ${KC_ADMIN_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
+      OMRS_OAUTH_CLIENT_SECRET: ${OMRS_OAUTH_CLIENT_SECRET}
+      USERS_DEFAULT_PASSWORD: ${USERS_DEFAULT_PASSWORD}
       KC_HOSTNAME_STRICT: false
-      KC_HOSTNAME_STRICT_HTTPS: false
       KC_HTTP_ENABLED: true
-      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-openmrs}
-      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-openmrs}
-      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-openmrs-secret}
+      KC_HTTP_PORT: 8081
+      KC_HOSTNAME: localhost
+#      KC_HOSTNAME: 10.0.2.2
+    command: ["start-dev"]
 
-  keycloak-db:
-    container_name: peruHCE-keycloak-db
-    image: postgres:15
-    restart: "unless-stopped"
-    ports:
-      - "5434:5432"
-    environment:
-      POSTGRES_DB: ${KEYCLOAK_DB_NAME:-keycloak}
-      POSTGRES_USER: ${KEYCLOAK_DB_USER:-keycloak}
-      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloak}
-    volumes:
-      - keycloak-db-data:/var/lib/postgresql/data
 
 volumes:
   openmrs-frontend: ~
