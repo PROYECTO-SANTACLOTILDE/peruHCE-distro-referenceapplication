@@ -143,31 +143,26 @@
         </globalProperty>
 
         <!-- OAuth2 SSO Configuration -->
-        <globalProperty>
-            <property>oauth2.enabled</property>
-            <value>true</value>
-        </globalProperty>
-
-        <globalProperty>
-            <property>oauth2.loginUrl</property>
-            <value>/openmrs/oauth2/authorization</value>
-        </globalProperty>
-
-        <globalProperty>
-            <property>oauth2.logoutUrl</property>
-            <value>/openmrs/oauth2/logout</value>
-        </globalProperty>
-
+        <!-- NECESARIAS -->
         <globalProperty>
             <property>oauth2login.loginWithOAuth2</property>
             <value>true</value>
-            <description>Enable OAuth2 login</description>
         </globalProperty>
 
         <globalProperty>
             <property>oauth2login.redirectUriAfterLogin</property>
             <value>/openmrs/spa</value>
-            <description>Redirect URI after successful OAuth2 login</description>
+        </globalProperty>
+
+        <!-- RECOMENDADAS para personal médico -->
+        <globalProperty>
+            <property>oauth2login.defaultRoles</property>
+            <value>Provider</value>
+        </globalProperty>
+
+        <globalProperty>
+            <property>oauth2login.createProviderAccount</property>
+            <value>true</value>
         </globalProperty>
     </globalProperties>
 </config>
