@@ -1,5 +1,13 @@
-username,password,email,firstName,lastName,roles
-admin,Admin123,admin@openmrs.org,System,Administrator,System Developer
-clerk,Clerk123,clerk@openmrs.org,Data,Clerk,Data Assistant
-doctor,Doctor123,doctor@openmrs.org,Dr,Smith,Provider
-nurse,Nurse123,nurse@openmrs.org,Nurse,Johnson,Provider
+admin@localhost.local
+clerk.l1@localhost.local
+clerk.l2@localhost.local
+clerk.l3@localhost.local
+clerk.many@localhost.local
+doctor.l1@localhost.local
+doctor.l2@localhost.local
+doctor.l3@localhost.local
+doctor.many@localhost.local
+nurse.l1@localhost.local
+nurse.l2@localhost.local
+nurse.l3@localhost.local
+nurse.many@localhost.local

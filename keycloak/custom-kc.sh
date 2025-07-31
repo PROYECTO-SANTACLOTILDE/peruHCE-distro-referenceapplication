@@ -1,18 +1,23 @@
 #!/bin/bash
 
-set -euo pipefail
+# SPDX-FileCopyrightText: 2025 ICRC
+#
+# SPDX-License-Identifier: BSD-3-Clause
 
-echo "Starting Keycloak in development mode..."
+# Wrapper script as docker entrypoint to run initialize-my-realm.sh in parallel to actual kc.sh (the official entrypoint).
 
-/opt/keycloak/bin/kc.sh start-dev --import-realm &
-KEYCLOAK_PID=$!
+set -e -u -o pipefail
+shopt -s failglob
 
-sleep 30
+if [ -z "${OMRS_OAUTH_CLIENT_SECRET:-}" ]; then
+  echo "ERROR: OpenMRS ClientSecret must be defined in OMRS_OAUTH_CLIENT_SECRET"
+  exit 1
+fi
+if [ -z "${USERS_DEFAULT_PASSWORD:-}" ]; then
+  echo "ERROR: Users Default Password must be defined in USERS_DEFAULT_PASSWORD"
+  exit 1
+fi
 
-echo "Initializing realm and users..."
-/opt/keycloak/bin/initialize-my-realm-and-add-users.sh
+sh /opt/keycloak/bin/initialize-my-realm-and-add-users.sh & disown
 
-echo "OAuth2 configuration available at /opt/keycloak/bin/oauth2.properties"
-echo "Copy this file to your OpenMRS application data directory to enable OAuth2 login"
-
-wait $KEYCLOAK_PID
+/opt/keycloak/bin/kc.sh "$@"

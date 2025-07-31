@@ -1,110 +1,74 @@
 #!/bin/bash
 
-set -euo pipefail
+# SPDX-FileCopyrightText: 2025 ICRC
+#
+# SPDX-License-Identifier: BSD-3-Clause
 
-KEYCLOAK_BASE_URL="http://localhost:8080"
-ADMIN_USERNAME="${KEYCLOAK_ADMIN_USER:-admin}"
-ADMIN_PASSWORD="${KEYCLOAK_ADMIN_PASSWORD:-admin}"
-REALM_NAME="${KEYCLOAK_REALM:-openmrs}"
-CLIENT_ID="${KEYCLOAK_CLIENT_ID:-openmrs}"
-CLIENT_SECRET="${KEYCLOAK_CLIENT_SECRET:-openmrs-secret}"
+function wait_for_keycloak() {
+  local -r MAX_WAIT=30
+  local wait_time
+  wait_time=0
 
-echo "Waiting for Keycloak to be ready..."
-until curl -s -f "${KEYCLOAK_BASE_URL}/health/ready" > /dev/null; do
-    echo "Waiting for Keycloak..."
-    sleep 5
-done
-
-echo "Keycloak is ready. Getting admin token..."
-
-# Get admin token
-ADMIN_TOKEN=$(curl -s -X POST "${KEYCLOAK_BASE_URL}/realms/master/protocol/openid-connect/token" \
-    -H "Content-Type: application/x-www-form-urlencoded" \
-    -d "username=${ADMIN_USERNAME}" \
-    -d "password=${ADMIN_PASSWORD}" \
-    -d "grant_type=password" \
-    -d "client_id=admin-cli" | jq -r '.access_token')
-
-if [ "$ADMIN_TOKEN" == "null" ] || [ -z "$ADMIN_TOKEN" ]; then
-    echo "Failed to get admin token"
-    exit 1
-fi
-
-echo "Admin token obtained. Creating realm..."
-
-# Create realm
-curl -s -X POST "${KEYCLOAK_BASE_URL}/admin/realms" \
-    -H "Authorization: Bearer ${ADMIN_TOKEN}" \
-    -H "Content-Type: application/json" \
-    -d "{
-        \"realm\": \"${REALM_NAME}\",
-        \"enabled\": true,
-        \"displayName\": \"OpenMRS Realm\",
-        \"loginWithEmailAllowed\": true,
-        \"duplicateEmailsAllowed\": false
-    }" || echo "Realm may already exist"
-
-echo "Realm created/verified. Creating client..."
-
-# Create client
-curl -s -X POST "${KEYCLOAK_BASE_URL}/admin/realms/${REALM_NAME}/clients" \
-    -H "Authorization: Bearer ${ADMIN_TOKEN}" \
-    -H "Content-Type: application/json" \
-    -d "{
-        \"clientId\": \"${CLIENT_ID}\",
-        \"enabled\": true,
-        \"redirectUris\": [\"http://localhost:8080/openmrs/oauth2/callback\", \"http://localhost/openmrs/oauth2/callback\"],
-        \"webOrigins\": [\"http://localhost:8080\", \"http://localhost\"],
-        \"protocol\": \"openid-connect\",
-        \"publicClient\": false,
-        \"secret\": \"${CLIENT_SECRET}\",
-        \"serviceAccountsEnabled\": true,
-        \"authorizationServicesEnabled\": false,
-        \"standardFlowEnabled\": true,
-        \"directAccessGrantsEnabled\": true
-    }" || echo "Client may already exist"
-
-echo "Client created/verified. Creating users from CSV..."
-
-# Read users from CSV and create them
-while IFS=',' read -r username password email firstName lastName roles
-do
-    if [[ "$username" != "username" ]]; then # Skip header
-        echo "Creating user: $username"
-        
-        # Create user
-        curl -s -X POST "${KEYCLOAK_BASE_URL}/admin/realms/${REALM_NAME}/users" \
-            -H "Authorization: Bearer ${ADMIN_TOKEN}" \
-            -H "Content-Type: application/json" \
-            -d "{
-                \"username\": \"${username}\",
-                \"email\": \"${email}\",
-                \"firstName\": \"${firstName}\",
-                \"lastName\": \"${lastName}\",
-                \"enabled\": true,
-                \"emailVerified\": true,
-                \"attributes\": {
-                    \"roles\": [\"${roles}\"]
-                }
-            }" || echo "User $username may already exist"
-        
-        # Get user ID
-        USER_ID=$(curl -s -X GET "${KEYCLOAK_BASE_URL}/admin/realms/${REALM_NAME}/users?username=${username}" \
-            -H "Authorization: Bearer ${ADMIN_TOKEN}" | jq -r '.[0].id')
-        
-        if [ "$USER_ID" != "null" ] && [ -n "$USER_ID" ]; then
-            # Set password
-            curl -s -X PUT "${KEYCLOAK_BASE_URL}/admin/realms/${REALM_NAME}/users/${USER_ID}/reset-password" \
-                -H "Authorization: Bearer ${ADMIN_TOKEN}" \
-                -H "Content-Type: application/json" \
-                -d "{
-                    \"type\": \"password\",
-                    \"value\": \"${password}\",
-                    \"temporary\": false
-                }"
-            echo "Password set for user: $username"
-        fi
+  # Waiting for kcadm.sh to succeed
+  success="no"
+  while [[ "${success}" != "yes" ]]; do
+    if [[ ${wait_time} -ge ${MAX_WAIT} ]]; then
+      echo "ERROR: The application service did not start within 60 seconds. Aborting."
+      exit 1
+    else
+      sh /opt/keycloak/bin/kcadm.sh config credentials \
+          --server http://localhost:${KC_HTTP_PORT}  \
+          --realm master --user "${KEYCLOAK_ADMIN}" --password "${KEYCLOAK_ADMIN_PASSWORD}"
+        if [[ $? -eq 0 ]]; then
+          success="yes"
+        else
+          echo "INFO: Keycloak admin authentication failed; retry after 2 seconds! Waiting (${wait_time}/${MAX_WAIT}) ..."
+          sleep 2
+          ((++wait_time))
+      fi
     fi
-done < /opt/keycloak/bin/users.csv
+  done
+  echo "INFO: Keycloak is ready"
+}
+sleep 10
+echo "Wait for Keycloak"
+# Waiting for Keycloak to start before proceeding with the configurations.
+wait_for_keycloak
 
-echo "Keycloak initialization completed successfully!"
+REALM=${REALM:-main}
+KC_HTTP_PORT=${KC_HTTP_PORT:-8080}
+ANDROID_SDK_CLIENT_ID=${ANDROID_SDK_CLIENT_ID:-openmrs-fhir}
+ANDROID_SDK_REDIRECT_URIS=${ANDROID_SDK_REDIRECT_URIS:-org.openmrs.android.fhir.app:/oauth2redirect}
+OMRS_CLIENT_ID=${OMRS_CLIENT_ID:-openmrs}
+OMRS_REDIRECT_URIS=${OMRS_REDIRECT_URIS:-http://localhost:8080/*}
+OMRS_FRONTCHANNEL_LOGOUT_URI=${OMRS_FRONTCHANNEL_LOGOUT_URI:-http://localhost:8080/openmrs/ms/logout}
+
+sh /opt/keycloak/bin/kcadm.sh create realms -s realm="${REALM}" -s enabled=true   -s sslRequired=none
+echo "INFO: Created REALM ${REALM}"
+sh /opt/keycloak/bin/kcadm.sh create clients -r "${REALM}" -s clientId="${ANDROID_SDK_CLIENT_ID}" \
+  -s publicClient=true -s directAccessGrantsEnabled=true \
+  -s redirectUris="[\"${ANDROID_SDK_REDIRECT_URIS}\"]" -i
+echo "INFO: Created the new ${ANDROID_SDK_CLIENT_ID} client"
+
+sh /opt/keycloak/bin/kcadm.sh create clients -r "${REALM}" -s clientId="${OMRS_CLIENT_ID}" \
+  -s publicClient=false -s directAccessGrantsEnabled=false \
+  -s secret="${OMRS_OAUTH_CLIENT_SECRET}" \
+  -s frontchannelLogout=true \
+  -s "attributes.\"frontchannel.logout.url\"=${OMRS_FRONTCHANNEL_LOGOUT_URI}" \
+  -s redirectUris="[\"${OMRS_REDIRECT_URIS}\"]" -i
+echo "INFO: Created the new ${OMRS_CLIENT_ID}"
+
+while read email; do
+  username=$(echo "${email}"|cut -d @ -f 1)
+  firstname=$(echo "${username}"|cut -d . -f 1)
+  lastname=$(echo "${username}"|cut -d . -f 2)
+  sh /opt/keycloak/bin/kcadm.sh create users -r ${REALM} \
+    -s username="${username}" \
+    -s firstName="${firstname}" \
+    -s lastName="${lastname}" \
+    -s email="${email}" \
+    -s enabled=true \
+    -s emailVerified=true \
+    -s credentials="[{\"type\":\"password\",\"value\":\"${USERS_DEFAULT_PASSWORD}\"}]"
+  echo "Create username ${username} with email ${email}"
+done </opt/keycloak/bin/users.csv
