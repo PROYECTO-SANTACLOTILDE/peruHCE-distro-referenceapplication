@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<globalProperties>
+  <!-- KenyaEMR Core Configuration -->
+  <globalProperty>
+    <property>kenyaemr.core.enabled</property>
+    <description>Enable KenyaEMR core functionality</description>
+    <value>true</value>
+  </globalProperty>
+  
+  <globalProperty>
+    <property>kenyaemr.ui.enabled</property>
+    <description>Enable KenyaEMR user interface</description>
+    <value>true</value>
+  </globalProperty>
+  
+  <globalProperty>
+    <property>kenyaemr.dq.enabled</property>
+    <description>Enable KenyaEMR data quality features</description>
+    <value>true</value>
+  </globalProperty>
+  
+  <globalProperty>
+    <property>kenyaemr.orderentry.enabled</property>
+    <description>Enable KenyaEMR order entry functionality</description>
+    <value>true</value>
+  </globalProperty>
+  
+  <!-- KenyaEMR Module Paths -->
+  <globalProperty>
+    <property>kenyaemr.core.modulePath</property>
+    <description>Path to KenyaEMR core module</description>
+    <value>/opt/openmrs/modules/kenyacore-omod</value>
+  </globalProperty>
+  
+  <globalProperty>
+    <property>kenyaemr.ui.modulePath</property>
+    <description>Path to KenyaEMR UI module</description>
+    <value>/opt/openmrs/modules/kenyaui-omod</value>
+  </globalProperty>
+  
+  <!-- KenyaEMR Feature Flags -->
+  <globalProperty>
+    <property>kenyaemr.features.advancedReporting</property>
+    <description>Enable advanced reporting features</description>
+    <value>true</value>
+  </globalProperty>
+  
+  <globalProperty>
+    <property>kenyaemr.features.dataQuality</property>
+    <description>Enable data quality monitoring</description>
+    <value>true</value>
+  </globalProperty>
+</globalProperties>

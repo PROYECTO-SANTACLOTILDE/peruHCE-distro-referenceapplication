@@ -1,0 +1,5 @@
+Uuid,Void/Retire,Name,Description,Configuration
+kenyaemr-config-001,,KenyaEMR Core Configuration,Basic configuration for KenyaEMR modules,
+kenyaemr-config-002,,KenyaEMR UI Configuration,User interface configuration for KenyaEMR,
+kenyaemr-config-003,,KenyaEMR Data Quality Configuration,Data quality and validation settings,
+kenyaemr-config-004,,KenyaEMR Order Entry Configuration,Order entry and management settings,

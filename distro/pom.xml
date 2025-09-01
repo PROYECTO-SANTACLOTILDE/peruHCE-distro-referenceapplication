@@ -59,6 +59,23 @@
     <fua.version>1.0.19</fua.version>
     <!-- <oauth2login.version>1.6.0</oauth2login.version>
     <vaccination-schedule.version>1.0.6</vaccination-schedule.version> -->
+    
+    <!-- KenyaEMR Module Versions -->
+    <kenyacore.version>3.0.2-SNAPSHOT</kenyacore.version>
+    <kenyadq.version>1.4.0</kenyadq.version>
+    <kenyaui.version>3.0.0</kenyaui.version>
+    <kenyaemrOrderentry.version>1.6.7</kenyaemrOrderentry.version>
+    
+    <!-- Additional Module Versions -->
+    <appframework.version>2.13.0</appframework.version>
+    <groovy.version>2.2.4</groovy.version>
+    <htmlformentry.version>5.1.0</htmlformentry.version>
+    <logic.version>0.5.2</logic.version>
+    <facilityReporting.version>1.2.0</facilityReporting.version>
+    <apacheHttpClient.version>4.5.10</apacheHttpClient.version>
+    <metadatadeploy.version>1.11.0</metadatadeploy.version>
+    <metadatasharing.version>1.5.0</metadatasharing.version>
+    <reportingcompatibility.version>2.0.9</reportingcompatibility.version>
   </properties>
 
   <dependencies>
@@ -266,6 +283,89 @@
       <version>${datafilter.version}</version>
       <scope>provided</scope>
     </dependency>
+    
+    <!-- KenyaEMR Module Dependencies -->
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>kenyacore-omod</artifactId>
+      <version>${kenyacore.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>kenyadq-omod</artifactId>
+      <version>${kenyadq.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>kenyaui-omod</artifactId>
+      <version>${kenyaui.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>kenyaemr-orderentry-omod</artifactId>
+      <version>${kenyaemrOrderentry.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- Additional Module Dependencies -->
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>appframework-omod</artifactId>
+      <version>${appframework.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>groovy-omod</artifactId>
+      <version>${groovy.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>htmlformentry-omod</artifactId>
+      <version>${htmlformentry.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>logic-omod</artifactId>
+      <version>${logic.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>facilityreporting-omod</artifactId>
+      <version>${facilityReporting.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>apachehttpclient-omod</artifactId>
+      <version>${apacheHttpClient.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>metadatadeploy-omod</artifactId>
+      <version>${metadatadeploy.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>metadatasharing-omod</artifactId>
+      <version>${metadatasharing.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>reportingcompatibility-omod</artifactId>
+      <version>${reportingcompatibility.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    
     <!-- 
     <dependency>
       <groupId>org.openmrs.module</groupId>
