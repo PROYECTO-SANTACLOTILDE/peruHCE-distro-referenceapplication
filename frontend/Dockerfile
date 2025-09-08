@@ -2,7 +2,7 @@
 #--------------------------------------------
 # Dev Stage - Assembles and Builds Frontend
 #--------------------------------------------
-FROM --platform=$BUILDPLATFORM node:18-alpine as dev
+FROM --platform=$BUILDPLATFORM node:22-alpine as dev
 
 ARG APP_SHELL_VERSION=6.3.0
 
@@ -38,7 +38,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=dev /app/spa /usr/share/nginx/html
 COPY config/config-openmrs.json /usr/share/nginx/html
 COPY config/config-pucp.json /usr/share/nginx/html
-# COPY oauth2.json /usr/share/nginx/html
+#COPY config/oauth2.json /usr/share/nginx/html
 
 # copy assets
 COPY ./resources/* /usr/share/nginx/html

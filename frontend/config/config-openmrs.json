@@ -35,6 +35,11 @@
             }
         }
     },
+    "@openmrs/esm-patient-immunizations-app": {
+        "immunizationsConfig": {
+            "immunizationConceptSet": "a8807661-5f6a-491b-8781-509660b5c2aa"
+        }
+    },
     "@openmrs/esm-service-queues-app": {
         "priorityConfigs": [
             {
@@ -155,11 +160,6 @@
         "logo": {
             "src": "${openmrsSpaBase}/login-logo.svg",
             "alt": "Logo"
-        },
-        "provider": {
-            "type": "oauth2",
-            "loginUrl": "/openmrs/oauth2login",
-            "logoutUrl": "/openmrs/oauth2logout"
         }
     },
     "@openmrs/esm-primary-navigation-app": {
