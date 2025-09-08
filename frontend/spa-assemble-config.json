@@ -41,7 +41,8 @@
     "@openmrs/esm-form-builder-app": "latest",
     "@openmrs/esm-billing-app": "latest",
     "@openmrs/esm-stock-management-app": "latest",
-    "@openmrs/esm-user-onboarding-app": "latest"
+    "@openmrs/esm-user-onboarding-app": "latest",
+    "@pucp-gidis-hiisc/esm-fua-app": "latest"
   },
   "excludedFrontendModules": []
 }

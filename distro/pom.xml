@@ -57,8 +57,8 @@
     
     <!-- Content Packages -->
     <!-- <datafilter.version>2.2.0</datafilter.version> -->
-    <!-- <oauth2login.version>1.6.0</oauth2login.version>
-    <vaccination-schedule.version>1.0.6</vaccination-schedule.version> -->
+    <!-- <oauth2login.version>1.6.0</oauth2login.version> -->
+    <vaccination-schedule.version>1.0.8</vaccination-schedule.version>
   </properties>
 
   <dependencies>
@@ -86,11 +86,11 @@
     </dependency>
 
     <!-- Custom Module: Vaccination Schedule -->
-    <!-- <dependency>
+    <dependency>
       <groupId>org.openmrs.module</groupId>
       <artifactId>vaccination-schedule-omod</artifactId>
       <version>${vaccination-schedule.version}</version>
-    </dependency> -->
+    </dependency>
 
 
     <!-- Module dependencies -->
