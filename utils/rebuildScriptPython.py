@@ -79,6 +79,15 @@ servicesIndications = [
             { "name": "db-data-r" },
             { "name": "db-backup-r" }
         ]
+    },
+    {
+        "service":          "fua-generator",
+        "name":             "peruHCE-fua-generator",
+        "dependantOn":      "fua-generator-db",
+        "deleteVolumes":    True,
+        "volumesToDelete":  [
+            { "name": "db-fua-generator" }
+        ]
     }
 ]
 
