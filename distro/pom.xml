@@ -58,7 +58,7 @@
     <!-- Content Packages -->
     <!-- <datafilter.version>2.2.0</datafilter.version> -->
     <!-- <oauth2login.version>1.6.0</oauth2login.version> -->
-    <vaccination-schedule.version>1.0.8</vaccination-schedule.version>
+    <vaccination-schedule.version>1.0.9</vaccination-schedule.version>
   </properties>
 
   <dependencies>
