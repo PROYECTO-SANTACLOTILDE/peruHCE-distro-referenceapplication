@@ -40,8 +40,4 @@ COPY config/config-openmrs.json /usr/share/nginx/html
 COPY config/config-pucp.json /usr/share/nginx/html
 #COPY config/oauth2.json /usr/share/nginx/html
 
-# copy assets
-COPY ./resources/* /usr/share/nginx/html
-
-
 CMD ["/usr/local/bin/startup.sh"]
