@@ -1,3 +1,24 @@
+## Uso de credenciales seguras con Docker secrets
+
+Para descargar dependencias privadas desde GitHub Packages durante el build de la imagen backend, este proyecto utiliza Docker secrets en lugar de variables de entorno. Esto mejora la seguridad y evita exponer credenciales sensibles.
+
+### ¿Cómo crear y usar los secrets?
+
+1. Crea los secrets antes de construir la imagen:
+  ```bash
+  echo "<tu_usuario_github>" | docker secret create GHP_USERNAME -
+  echo "<tu_token_github>" | docker secret create GHP_PASSWORD -
+  ```
+
+2. Al construir la imagen, Docker los montará automáticamente y el build los usará para autenticarse en Maven.
+
+3. Ya no es necesario definir las variables de entorno `GHP_USERNAME` ni `GHP_PASSWORD` en el sistema ni en archivos `.env`.
+
+4. El archivo `credentials/settings.xml.template` está preparado para tomar las credenciales desde el entorno exportado por el build.
+
+**Importante:** Si cambias tus credenciales, elimina y vuelve a crear los secrets.
+
+Para más información sobre Docker secrets: https://docs.docker.com/engine/swarm/secrets/
 # OpenMRS 3.0 Reference Application
 
 This project holds the build configuration for the OpenMRS 3.0 reference application, found on

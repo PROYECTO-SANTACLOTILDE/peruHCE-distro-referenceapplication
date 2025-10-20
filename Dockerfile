@@ -19,15 +19,15 @@ ARG CACHE_BUST
 
 # Montar secrets de GitHub y exportar como variables de entorno para Maven
 RUN --mount=type=secret,id=m2settings,target=/usr/share/maven/ref/settings-docker.xml \
-		--mount=type=secret,id=ghp_username,target=/run/secrets/GHP_USERNAME \
-		--mount=type=secret,id=ghp_password,target=/run/secrets/GHP_PASSWORD \
-		export GHP_USERNAME=$(cat /run/secrets/GHP_USERNAME) && \
-		export GHP_PASSWORD=$(cat /run/secrets/GHP_PASSWORD) && \
-		if [[ "$MVN_ARGS" != "deploy" || "$(arch)" = "x86_64" ]]; then \
-			mvn $MVN_ARGS_SETTINGS $MVN_ARGS; \
-		else \
-			mvn $MVN_ARGS_SETTINGS install; \
-		fi
+    --mount=type=secret,id=ghp_username,target=/run/secrets/GHP_USERNAME \
+    --mount=type=secret,id=ghp_password,target=/run/secrets/GHP_PASSWORD \
+    export GHP_USERNAME=$(cat /run/secrets/GHP_USERNAME) && \
+    export GHP_PASSWORD=$(cat /run/secrets/GHP_PASSWORD) && \
+    if [[ "$MVN_ARGS" != "deploy" || "$(arch)" = "x86_64" ]]; then \
+    mvn $MVN_ARGS_SETTINGS $MVN_ARGS; \
+    else \
+    mvn $MVN_ARGS_SETTINGS install; \
+    fi
 
 RUN cp /openmrs_distro/distro/target/sdk-distro/web/openmrs_core/openmrs.war /openmrs/distribution/openmrs_core/
 
