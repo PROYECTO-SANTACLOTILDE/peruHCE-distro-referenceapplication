@@ -23,6 +23,8 @@ services:
       - ./keycloak/themes:/opt/keycloak/themes:ro
     depends_on:
       - keycloak-db
+    networks:
+      - auth-network
 
   keycloak-db:
     container_name: peruHCE-keycloak-db
@@ -38,6 +40,8 @@ services:
       - "5434:5432"
     volumes:
       - keycloak-data:/var/lib/postgresql/data
+    networks:
+      - auth-network
 
   portainer:
     container_name: peruHCE-portainer
@@ -51,6 +55,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-data:/data
+    networks:
+      - management-network
+
   gateway:
     container_name: peruHCE-gateway
     image: openmrs/openmrs-reference-application-3-gateway:${TAG:-qa}
@@ -63,6 +70,10 @@ services:
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
+    networks:
+      - frontend-network
+      - backend-network
+      - auth-network
 
   frontend:
     container_name: peruHCE-frontend
@@ -80,6 +91,10 @@ services:
       - backend
     volumes:
       - openmrs-frontend:/usr/share/nginx/html/
+    networks:
+      - frontend-network
+      - backend-network
+      - auth-network
 
   backend:
     container_name: peruHCE-backend
@@ -107,6 +122,11 @@ services:
     volumes:
       - openmrs-data:/openmrs/data
       #- ./keycloak/oauth2.properties:/openmrs/data/oauth2.properties:ro
+    networks:
+      - backend-network
+      - database-network
+      - auth-network
+      - dicom-network
 
       # MariaDB master
   db:
@@ -137,6 +157,8 @@ services:
       - ./scripts/database/init-master.sh:/docker-entrypoint-initdb.d/init-master.sh
       - db-data:/var/lib/mysql
       - db-backup:/backup
+    networks:
+      - database-network
 
   # MariaDB Replic
   db-replic:
@@ -164,6 +186,8 @@ services:
       - ./scripts/database/init-slave.sh:/docker-entrypoint-initdb.d/init-slave.sh
       - db-data-r:/var/lib/mysql
       - db-backup-r:/backup
+    networks:
+      - database-network
 
   # DNS Server
   dns:
@@ -190,6 +214,8 @@ services:
       # For persisting Pi-hole's databases and common configuration file
       - pihole-data:/etc/pihole
       - pihole-dnsmaq:/etc/dnsmasq.d
+    networks:
+      - management-network
 
   fua-generator:
     container_name: peruHCE-fua-generator
@@ -206,6 +232,9 @@ services:
       TOKEN: ${PERUHCE_FUA_GEN_TOKEN:-fuagenerator}
     depends_on:
       - fua-generator-db
+    networks:
+      - services-network
+      - backend-network
 
   fua-generator-db:
     container_name: peruHCE-fua-generator-db
@@ -219,6 +248,8 @@ services:
       POSTGRES_DB: ${PERUHCE_FUA_GEN_DB:-fuagenerator}
     volumes:
       - db-fua-generator:/var/lib/postgresql/data
+    networks:
+      - services-network
 
   # Orthanc DICOM Server
   orthanc:
@@ -251,6 +282,8 @@ services:
         }
     volumes:
       - orthanc-data:/var/lib/orthanc/db
+    networks:
+      - dicom-network
 
   # OHIF Viewer
   ohif:
@@ -283,6 +316,9 @@ services:
         }
     depends_on:
       - orthanc
+    networks:
+      - dicom-network
+      - frontend-network
 
   # Prometheus - Metrics collection
   prometheus:
@@ -302,6 +338,13 @@ services:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./monitoring/prometheus/alerts:/etc/prometheus/alerts:ro
       - prometheus-data:/prometheus
+    networks:
+      - monitoring-network
+      - backend-network
+      - database-network
+      - auth-network
+      - dicom-network
+      - services-network
 
   # Loki - Log aggregation
   loki:
@@ -314,6 +357,8 @@ services:
     volumes:
       - ./monitoring/loki/loki-config.yml:/etc/loki/loki-config.yml:ro
       - loki-data:/loki
+    networks:
+      - monitoring-network
 
   # Promtail - Log shipper for Loki
   promtail:
@@ -327,6 +372,8 @@ services:
     command: -config.file=/etc/promtail/promtail-config.yml
     depends_on:
       - loki
+    networks:
+      - monitoring-network
 
   # Grafana - Visualization and dashboards
   grafana:
@@ -348,6 +395,9 @@ services:
     depends_on:
       - prometheus
       - loki
+    networks:
+      - monitoring-network
+      - management-network
 
 volumes:
   keycloak-data: ~
@@ -366,3 +416,61 @@ volumes:
   prometheus-data: ~
   loki-data: ~
   grafana-data: ~
+
+networks:
+  # Red pública - Servicios expuestos al exterior
+  frontend-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+  # Red de aplicación - APIs y lógica de negocio
+  backend-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+
+  # Red de datos - Bases de datos (INTERNA - sin acceso externo directo)
+  database-network:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.22.0.0/24
+
+  # Red de autenticación - Keycloak y SSO
+  auth-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.23.0.0/24
+
+  # Red médica - DICOM/Orthanc/OHIF
+  dicom-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.24.0.0/24
+
+  # Red de monitoreo - Prometheus, Loki, Grafana
+  monitoring-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/24
+
+  # Red de gestión - Portainer, herramientas admin
+  management-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.26.0.0/24
+
+  # Red de servicios auxiliares - FUA Generator, etc
+  services-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.27.0.0/24
