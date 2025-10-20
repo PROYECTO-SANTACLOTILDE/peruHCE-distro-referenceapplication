@@ -10,3 +10,6 @@ services:
   backend:
     build:
       context: .
+      args:
+        GHP_USERNAME: ${GHP_USERNAME}
+        GHP_PASSWORD: ${GHP_PASSWORD}

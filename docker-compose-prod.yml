@@ -76,7 +76,7 @@ services:
     ports:
       - "3307:3306" # 3307 for host
     volumes:
-      - ./scripts/database/init-master-sql.sql:/docker-entrypoint-initdb.d/init-master-sql.sql
+      - ./scripts/database/init-master.sh:/docker-entrypoint-initdb.d/init-master.sh
       - db-data:/var/lib/mysql
       - db-backup:/backup
 
@@ -101,7 +101,7 @@ services:
     ports:
       - "3308:3306" # 3308 for host
     volumes:
-      - ./scripts/database/init-slave-sql.sql:/docker-entrypoint-initdb.d/init-slave-sql.sql
+      - ./scripts/database/init-slave.sh:/docker-entrypoint-initdb.d/init-slave.sh
       - db-data-r:/var/lib/mysql
       - db-backup-r:/backup
 
