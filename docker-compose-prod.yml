@@ -4,8 +4,8 @@ services:
     image: portainer/portainer-ce:lts
     restart: "unless-stopped"
     ports:
-      - "9443:9443"  # HTTPS Portainer Web UI
-      - "9000:9000"  # HTTP Portainer Web UI
+      - "9443:9443" # HTTPS Portainer Web UI
+      - "9000:9000" # HTTP Portainer Web UI
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-data:/data
@@ -30,7 +30,7 @@ services:
       SPA_CONFIG_URLS: /openmrs/spa/config-openmrs.json,/openmrs/spa/config-pucp.json
       SPA_DEFAULT_LOCALE: es
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/"]
+      test: [ "CMD", "curl", "-f", "http://localhost/" ]
       timeout: 5s
     depends_on:
       - backend
@@ -52,7 +52,7 @@ services:
       OMRS_CONFIG_CONNECTION_USERNAME: ${OPENMRS_DB_USER:-openmrs}
       OMRS_CONFIG_CONNECTION_PASSWORD: ${OPENMRS_DB_PASSWORD:-openmrs}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/openmrs"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/openmrs" ]
       timeout: 5s
     volumes:
       - openmrs-data:/openmrs/data
@@ -76,7 +76,7 @@ services:
     ports:
       - "3307:3306" # 3307 for host
     volumes:
-      - ./db-config/init-master-sql.sql:/docker-entrypoint-initdb.d/init-master-sql.sql
+      - ./scripts/database/init-master-sql.sql:/docker-entrypoint-initdb.d/init-master-sql.sql
       - db-data:/var/lib/mysql
       - db-backup:/backup
 
@@ -101,15 +101,15 @@ services:
     ports:
       - "3308:3306" # 3308 for host
     volumes:
-      - ./db-config/init-slave-sql.sql:/docker-entrypoint-initdb.d/init-slave-sql.sql
+      - ./scripts/database/init-slave-sql.sql:/docker-entrypoint-initdb.d/init-slave-sql.sql
       - db-data-r:/var/lib/mysql
       - db-backup-r:/backup
-  
+
   # DNS Server
   dns:
     container_name: peruHCE-dns
     image: pihole/pihole:2025.03.0
-    restart: "unless-stopped"    
+    restart: "unless-stopped"
     ports:
       # DNS Ports
       - "53:53/tcp"
@@ -128,14 +128,14 @@ services:
       # For persisting Pi-hole's databases and common configuration file
       - pihole-data:/etc/pihole
       #- './etc-dnsmasq.d:/etc/dnsmasq.d
-    
+
 
 volumes:
   openmrs-frontend: ~
   openmrs-data: ~
   db-data: ~
   db-backup: ~
-  db-data-r: ~  
+  db-data-r: ~
   db-backup-r: ~
   gateway-data: ~
   portainer-data: ~

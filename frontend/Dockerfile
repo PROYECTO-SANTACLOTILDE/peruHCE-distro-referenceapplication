@@ -30,7 +30,7 @@ RUN apk update && \
 # clear any default files installed by nginx
 RUN rm -rf /usr/share/nginx/html/*
 
-COPY startup.sh /usr/local/bin/startup.sh
+COPY ../scripts/frontend/startup.sh /usr/local/bin/startup.sh
 RUN chmod +x /usr/local/bin/startup.sh
 
 COPY nginx.conf /etc/nginx/nginx.conf
