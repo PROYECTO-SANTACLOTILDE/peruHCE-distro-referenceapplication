@@ -37,7 +37,7 @@ services:
 
   keycloak-db:
     container_name: peruHCE-keycloak-db
-    image: postgres:15
+    image: postgres:17
     restart: "unless-stopped"
     env_file:
       - ./.env
@@ -320,7 +320,7 @@ services:
 
   fua-generator-db:
     container_name: peruHCE-fua-generator-db
-    image: postgres:15
+    image: postgres:17
     secrets:
       - fua_db_password
     ports:
