@@ -1,6 +1,6 @@
 // Grafana Alloy Configuration for PeruHCE
-// Migrated from Promtail on 2025-10-20
-// This replaces the deprecated Promtail agent
+// Simplified version - collects all Docker container logs
+// Fixed: 2025-10-20
 
 // Logging configuration
 logging {
@@ -12,8 +12,6 @@ logging {
 loki.write "default" {
   endpoint {
     url = "http://loki:3100/loki/api/v1/push"
-
-    // Batching configuration (from Promtail)
     batch_wait = "1s"
     batch_size = 1048576
   }
@@ -25,255 +23,42 @@ discovery.docker "containers" {
   refresh_interval = "5s"
 }
 
-// General Docker container logs scraping
+// Collect logs from all Docker containers
 loki.source.docker "docker_logs" {
-  host = "unix:///var/run/docker.sock"
+  host    = "unix:///var/run/docker.sock"
   targets = discovery.docker.containers.targets
+
   forward_to = [loki.process.docker_pipeline.receiver]
 
-  relabel_rules {
-    // Container name
-    source_labels = ["__meta_docker_container_name"]
-    regex = "/(.*)"
-    target_label = "container"
-  }
-
-  relabel_rules {
-    // Container ID
-    source_labels = ["__meta_docker_container_id"]
-    target_label = "container_id"
-  }
-
-  relabel_rules {
-    // Container image
-    source_labels = ["__meta_docker_container_image"]
-    target_label = "image"
-  }
-
-  relabel_rules {
-    // Docker Compose service name
-    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
-    target_label = "service"
-  }
-
-  relabel_rules {
-    // Docker Compose project name
-    source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
-    target_label = "project"
-  }
-
-  relabel_rules {
-    // Log stream (stdout/stderr)
-    source_labels = ["__meta_docker_container_log_stream"]
-    target_label = "stream"
+  labels = {
+    job = "docker",
   }
 }
 
-// Processing pipeline for Docker logs
+// Processing pipeline for all Docker logs
 loki.process "docker_pipeline" {
-  // Parse JSON logs
-  stage.json {
-    expressions = {
-      output    = "log",
-      stream    = "stream",
-      timestamp = "time",
-    }
-  }
+  forward_to = [loki.write.default.receiver]
 
-  // Extract log level
+  // Parse Docker log format
+  stage.docker {}
+
+  // Extract log level if present
   stage.regex {
     expression = "(?P<level>ERROR|WARN|INFO|DEBUG|TRACE)"
   }
 
-  // Set log level as label
+  // Set labels from regex extraction
   stage.labels {
     values = {
-      level = "",
+      level = "level",
     }
   }
 
-  // Parse timestamp
-  stage.timestamp {
-    source = "timestamp"
-    format = "RFC3339Nano"
-  }
-
-  forward_to = [loki.write.default.receiver]
-}
-
-// Specific scraping for OpenMRS backend
-loki.source.docker "openmrs_backend" {
-  host = "unix:///var/run/docker.sock"
-  targets = discovery.docker.containers.targets
-  forward_to = [loki.process.openmrs_pipeline.receiver]
-
-  relabel_rules {
-    // Only keep OpenMRS backend container
-    source_labels = ["__meta_docker_container_name"]
-    regex = ".*peruHCE-backend.*"
-    action = "keep"
-  }
-
-  relabel_rules {
-    source_labels = ["__meta_docker_container_name"]
-    regex = "/(.*)"
-    target_label = "container"
-  }
-
-  relabel_rules {
-    source_labels = ["__meta_docker_container_id"]
-    target_label = "container_id"
-  }
-
-  relabel_rules {
-    replacement = "openmrs-backend"
-    target_label = "service"
-  }
-
-  relabel_rules {
-    replacement = "peruhce"
-    target_label = "application"
-  }
-}
-
-// Processing pipeline for OpenMRS
-loki.process "openmrs_pipeline" {
-  stage.json {
-    expressions = {
-      output = "log",
-      stream = "stream",
-    }
-  }
-
-  stage.regex {
-    expression = ".*(ERROR|WARN|INFO|DEBUG|TRACE).*"
-  }
-
-  stage.labels {
+  // Add container metadata as labels
+  stage.static_labels {
     values = {
-      level = "",
+      environment = "production",
+      application = "peruhce",
     }
-  }
-
-  forward_to = [loki.write.default.receiver]
-}
-
-// Specific scraping for Keycloak
-loki.source.docker "keycloak" {
-  host = "unix:///var/run/docker.sock"
-  targets = discovery.docker.containers.targets
-  forward_to = [loki.process.keycloak_pipeline.receiver]
-
-  relabel_rules {
-    source_labels = ["__meta_docker_container_name"]
-    regex = ".*peruHCE-keycloak.*"
-    action = "keep"
-  }
-
-  relabel_rules {
-    source_labels = ["__meta_docker_container_name"]
-    regex = "/(.*)"
-    target_label = "container"
-  }
-
-  relabel_rules {
-    replacement = "keycloak"
-    target_label = "service"
-  }
-}
-
-// Processing pipeline for Keycloak
-loki.process "keycloak_pipeline" {
-  stage.json {
-    expressions = {
-      output = "log",
-      stream = "stream",
-    }
-  }
-
-  stage.regex {
-    expression = ".*(ERROR|WARN|INFO|DEBUG|TRACE).*"
-  }
-
-  stage.labels {
-    values = {
-      level = "",
-    }
-  }
-
-  forward_to = [loki.write.default.receiver]
-}
-
-// Specific scraping for Orthanc
-loki.source.docker "orthanc" {
-  host = "unix:///var/run/docker.sock"
-  targets = discovery.docker.containers.targets
-  forward_to = [loki.process.orthanc_pipeline.receiver]
-
-  relabel_rules {
-    source_labels = ["__meta_docker_container_name"]
-    regex = ".*peruHCE-orthanc.*"
-    action = "keep"
-  }
-
-  relabel_rules {
-    source_labels = ["__meta_docker_container_name"]
-    regex = "/(.*)"
-    target_label = "container"
-  }
-
-  relabel_rules {
-    replacement = "orthanc"
-    target_label = "service"
-  }
-}
-
-// Processing pipeline for Orthanc
-loki.process "orthanc_pipeline" {
-  stage.json {
-    expressions = {
-      output = "log",
-      stream = "stream",
-    }
-  }
-
-  forward_to = [loki.write.default.receiver]
-}
-
-// Specific scraping for MariaDB
-loki.source.docker "mariadb" {
-  host = "unix:///var/run/docker.sock"
-  targets = discovery.docker.containers.targets
-  forward_to = [loki.write.default.receiver]
-
-  relabel_rules {
-    source_labels = ["__meta_docker_container_name"]
-    regex = ".*peruHCE-db.*"
-    action = "keep"
-  }
-
-  relabel_rules {
-    source_labels = ["__meta_docker_container_name"]
-    regex = "/(.*)"
-    target_label = "container"
-  }
-
-  relabel_rules {
-    source_labels = ["__meta_docker_container_name"]
-    regex = ".*master.*"
-    replacement = "master"
-    target_label = "instance"
-  }
-
-  relabel_rules {
-    source_labels = ["__meta_docker_container_name"]
-    regex = ".*replic.*"
-    replacement = "replica"
-    target_label = "instance"
-  }
-
-  relabel_rules {
-    replacement = "mariadb"
-    target_label = "service"
   }
 }
