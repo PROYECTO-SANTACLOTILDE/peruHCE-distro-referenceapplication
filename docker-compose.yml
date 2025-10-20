@@ -127,7 +127,6 @@ services:
       - database-network
       - auth-network
       - dicom-network
-
       # MariaDB master
   db:
     container_name: peruHCE-db-master
@@ -219,17 +218,17 @@ services:
       DNSSEC: 'true'
 
       # Local network configuration
-      DNS_BOGUS_PRIV: 'false'     # Allow private IP queries
-      DNS_FQDN_REQUIRED: 'false'   # Flexible with local names
+      DNS_BOGUS_PRIV: 'false' # Allow private IP queries
+      DNS_FQDN_REQUIRED: 'false' # Flexible with local names
 
       # Reverse DNS for local network
       REV_SERVER: 'true'
       REV_SERVER_DOMAIN: 'hospital.local'
-      REV_SERVER_TARGET: ${HOSPITAL_GATEWAY:-192.168.1.1}  # Hospital gateway
+      REV_SERVER_TARGET: ${HOSPITAL_GATEWAY:-192.168.1.1} # Hospital gateway
       REV_SERVER_CIDR: ${HOSPITAL_NETWORK:-192.168.1.0/24} # Hospital network
 
       # Cache optimization for limited internet
-      CACHE_SIZE: '10000'         # Large cache (default 10000)
+      CACHE_SIZE: '10000' # Large cache (default 10000)
 
       # Query logging for auditing
       QUERY_LOGGING: 'true'
@@ -244,7 +243,7 @@ services:
 
     networks:
       - management-network
-      - frontend-network  # Allow resolution for public services
+      - frontend-network # Allow resolution for public services
 
   fua-generator:
     container_name: peruHCE-fua-generator
@@ -283,11 +282,11 @@ services:
   # Orthanc DICOM Server
   orthanc:
     container_name: peruHCE-orthanc
-    image: osimis/orthanc:24.12.4
+    image: orthancteam/orthanc:25.8.2
     restart: "unless-stopped"
     ports:
-      - "8042:8042"  # HTTP port
-      - "4242:4242"  # DICOM port
+      - "8042:8042" # HTTP port
+      - "4242:4242" # DICOM port
     environment:
       ORTHANC_JSON: |
         {
