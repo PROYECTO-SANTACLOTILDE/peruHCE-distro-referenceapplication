@@ -7,13 +7,16 @@ services:
     restart: "unless-stopped"
     env_file:
       - ./.env
+    secrets:
+      - keycloak_admin_password
+      - keycloak_db_password
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin123}
+      KEYCLOAK_ADMIN_PASSWORD_FILE: /run/secrets/keycloak_admin_password
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${KC_DB_DATABASE:-keycloak}
       KC_DB_USERNAME: ${KC_DB_USERNAME:-keycloak}
-      KC_DB_PASSWORD: ${KC_DB_PASSWORD:-keycloak123}
+      KC_DB_PASSWORD_FILE: /run/secrets/keycloak_db_password
       KC_HOSTNAME: ${KC_HOSTNAME:-localhost}
       KC_HOSTNAME_STRICT: "false"
       KC_HTTP_ENABLED: "true"
@@ -28,14 +31,16 @@ services:
 
   keycloak-db:
     container_name: peruHCE-keycloak-db
-    image: postgres:15
+    image: postgres:17
     restart: "unless-stopped"
     env_file:
       - ./.env
+    secrets:
+      - keycloak_db_password
     environment:
       POSTGRES_DB: ${KC_DB_DATABASE:-keycloak}
       POSTGRES_USER: ${KC_DB_USERNAME:-keycloak}
-      POSTGRES_PASSWORD: ${KC_DB_PASSWORD:-keycloak123}
+      POSTGRES_PASSWORD_FILE: /run/secrets/keycloak_db_password
     ports:
       - "5434:5432"
     volumes:
@@ -100,6 +105,8 @@ services:
     container_name: peruHCE-backend
     image: openmrs/openmrs-reference-application-3-backend:${TAG:-qa}
     restart: "unless-stopped"
+    secrets:
+      - mysql_openmrs_password
     ports:
       - "8080:8080"
     depends_on:
@@ -114,7 +121,7 @@ services:
       OMRS_CONFIG_CONNECTION_SERVER: db
       OMRS_CONFIG_CONNECTION_DATABASE: openmrs
       OMRS_CONFIG_CONNECTION_USERNAME: ${OPENMRS_DB_USER:-openmrs}
-      OMRS_CONFIG_CONNECTION_PASSWORD: ${OPENMRS_DB_PASSWORD:-openmrs}
+      OMRS_CONFIG_CONNECTION_PASSWORD_FILE: /run/secrets/mysql_openmrs_password
       OMRS_OCL_TOKEN: ${OMRS_OCL_TOKEN:-openmrs}
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/openmrs" ]
@@ -130,12 +137,17 @@ services:
       # MariaDB master
   db:
     container_name: peruHCE-db-master
-    image: mariadb:10.11.7
+    image: mariadb:11.8
     restart: "unless-stopped"
     command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1"
     #command: "mysqld --character-set-server=utf8mb3 --collation-server=utf8mb3_general_ci"
+    secrets:
+      - mysql_root_password
+      - mysql_openmrs_password
+      - mysql_repl_password
+      - mysql_backup_password
     healthcheck:
-      test: "mysql --user=${OMRS_DB_USER:-openmrs} --password=${OMRS_DB_PASSWORD:-openmrs} --execute \"SHOW DATABASES;\""
+      test: "mysql --user=${OMRS_DB_USER:-openmrs} --password=$$(cat /run/secrets/mysql_openmrs_password) --execute 'SHOW DATABASES;'"
       interval: 3s
       timeout: 1s
       retries: 5
@@ -143,12 +155,12 @@ services:
     environment:
       MYSQL_DATABASE: openmrs
       MYSQL_USER: ${OMRS_DB_USER:-openmrs}
-      MYSQL_PASSWORD: ${OMRS_DB_PASSWORD:-openmrs}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-openmrs}
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_openmrs_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
       OMRS_DB_REPL_USER: ${OMRS_DB_REPL_USER:-openmrs_repl}
-      OMRS_DB_REPL_PASSWORD: ${OMRS_DB_REPL_PASSWORD:-openmrs_repl}
-      OMRS_DB_BACKUP_USER: ${OMRS_DB_BACKUP_USER:-openmrs_b}
-      OMRS_DB_BACKUP_PASSWORD: ${OMRS_DB_BACKUP_PASSWORD:-openmrs_b}
+      OMRS_DB_REPL_PASSWORD_FILE: /run/secrets/mysql_repl_password
+      OMRS_DB_BACKUP_USER: ${OMRS_DB_BACKUP_USER:-openmrs_backup}
+      OMRS_DB_BACKUP_PASSWORD_FILE: /run/secrets/mysql_backup_password
 
     ports:
       - "3307:3306" # 3307 for host
@@ -162,21 +174,25 @@ services:
   # MariaDB Replic
   db-replic:
     container_name: peruHCE-db-replic
-    image: mariadb:10.11.7
+    image: mariadb:11.8
     restart: "unless-stopped"
     command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=2 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1 --read-only=1"
+    secrets:
+      - mysql_root_password
+      - mysql_repl_password
+      - mysql_backup_password
     healthcheck:
-      test: "mysql --user=${OMRS_DB_USER:-openmrs} --password=${OMRS_DB_PASSWORD:-openmrs} --execute \"SHOW DATABASES;\""
+      test: "mysql --user=${OMRS_DB_USER:-openmrs} --password=$$(cat /run/secrets/mysql_openmrs_password) --execute 'SHOW DATABASES;'"
       interval: 3s
       timeout: 1s
       retries: 5
     #env_file: "enviromentVariables.env"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-openmrs}
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
       OMRS_DB_REPL_USER: ${OMRS_DB_REPL_USER:-openmrs_repl}
-      OMRS_DB_REPL_PASSWORD: ${OMRS_DB_REPL_PASSWORD:-openmrs_repl}
-      OMRS_DB_BACKUP_USER: ${OMRS_DB_BACKUP_USER:-openmrs_b}
-      OMRS_DB_BACKUP_PASSWORD: ${OMRS_DB_BACKUP_PASSWORD:-openmrs_b}
+      OMRS_DB_REPL_PASSWORD_FILE: /run/secrets/mysql_repl_password
+      OMRS_DB_BACKUP_USER: ${OMRS_DB_BACKUP_USER:-openmrs_backup}
+      OMRS_DB_BACKUP_PASSWORD_FILE: /run/secrets/mysql_backup_password
     depends_on:
       - db
     ports:
@@ -193,6 +209,8 @@ services:
     container_name: peruHCE-dns
     image: pihole/pihole:2025.03.0
     restart: "unless-stopped"
+    secrets:
+      - pihole_password
     ports:
       # DNS Ports - Critical for hospital network
       - "53:53/tcp"
@@ -208,7 +226,7 @@ services:
       TZ: 'America/Lima'
 
       # Web UI Password
-      FTLCONF_webserver_api_password: ${DNS_PASSWORD:-openmrs}
+      FTLCONF_webserver_api_password_FILE: /run/secrets/pihole_password
       FTLCONF_dns_listeningMode: 'all'
 
       # Upstream DNS servers (when internet available)
@@ -248,16 +266,19 @@ services:
   fua-generator:
     container_name: peruHCE-fua-generator
     image: marcelius733/fua-generator:dev-0.1.4
+    secrets:
+      - fua_db_password
+      - fua_token
     ports:
       - "3333:3000"
     #env_file: "enviromentVariables.env"
     environment:
       DB_USER: ${PERUHCE_FUA_GEN_DB_USER:-fuagenerator}
-      DB_PASSWORD: ${PERUHCE_FUA_GEN_DB_PASSWORD:-fuagenerator}
+      DB_PASSWORD_FILE: /run/secrets/fua_db_password
       DB_NAME: ${PERUHCE_FUA_GEN_DB:-fuagenerator}
       DB_HOST: 'fua-generator-db'
       DB_PORT: '5432'
-      TOKEN: ${PERUHCE_FUA_GEN_TOKEN:-fuagenerator}
+      TOKEN_FILE: /run/secrets/fua_token
     depends_on:
       - fua-generator-db
     networks:
@@ -266,13 +287,15 @@ services:
 
   fua-generator-db:
     container_name: peruHCE-fua-generator-db
-    image: postgres:15
+    image: postgres:17
+    secrets:
+      - fua_db_password
     ports:
       - "5433:5432"
     #env_file: "enviromentVariables.env"
     environment:
       POSTGRES_USER: ${PERUHCE_FUA_GEN_DB_USER:-fuagenerator}
-      POSTGRES_PASSWORD: ${PERUHCE_FUA_GEN_DB_PASSWORD:-fuagenerator}
+      POSTGRES_PASSWORD_FILE: /run/secrets/fua_db_password
       POSTGRES_DB: ${PERUHCE_FUA_GEN_DB:-fuagenerator}
     volumes:
       - db-fua-generator:/var/lib/postgresql/data
@@ -351,7 +374,7 @@ services:
   # Prometheus - Metrics collection
   prometheus:
     container_name: peruHCE-prometheus
-    image: prom/prometheus:v3.1.0
+    image: prom/prometheus:v3.7.1
     restart: "unless-stopped"
     ports:
       - "9090:9090"
@@ -377,7 +400,7 @@ services:
   # Loki - Log aggregation
   loki:
     container_name: peruHCE-loki
-    image: grafana/loki:3.3.2
+    image: grafana/loki:3.5.7
     restart: "unless-stopped"
     ports:
       - "3100:3100"
@@ -389,15 +412,20 @@ services:
       - monitoring-network
 
   # Promtail - Log shipper for Loki
-  promtail:
-    container_name: peruHCE-promtail
-    image: grafana/promtail:3.3.2
+  # Grafana Alloy - Log collection (replaces deprecated Promtail)
+  # Migrated on 2025-10-20 - Promtail EOL: March 2026
+  alloy:
+    container_name: peruHCE-alloy
+    image: grafana/alloy:latest
     restart: "unless-stopped"
+    ports:
+      - "12345:12345"  # Alloy UI
     volumes:
-      - ./monitoring/promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - ./monitoring/alloy/config.alloy:/etc/alloy/config.alloy:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock
-    command: -config.file=/etc/promtail/promtail-config.yml
+      - alloy-data:/var/lib/alloy/data
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
     depends_on:
       - loki
     networks:
@@ -406,13 +434,15 @@ services:
   # Grafana - Visualization and dashboards
   grafana:
     container_name: peruHCE-grafana
-    image: grafana/grafana:11.4.0
+    image: grafana/grafana:12.3.0
     restart: "unless-stopped"
+    secrets:
+      - grafana_admin_password
     ports:
       - "3001:3000"
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin123}
+      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana_admin_password
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel
       GF_SERVER_ROOT_URL: http://localhost:3001
       GF_USERS_ALLOW_SIGN_UP: "false"
@@ -443,6 +473,7 @@ volumes:
   orthanc-data: ~
   prometheus-data: ~
   loki-data: ~
+  alloy-data: ~
   grafana-data: ~
 
 networks:
@@ -502,3 +533,40 @@ networks:
     ipam:
       config:
         - subnet: 172.27.0.0/24
+
+# ============================================
+# SECRETS CONFIGURATION
+# ============================================
+# Docker Secrets para gestión segura de credenciales
+# Las contraseñas reales están en ./secrets/ (NO en Git)
+
+secrets:
+  # Keycloak
+  keycloak_admin_password:
+    file: ./secrets/keycloak_admin_password.txt
+  keycloak_db_password:
+    file: ./secrets/keycloak_db_password.txt
+
+  # MySQL/MariaDB
+  mysql_root_password:
+    file: ./secrets/mysql_root_password.txt
+  mysql_openmrs_password:
+    file: ./secrets/mysql_openmrs_password.txt
+  mysql_repl_password:
+    file: ./secrets/mysql_repl_password.txt
+  mysql_backup_password:
+    file: ./secrets/mysql_backup_password.txt
+
+  # Grafana
+  grafana_admin_password:
+    file: ./secrets/grafana_admin_password.txt
+
+  # Pi-hole DNS
+  pihole_password:
+    file: ./secrets/pihole_password.txt
+
+  # FUA Generator
+  fua_db_password:
+    file: ./secrets/fua_db_password.txt
+  fua_token:
+    file: ./secrets/fua_token.txt

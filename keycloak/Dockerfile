@@ -1,13 +1,13 @@
 # keycloak/Dockerfile
-FROM quay.io/keycloak/keycloak:26.3.2
+# Updated: 2025-10-20 - Latest version and secrets support
+FROM quay.io/keycloak/keycloak:26.4.1
 
 # Variables por defecto (sobreescribibles desde docker-compose)
+# IMPORTANTE: No incluir passwords aquí - usar Docker Secrets
 ENV KEYCLOAK_ADMIN=admin
-ENV KEYCLOAK_ADMIN_PASSWORD=admin123
 ENV KC_DB=postgres
 ENV KC_DB_URL=jdbc:postgresql://keycloak-db:5432/keycloak
 ENV KC_DB_USERNAME=keycloak
-ENV KC_DB_PASSWORD=keycloak123
 ENV KC_HOSTNAME=localhost
 ENV KC_HOSTNAME_STRICT=false
 
