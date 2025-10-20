@@ -25,7 +25,7 @@ services:
     volumes:
       - ./keycloak/themes:/opt/keycloak/themes:ro
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ready" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -52,7 +52,7 @@ services:
     volumes:
       - keycloak-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${KC_DB_USERNAME:-keycloak} -d ${KC_DB_DATABASE:-keycloak}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${KC_DB_USERNAME:-keycloak} -d ${KC_DB_DATABASE:-keycloak}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -88,7 +88,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -165,7 +165,7 @@ services:
       - mysql_repl_password
       - mysql_backup_password
     healthcheck:
-      test: ["CMD-SHELL", "mysql --user=${OMRS_DB_USER:-openmrs} --password=$$(cat /run/secrets/mysql_openmrs_password) --execute 'SHOW DATABASES;'"]
+      test: [ "CMD-SHELL", "mysql --user=${OMRS_DB_USER:-openmrs} --password=$$(cat /run/secrets/mysql_openmrs_password) --execute 'SHOW DATABASES;'" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -202,7 +202,7 @@ services:
       - mysql_repl_password
       - mysql_backup_password
     healthcheck:
-      test: ["CMD-SHELL", "mysql --user=${OMRS_DB_USER:-openmrs} --password=$$(cat /run/secrets/mysql_openmrs_password) --execute 'SHOW DATABASES;'"]
+      test: [ "CMD-SHELL", "mysql --user=${OMRS_DB_USER:-openmrs} --password=$$(cat /run/secrets/mysql_openmrs_password) --execute 'SHOW DATABASES;'" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -281,7 +281,7 @@ services:
       - ./dns/custom.list:/etc/pihole/custom.list:ro
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/admin/"]
+      test: [ "CMD", "curl", "-f", "http://localhost/admin/" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -309,7 +309,7 @@ services:
     depends_on:
       - fua-generator-db
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -333,7 +333,7 @@ services:
     volumes:
       - db-fua-generator:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${PERUHCE_FUA_GEN_DB_USER:-fuagenerator} -d ${PERUHCE_FUA_GEN_DB:-fuagenerator}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${PERUHCE_FUA_GEN_DB_USER:-fuagenerator} -d ${PERUHCE_FUA_GEN_DB:-fuagenerator}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -373,7 +373,7 @@ services:
     volumes:
       - orthanc-data:/var/lib/orthanc/db
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8042/system"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8042/system" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -413,7 +413,7 @@ services:
     depends_on:
       - orthanc
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/"]
+      test: [ "CMD", "curl", "-f", "http://localhost/" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -441,7 +441,7 @@ services:
       - ./monitoring/prometheus/alerts:/etc/prometheus/alerts:ro
       - prometheus-data:/prometheus
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9090/-/healthy"]
+      test: [ "CMD", "curl", "-f", "http://localhost:9090/-/healthy" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -466,7 +466,7 @@ services:
       - ./monitoring/loki/loki-config.yml:/etc/loki/loki-config.yml:ro
       - loki-data:/loki
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3100/ready"]
+      test: [ "CMD", "curl", "-f", "http://localhost:3100/ready" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -482,7 +482,7 @@ services:
     image: grafana/alloy:latest
     restart: "unless-stopped"
     ports:
-      - "12345:12345"  # Alloy UI
+      - "12345:12345" # Alloy UI
     volumes:
       - ./monitoring/alloy/config.alloy:/etc/alloy/config.alloy:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
@@ -492,7 +492,7 @@ services:
     depends_on:
       - loki
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:12345/-/healthy"]
+      test: [ "CMD", "curl", "-f", "http://localhost:12345/-/healthy" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -521,7 +521,7 @@ services:
       - prometheus
       - loki
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/api/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
