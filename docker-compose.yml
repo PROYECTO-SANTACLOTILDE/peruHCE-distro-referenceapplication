@@ -189,33 +189,62 @@ services:
     networks:
       - database-network
 
-  # DNS Server
+  # DNS Server - Pi-hole for On-Premise Hospital Network
   dns:
     container_name: peruHCE-dns
     image: pihole/pihole:2025.03.0
     restart: "unless-stopped"
     ports:
-      # DNS Ports
+      # DNS Ports - Critical for hospital network
       - "53:53/tcp"
       - "53:53/udp"
-      # Default HTTP Port
+      # Web UI Port
       - "81:80/tcp"
-      # Default HTTPs Port. FTL will generate a self-signed certificate
+      # HTTPS Port
       - "444:443/tcp"
-    #env_file: "enviromentVariables.env"
+    env_file:
+      - ./.env
     environment:
-      # Set the appropriate timezone for your location (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g:
+      # Timezone
       TZ: 'America/Lima'
-      # Set a password to access the web interface. Not setting one will result in a random password being assigned
+
+      # Web UI Password
       FTLCONF_webserver_api_password: ${DNS_PASSWORD:-openmrs}
       FTLCONF_dns_listeningMode: 'all'
-    # Volumes store your data between container upgrades
+
+      # Upstream DNS servers (when internet available)
+      PIHOLE_DNS_: '8.8.8.8;8.8.4.4;1.1.1.1'
+
+      # Security
+      DNSSEC: 'true'
+
+      # Local network configuration
+      DNS_BOGUS_PRIV: 'false'     # Allow private IP queries
+      DNS_FQDN_REQUIRED: 'false'   # Flexible with local names
+
+      # Reverse DNS for local network
+      REV_SERVER: 'true'
+      REV_SERVER_DOMAIN: 'hospital.local'
+      REV_SERVER_TARGET: ${HOSPITAL_GATEWAY:-192.168.1.1}  # Hospital gateway
+      REV_SERVER_CIDR: ${HOSPITAL_NETWORK:-192.168.1.0/24} # Hospital network
+
+      # Cache optimization for limited internet
+      CACHE_SIZE: '10000'         # Large cache (default 10000)
+
+      # Query logging for auditing
+      QUERY_LOGGING: 'true'
+
     volumes:
-      # For persisting Pi-hole's databases and common configuration file
+      # Persistent data
       - pihole-data:/etc/pihole
       - pihole-dnsmaq:/etc/dnsmasq.d
+
+      # Custom DNS mappings for hospital
+      - ./dns/custom.list:/etc/pihole/custom.list:ro
+
     networks:
       - management-network
+      - frontend-network  # Allow resolution for public services
 
   fua-generator:
     container_name: peruHCE-fua-generator
