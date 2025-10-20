@@ -139,8 +139,8 @@ services:
     container_name: peruHCE-db-master
     image: mariadb:11.8
     restart: "unless-stopped"
-    command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1"
-    #command: "mysqld --character-set-server=utf8mb3 --collation-server=utf8mb3_general_ci"
+    command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1"
+    #command: "mariadbd --character-set-server=utf8mb3 --collation-server=utf8mb3_general_ci"
     secrets:
       - mysql_root_password
       - mysql_openmrs_password
@@ -176,7 +176,7 @@ services:
     container_name: peruHCE-db-replic
     image: mariadb:11.8
     restart: "unless-stopped"
-    command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=2 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1 --read-only=1"
+    command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=2 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1 --read-only=1"
     secrets:
       - mysql_root_password
       - mysql_repl_password
@@ -434,7 +434,7 @@ services:
   # Grafana - Visualization and dashboards
   grafana:
     container_name: peruHCE-grafana
-    image: grafana/grafana:12.3.0
+    image: grafana/grafana:latest
     restart: "unless-stopped"
     secrets:
       - grafana_admin_password
