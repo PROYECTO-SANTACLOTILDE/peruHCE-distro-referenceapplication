@@ -1,0 +1,14 @@
+# Grafana Dashboards Provisioning for PeruHCE
+apiVersion: 1
+
+providers:
+  - name: 'PeruHCE Dashboards'
+    orgId: 1
+    folder: 'PeruHCE'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+      foldersFromFilesStructure: true

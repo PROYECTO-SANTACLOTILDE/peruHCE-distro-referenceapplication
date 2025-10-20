@@ -1,0 +1,150 @@
+# Promtail Configuration for PeruHCE
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+  log_level: info
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+    batchwait: 1s
+    batchsize: 1048576
+
+scrape_configs:
+  # Docker container logs
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      # Container name
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+      # Container ID
+      - source_labels: ['__meta_docker_container_id']
+        target_label: 'container_id'
+      # Container image
+      - source_labels: ['__meta_docker_container_image']
+        target_label: 'image'
+      # Container labels
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        target_label: 'service'
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_project']
+        target_label: 'project'
+      # Log path
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: 'stream'
+    pipeline_stages:
+      # Parse JSON logs
+      - json:
+          expressions:
+            output: log
+            stream: stream
+            timestamp: time
+      # Extract log level
+      - regex:
+          expression: '(?P<level>ERROR|WARN|INFO|DEBUG|TRACE)'
+      - labels:
+          level:
+      # Add timestamp
+      - timestamp:
+          source: timestamp
+          format: RFC3339Nano
+
+  # Specific scraping for OpenMRS backend
+  - job_name: openmrs-backend
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '.*peruHCE-backend.*'
+        action: keep
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+      - source_labels: ['__meta_docker_container_id']
+        target_label: 'container_id'
+      - replacement: 'openmrs-backend'
+        target_label: 'service'
+      - replacement: 'peruhce'
+        target_label: 'application'
+    pipeline_stages:
+      - json:
+          expressions:
+            output: log
+            stream: stream
+      - regex:
+          expression: '.*(ERROR|WARN|INFO|DEBUG|TRACE).*'
+      - labels:
+          level:
+
+  # Specific scraping for Keycloak
+  - job_name: keycloak
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '.*peruHCE-keycloak.*'
+        action: keep
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+      - replacement: 'keycloak'
+        target_label: 'service'
+    pipeline_stages:
+      - json:
+          expressions:
+            output: log
+            stream: stream
+      - regex:
+          expression: '.*(ERROR|WARN|INFO|DEBUG|TRACE).*'
+      - labels:
+          level:
+
+  # Specific scraping for Orthanc
+  - job_name: orthanc
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '.*peruHCE-orthanc.*'
+        action: keep
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+      - replacement: 'orthanc'
+        target_label: 'service'
+    pipeline_stages:
+      - json:
+          expressions:
+            output: log
+            stream: stream
+
+  # MariaDB logs
+  - job_name: mariadb
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '.*peruHCE-db.*'
+        action: keep
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+      - source_labels: ['__meta_docker_container_name']
+        regex: '.*master.*'
+        replacement: 'master'
+        target_label: 'instance'
+      - source_labels: ['__meta_docker_container_name']
+        regex: '.*replic.*'
+        replacement: 'replica'
+        target_label: 'instance'
+      - replacement: 'mariadb'
+        target_label: 'service'
