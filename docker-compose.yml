@@ -1,29 +1,43 @@
 services:
-  # keycloak:
-  #   build:
-  #     context: ./keycloak
-  #     dockerfile: Dockerfile
-  #     args:
-  #       KEYCLOAK_VERSION: ${KEYCLOAK_VERSION}
-  #   env_file:
-  #     - ./.env
-  #   ports:
-  #     - "${KEYCLOAK_PORT}:8080" #Si algo se cae es este cambio
-  #   volumes:
-  #     - ./keycloak/themes:/opt/keycloak/themes:ro
-  #   depends_on:
-  #     - keycloak-db
+  keycloak:
+    container_name: peruHCE-keycloak
+    build:
+      context: ./keycloak
+      dockerfile: Dockerfile
+    restart: "unless-stopped"
+    env_file:
+      - ./.env
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin123}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${KC_DB_DATABASE:-keycloak}
+      KC_DB_USERNAME: ${KC_DB_USERNAME:-keycloak}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD:-keycloak123}
+      KC_HOSTNAME: ${KC_HOSTNAME:-localhost}
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+    ports:
+      - "${KEYCLOAK_PORT:-8180}:8080"
+    volumes:
+      - ./keycloak/themes:/opt/keycloak/themes:ro
+    depends_on:
+      - keycloak-db
 
-  # keycloak-db:
-  #   image: postgres:15
-  #   env_file:
-  #     - ./.env
-  #   environment:
-  #     POSTGRES_DB: ${KC_DB_DATABASE}
-  #     POSTGRES_USER: ${KC_DB_USERNAME}
-  #     POSTGRES_PASSWORD: ${KC_DB_PASSWORD}
-  #   volumes:
-  #     - keycloak-data:/var/lib/postgresql/data
+  keycloak-db:
+    container_name: peruHCE-keycloak-db
+    image: postgres:15
+    restart: "unless-stopped"
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_DB: ${KC_DB_DATABASE:-keycloak}
+      POSTGRES_USER: ${KC_DB_USERNAME:-keycloak}
+      POSTGRES_PASSWORD: ${KC_DB_PASSWORD:-keycloak123}
+    ports:
+      - "5434:5432"
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
 
   portainer:
     container_name: peruHCE-portainer
@@ -75,8 +89,8 @@ services:
       - "8080:8080"
     depends_on:
       - db-replic
-      #- keycloak
-      #env_file: "enviromentVariables.env"
+      - keycloak
+    #env_file: "enviromentVariables.env"
     environment:
       ENABLE_SSO: "true" # Enable Single Sign-On (colocar como variable de entorno? si lo queremos hacer flexible tambien habria que hacerlo en el frontend)
       OMRS_CONFIG_MODULE_WEB_ADMIN: "true"
@@ -206,8 +220,72 @@ services:
     volumes:
       - db-fua-generator:/var/lib/postgresql/data
 
+  # Orthanc DICOM Server
+  orthanc:
+    container_name: peruHCE-orthanc
+    image: osimis/orthanc:24.12.4
+    restart: "unless-stopped"
+    ports:
+      - "8042:8042"  # HTTP port
+      - "4242:4242"  # DICOM port
+    environment:
+      ORTHANC_JSON: |
+        {
+          "Name": "PeruHCE Orthanc",
+          "RemoteAccessAllowed": true,
+          "AuthenticationEnabled": false,
+          "RegisteredUsers": {},
+          "DicomAet": "ORTHANC",
+          "DicomPort": 4242,
+          "DicomWeb": {
+            "Enable": true,
+            "Root": "/dicom-web/",
+            "EnableWado": true,
+            "WadoRoot": "/wado",
+            "Ssl": false
+          },
+          "StableAge": 60,
+          "StrictAetComparison": false,
+          "HttpTimeout": 60,
+          "ConcurrentJobs": 2
+        }
+    volumes:
+      - orthanc-data:/var/lib/orthanc/db
+
+  # OHIF Viewer
+  ohif:
+    container_name: peruHCE-ohif
+    image: ohif/app:v3.9.3
+    restart: "unless-stopped"
+    ports:
+      - "3000:80"
+    environment:
+      APP_CONFIG: |
+        {
+          "routerBasename": "/",
+          "servers": {
+            "dicomWeb": [
+              {
+                "name": "PeruHCE Orthanc",
+                "wadoUriRoot": "http://orthanc:8042/wado",
+                "qidoRoot": "http://orthanc:8042/dicom-web",
+                "wadoRoot": "http://orthanc:8042/dicom-web",
+                "qidoSupportsIncludeField": true,
+                "imageRendering": "wadors",
+                "thumbnailRendering": "wadors",
+                "requestOptions": {
+                  "requestFromBrowser": true
+                }
+              }
+            ]
+          },
+          "defaultDataSourceName": "dicomWeb"
+        }
+    depends_on:
+      - orthanc
+
 volumes:
-  # keycloak-data:
+  keycloak-data: ~
   openmrs-frontend: ~
   openmrs-data: ~
   db-data: ~
@@ -219,3 +297,4 @@ volumes:
   portainer-data: ~
   pihole-data: ~
   pihole-dnsmaq: ~
+  orthanc-data: ~

@@ -41,11 +41,16 @@
             "redirectUris": [
                 "http://localhost/openmrs/*",
                 "http://localhost:8080/openmrs/*",
-                "http://localhost/openmrs/spa/*"
+                "http://localhost/openmrs/spa/*",
+                "https://localhost/openmrs/*",
+                "https://localhost:8080/openmrs/*"
             ],
             "webOrigins": [
                 "http://localhost",
-                "http://localhost:8080"
+                "http://localhost:8080",
+                "https://localhost",
+                "https://localhost:8080",
+                "+"
             ],
             "standardFlowEnabled": true,
             "implicitFlowEnabled": false,
