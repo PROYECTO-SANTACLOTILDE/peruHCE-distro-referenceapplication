@@ -30,6 +30,40 @@ loki.source.docker "docker_logs" {
 
   forward_to = [loki.process.docker_pipeline.receiver]
 
+  relabel_rules = [
+    // Extract container name
+    {
+      source_labels = ["__meta_docker_container_name"]
+      regex         = "/(.*)"
+      target_label  = "container"
+    },
+    // Extract container ID
+    {
+      source_labels = ["__meta_docker_container_id"]
+      target_label  = "container_id"
+    },
+    // Extract container image
+    {
+      source_labels = ["__meta_docker_container_image"]
+      target_label  = "image"
+    },
+    // Extract service name from compose labels
+    {
+      source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+      target_label  = "service"
+    },
+    // Extract project name
+    {
+      source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
+      target_label  = "project"
+    },
+    // Extract log stream
+    {
+      source_labels = ["__meta_docker_container_log_stream"]
+      target_label  = "stream"
+    },
+  ]
+
   labels = {
     job = "docker",
   }
