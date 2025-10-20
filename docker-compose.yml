@@ -31,7 +31,7 @@ services:
 
   keycloak-db:
     container_name: peruHCE-keycloak-db
-    image: postgres:17
+    image: postgres:15
     restart: "unless-stopped"
     env_file:
       - ./.env
@@ -287,7 +287,7 @@ services:
 
   fua-generator-db:
     container_name: peruHCE-fua-generator-db
-    image: postgres:17
+    image: postgres:15
     secrets:
       - fua_db_password
     ports:
@@ -436,13 +436,11 @@ services:
     container_name: peruHCE-grafana
     image: grafana/grafana:latest
     restart: "unless-stopped"
-    secrets:
-      - grafana_admin_password
     ports:
       - "3001:3000"
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
-      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana_admin_password
+      GF_SECURITY_ADMIN_PASSWORD: eCHV1kOvUQAK7B69snYwyKXUZJZ6LXLu
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel
       GF_SERVER_ROOT_URL: http://localhost:3001
       GF_USERS_ALLOW_SIGN_UP: "false"
