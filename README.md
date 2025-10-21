@@ -2,32 +2,66 @@
 
 Para máxima seguridad, todas las credenciales y claves sensibles deben gestionarse únicamente con Docker secrets. No definas contraseñas ni tokens en archivos .env ni en template.env.
 
-### Secrets recomendados:
 
-- OMRS_DB_PASSWORD
-- OMRS_DB_R_PASSWORD
-- OMRS_DB_BACKUP_USER
-- OMRS_DB_BACKUP_PASSWORD
-- MYSQL_ROOT_PASSWORD
-- BACKUP_ENCRYPTION_PASSWORD
-- KEYCLOAK_DB_PASSWORD
-- KEYCLOAK_ADMIN_PASSWORD
-- GHP_USERNAME
-- GHP_PASSWORD
+### Secrets requeridos (según docker-compose.yml):
+
+- keycloak_admin_password
+- keycloak_db_password
+- mysql_root_password
+- mysql_openmrs_password
+- mysql_repl_password
+- mysql_backup_password
+- grafana_admin_password
+- pihole_password
+- fua_db_password
+- fua_token
+- BACKUP_ENCRYPTION_PASSWORD (para scripts de backup)
+- GHP_USERNAME (para builds privados)
+- GHP_PASSWORD (para builds privados)
 
 ### Ejemplo para crear secrets:
 
 ```bash
-echo "<valor>" | docker secret create OMRS_DB_PASSWORD -
-echo "<valor>" | docker secret create OMRS_DB_R_PASSWORD -
-echo "<valor>" | docker secret create OMRS_DB_BACKUP_USER -
-echo "<valor>" | docker secret create OMRS_DB_BACKUP_PASSWORD -
-echo "<valor>" | docker secret create MYSQL_ROOT_PASSWORD -
+# Para los servicios principales:
+echo "<valor>" | docker secret create keycloak_admin_password -
+echo "<valor>" | docker secret create keycloak_db_password -
+echo "<valor>" | docker secret create mysql_root_password -
+echo "<valor>" | docker secret create mysql_openmrs_password -
+echo "<valor>" | docker secret create mysql_repl_password -
+echo "<valor>" | docker secret create mysql_backup_password -
+echo "<valor>" | docker secret create grafana_admin_password -
+echo "<valor>" | docker secret create pihole_password -
+echo "<valor>" | docker secret create fua_db_password -
+echo "<valor>" | docker secret create fua_token -
+# Para backups:
 echo "<valor>" | docker secret create BACKUP_ENCRYPTION_PASSWORD -
-echo "<valor>" | docker secret create KEYCLOAK_DB_PASSWORD -
-echo "<valor>" | docker secret create KEYCLOAK_ADMIN_PASSWORD -
-echo "<valor>" | docker secret create GHP_USERNAME -
-echo "<valor>" | docker secret create GHP_PASSWORD -
+# Para builds privados:
+echo "<tu_usuario_github>" | docker secret create GHP_USERNAME -
+echo "<tu_token_github>" | docker secret create GHP_PASSWORD -
+```
+
+Variables de entorno NO sensibles (definir en .env o template.env):
+
+```env
+# OMRS_DB_USER=
+# OMRS_DB_REPL_USER=
+# TAG=qa                # Versión/tag de las imágenes Docker (ej: qa, latest, prod)
+# KEYCLOAK_ADMIN=admin  # Usuario admin de Keycloak
+# KC_DB_DATABASE=keycloak   # Base de datos de Keycloak
+# KC_DB_USERNAME=keycloak   # Usuario de la base de datos de Keycloak
+# KC_HOSTNAME=localhost     # Hostname de Keycloak
+# KEYCLOAK_PORT=8180        # Puerto de Keycloak expuesto
+# OPENMRS_DB_USER=openmrs   # Usuario de la base de datos OpenMRS
+# OMRS_OCL_TOKEN=           # Token OCL (si aplica)
+# OMRS_DB_BACKUP_USER=openmrs_backup   # Usuario para backups de OpenMRS
+# HOSPITAL_GATEWAY=192.168.1.1         # Gateway/red hospital
+# HOSPITAL_NETWORK=192.168.1.0/24      # Red hospital
+# PERUHCE_FUA_GEN_DB_USER=fuagenerator # Usuario BD FUA Generator
+# PERUHCE_FUA_GEN_DB=fuagenerator      # Nombre BD FUA Generator
+# GRAFANA_ADMIN_USER=admin             # Usuario admin de Grafana
+```
+
+Recomendación: Copia y renombra `template.env` a `.env` y personaliza los valores según tu entorno antes de levantar los servicios.
 ```
 
 Los scripts y servicios están preparados para leer primero de Docker secrets (ubicados en `/run/secrets/NOMBRE_SECRET`). Si no existe el secret, intentarán usar la variable de entorno correspondiente.
