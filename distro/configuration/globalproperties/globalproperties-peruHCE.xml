@@ -21,9 +21,9 @@
         </globalProperty>
 
         <!-- ENV VARIABLE: OMRS_OCL_TOKEN -->
-        <globalProperty>
-            <property>openconceptlab.token</property>
-            <value>${OMRS_OCL_TOKEN}</value>
+            <globalProperty>
+                <property>openconceptlab.token</property>
+                <value>${OMRS_OCL_TOKEN}</value>
         </globalProperty>
 
         <!-- Queue Configuration -->

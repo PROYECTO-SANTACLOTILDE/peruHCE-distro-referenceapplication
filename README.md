@@ -3,7 +3,8 @@
 Para máxima seguridad, todas las credenciales y claves sensibles deben gestionarse únicamente con Docker secrets. No definas contraseñas ni tokens en archivos .env ni en template.env.
 
 
-### Secrets requeridos (según docker-compose.yml):
+
+### Secrets requeridos (según docker-compose.yml y configuración):
 
 - keycloak_admin_password
 - keycloak_db_password
@@ -15,6 +16,7 @@ Para máxima seguridad, todas las credenciales y claves sensibles deben gestiona
 - pihole_password
 - fua_db_password
 - fua_token
+- OMRS_OCL_TOKEN (token OCL, sensible)
 - BACKUP_ENCRYPTION_PASSWORD (para scripts de backup)
 - GHP_USERNAME (para builds privados)
 - GHP_PASSWORD (para builds privados)
@@ -32,7 +34,8 @@ echo "<valor>" | docker secret create mysql_backup_password -
 echo "<valor>" | docker secret create grafana_admin_password -
 echo "<valor>" | docker secret create pihole_password -
 echo "<valor>" | docker secret create fua_db_password -
-echo "<valor>" | docker secret create fua_token -
+# Para OCL:
+echo "<valor>" | docker secret create OMRS_OCL_TOKEN -
 # Para backups:
 echo "<valor>" | docker secret create BACKUP_ENCRYPTION_PASSWORD -
 # Para builds privados:
