@@ -54,6 +54,11 @@ if [ -f "/usr/share/nginx/html/index.html" ]; then
   envsubst '${IMPORTMAP_URL} ${SPA_PATH} ${API_URL} ${SPA_CONFIG_URLS} ${SPA_DEFAULT_LOCALE}' < "/usr/share/nginx/html/index.html" | sponge "/usr/share/nginx/html/index.html"
 fi
 
+# Sustituir variables en oauth2.json si existe
+if [ -f "/usr/share/nginx/html/oauth2.json" ]; then
+  envsubst '${KEYCLOAK_HOST} ${KEYCLOAK_REALM} ${KEYCLOAK_CLIENT_ID} ${SPA_URL}' < "/usr/share/nginx/html/oauth2.json" | sponge "/usr/share/nginx/html/oauth2.json"
+fi
+
 if [ -f "/usr/share/nginx/html/service-worker.js" ]; then
   envsubst '${IMPORTMAP_URL} ${SPA_PATH} ${API_URL}' < "/usr/share/nginx/html/service-worker.js" | sponge "/usr/share/nginx/html/service-worker.js"
 fi
