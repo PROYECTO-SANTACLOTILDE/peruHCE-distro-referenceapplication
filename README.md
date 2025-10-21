@@ -19,6 +19,15 @@ Para descargar dependencias privadas desde GitHub Packages durante el build de l
 **Importante:** Si cambias tus credenciales, elimina y vuelve a crear los secrets.
 
 Para más información sobre Docker secrets: https://docs.docker.com/engine/swarm/secrets/
+
+## Políticas de Seguridad: Cifrado de Backups y Retención de Logs
+
+Este proyecto implementa:
+- **Cifrado automático de backups**: Todos los archivos de respaldo generados por los scripts se cifran con AES-256 usando openssl. La clave se provee vía la variable de entorno `BACKUP_ENCRYPTION_PASSWORD` (recomendado: Docker secrets). El backup sin cifrar se elimina tras el cifrado exitoso.
+- **Rotación y retención de logs**: Los scripts de backup mantienen solo los últimos 5 archivos de log, eliminando los más antiguos automáticamente.
+
+Estas medidas contribuyen al cumplimiento de HIPAA y mejores prácticas de seguridad.
+
 # OpenMRS 3.0 Reference Application
 
 This project holds the build configuration for the OpenMRS 3.0 reference application, found on

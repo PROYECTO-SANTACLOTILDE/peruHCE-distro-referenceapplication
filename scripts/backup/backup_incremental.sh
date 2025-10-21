@@ -32,8 +32,19 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+
+# Rotación de logs: mantener solo los últimos 5 logs
 LOG_FILE="$FULL_BACKUP_DIR/incrementalBackup_log.txt"
 mkdir -p "$FULL_BACKUP_DIR"
+LOG_PATTERN="$FULL_BACKUP_DIR/incrementalBackup_log.txt*"
+LOG_COUNT=$(ls -1 $LOG_PATTERN 2>/dev/null | wc -l)
+if [ "$LOG_COUNT" -ge 5 ]; then
+    ls -1t $LOG_PATTERN | tail -n +6 | xargs rm -f
+fi
+# Renombrar log anterior si existe
+if [ -f "$LOG_FILE" ]; then
+    mv "$LOG_FILE" "$LOG_FILE.$(date +%Y%m%d%H%M%S)"
+fi
 exec > >(tee -a "$LOG_FILE") 2>&1
 
 echo "[INFO] Iniciando backup incremental $TIMESTAMP para contenedor $CONTAINER_NAME"
@@ -54,8 +65,25 @@ docker exec --user root "$CONTAINER_NAME" mariadb-backup --user=root --password=
 docker cp "$CONTAINER_NAME:$TEMP_INCR_BACKUP_PATH" "$FULL_BACKUP_DIR/$BACKUP_NAME"
 
 # Comprimir backup
+# Comprimir backup
 tar -czf "$FULL_BACKUP_DIR/$BACKUP_NAME.tar.gz" -C "$FULL_BACKUP_DIR" "$BACKUP_NAME"
 rm -rf "$FULL_BACKUP_DIR/$BACKUP_NAME"
+
+# Cifrar backup con openssl (AES-256)
+if [ -z "${BACKUP_ENCRYPTION_PASSWORD:-}" ]; then
+    echo "[ERROR] Variable BACKUP_ENCRYPTION_PASSWORD no definida. Abortando cifrado." >&2
+    exit 2
+fi
+openssl enc -aes-256-cbc -salt -pbkdf2 -pass env:BACKUP_ENCRYPTION_PASSWORD \
+    -in "$FULL_BACKUP_DIR/$BACKUP_NAME.tar.gz" \
+    -out "$FULL_BACKUP_DIR/$BACKUP_NAME.tar.gz.enc"
+if [ $? -eq 0 ]; then
+    rm -f "$FULL_BACKUP_DIR/$BACKUP_NAME.tar.gz"
+    echo "[OK] Backup cifrado exitosamente en '$FULL_BACKUP_DIR/$BACKUP_NAME.tar.gz.enc'"
+else
+    echo "[ERROR] Falló el cifrado del backup. El archivo sin cifrar permanece."
+    exit 3
+fi
 
 # Rotar backups antiguos
 BACKUP_COUNT=$(ls -1 "$FULL_BACKUP_DIR"/*.tar.gz 2>/dev/null | wc -l)

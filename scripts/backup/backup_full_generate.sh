@@ -41,8 +41,19 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+
+# Rotación de logs: mantener solo los últimos 5 logs
 LOG_FILE="$BACKUP_DIR/fullBackup_log.txt"
 mkdir -p "$BACKUP_DIR"
+LOG_PATTERN="$BACKUP_DIR/fullBackup_log.txt*"
+LOG_COUNT=$(ls -1 $LOG_PATTERN 2>/dev/null | wc -l)
+if [ "$LOG_COUNT" -ge 5 ]; then
+    ls -1t $LOG_PATTERN | tail -n +6 | xargs rm -f
+fi
+# Renombrar log anterior si existe
+if [ -f "$LOG_FILE" ]; then
+    mv "$LOG_FILE" "$LOG_FILE.$(date +%Y%m%d%H%M%S)"
+fi
 exec > >(tee -a "$LOG_FILE") 2>&1
 
 echo "[INFO] Iniciando backup completo $TIMESTAMP para contenedor $CONTAINER_NAME"
@@ -65,8 +76,25 @@ docker cp "$CONTAINER_NAME:$TEMP_BACKUP_PATH" "$TEMP_HOST_DIR/"
 
 # Comprimir backup
 cd "$BACKUP_DIR" || exit 1
+# Comprimir backup
 tar -czf "$BACKUP_DIR/$BACKUP_NAME.tar.gz" -C "temp/" .
 rm -rf "$TEMP_HOST_DIR"
+
+# Cifrar backup con openssl (AES-256)
+if [ -z "${BACKUP_ENCRYPTION_PASSWORD:-}" ]; then
+    echo "[ERROR] Variable BACKUP_ENCRYPTION_PASSWORD no definida. Abortando cifrado." >&2
+    exit 2
+fi
+openssl enc -aes-256-cbc -salt -pbkdf2 -pass env:BACKUP_ENCRYPTION_PASSWORD \
+    -in "$BACKUP_DIR/$BACKUP_NAME.tar.gz" \
+    -out "$BACKUP_DIR/$BACKUP_NAME.tar.gz.enc"
+if [ $? -eq 0 ]; then
+    rm -f "$BACKUP_DIR/$BACKUP_NAME.tar.gz"
+    echo "[OK] Backup cifrado exitosamente en '$BACKUP_DIR/$BACKUP_NAME.tar.gz.enc'"
+else
+    echo "[ERROR] Falló el cifrado del backup. El archivo sin cifrar permanece."
+    exit 3
+fi
 
 # Rotar backups antiguos
 BACKUP_COUNT=$(ls -1 "$BACKUP_DIR"/*.tar.gz 2>/dev/null | wc -l)

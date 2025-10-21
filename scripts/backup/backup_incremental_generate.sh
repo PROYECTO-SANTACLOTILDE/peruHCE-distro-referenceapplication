@@ -1,7 +1,18 @@
 #!/bin/bash
 
 # Log every outout in log.txt
-exec > >(tee -a incBackup_log.txt) 2>&1
+# Rotación de logs: mantener solo los últimos 5 logs
+LOG_FILE="incBackup_log.txt"
+LOG_PATTERN="incBackup_log.txt*"
+LOG_COUNT=$(ls -1 $LOG_PATTERN 2>/dev/null | wc -l)
+if [ "$LOG_COUNT" -ge 5 ]; then
+    ls -1t $LOG_PATTERN | tail -n +6 | xargs rm -f
+fi
+# Renombrar log anterior si existe
+if [ -f "$LOG_FILE" ]; then
+    mv "$LOG_FILE" "$LOG_FILE.$(date +%Y%m%d%H%M%S)"
+fi
+exec > >(tee -a "$LOG_FILE") 2>&1
 
 # Configuration
 CONTAINER_NAME="peruHCE-db-master"                      # Change to your MariaDB container name
@@ -50,8 +61,22 @@ docker cp "$CONTAINER_NAME:$TEMP_BACKUP_PATH" "$BACKUP_DIR/temp"
 
 # Zip the backup
 cd "$BACKUP_DIR" || exit
-tar -czf "$BACKUP_DIR/${FILENAME}_${BACKUP_NAME}.tar.gz" -C "temp/"
-rm -rf temp
+
+# Cifrar backup con openssl (AES-256)
+if [ -z "${BACKUP_ENCRYPTION_PASSWORD:-}" ]; then
+    echo "[ERROR] Variable BACKUP_ENCRYPTION_PASSWORD no definida. Abortando cifrado." >&2
+    exit 2
+fi
+openssl enc -aes-256-cbc -salt -pbkdf2 -pass env:BACKUP_ENCRYPTION_PASSWORD \
+    -in "$BACKUP_DIR/${FILENAME}_${BACKUP_NAME}.tar.gz" \
+    -out "$BACKUP_DIR/${FILENAME}_${BACKUP_NAME}.tar.gz.enc"
+if [ $? -eq 0 ]; then
+    rm -f "$BACKUP_DIR/${FILENAME}_${BACKUP_NAME}.tar.gz"
+    echo "[OK] Backup cifrado exitosamente en '$BACKUP_DIR/${FILENAME}_${BACKUP_NAME}.tar.gz.enc'"
+else
+    echo "[ERROR] Falló el cifrado del backup. El archivo sin cifrar permanece."
+    exit 3
+fi
 
 # Notice full backup created
 echo "Backup created: ${FILENAME}_${BACKUP_NAME}.tar.gz"
