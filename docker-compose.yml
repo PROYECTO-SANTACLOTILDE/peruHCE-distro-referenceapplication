@@ -474,9 +474,6 @@ services:
     networks:
       - monitoring-network
 
-  # Promtail - Log shipper for Loki
-  # Grafana Alloy - Log collection (replaces deprecated Promtail)
-  # Migrated on 2025-10-20 - Promtail EOL: March 2026
   alloy:
     container_name: peruHCE-alloy
     image: grafana/alloy:latest
