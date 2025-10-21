@@ -1,42 +1,72 @@
-#!/bin/bash
-
-# Log every outout in log.txt
-exec > >(tee -a fullBackup_log.txt) 2>&1
 
 #!/bin/bash
+# ------------------------------------------------------------------------------
+# Script: backup_full.sh
+# Descripción: Realiza un backup completo de la base de datos MariaDB del contenedor especificado.
+# Uso: ./backup_full.sh [--container NOMBRE] [--dir DIRECTORIO] [--max N]
+# Autor: Equipo PeruHCE
+# Fecha: 2025-10-20
+# ------------------------------------------------------------------------------
 
-# Configuration
-NAME_PREFIX="peruhce-distro-referenceapplication_"
-CONTAINER_NAME="peruHCE-db-master"                      # Change to your MariaDB container name
-FULL_BACKUP_DIR="/home/${USER}/peruHCE-fullBackups"     # Change to your desired backup storage location, make sure its exists
-MAX_BACKUPS=10                                          # Maximum number of backups to keep
+set -euo pipefail
+
+# Configuración por defecto (pueden ser sobreescritas por argumentos o variables de entorno)
+CONTAINER_NAME="${CONTAINER_NAME:-peruHCE-db-master}"
+FULL_BACKUP_DIR="${FULL_BACKUP_DIR:-/home/${USER}/peruHCE-fullBackups}"
+MAX_BACKUPS="${MAX_BACKUPS:-10}"
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-BACKUP_NAME="$TIMESTAMP"
-TEMP_FULL_BACKUP_PATH="/backup/full"                    # Inside the container 
-TEMP_INCR_BACKUP_PATH="/backup/inc"                     # Inside the container 
-BUSYBOX_VERSION="1.37.0"
+BACKUP_NAME="backup_$TIMESTAMP"
+TEMP_FULL_BACKUP_PATH="/backup/full"
 
-TEMP_BACKUP_PATH="./tmpFull"
+# Parseo de argumentos
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --container)
+            CONTAINER_NAME="$2"; shift 2;;
+        --dir)
+            FULL_BACKUP_DIR="$2"; shift 2;;
+        --max)
+            MAX_BACKUPS="$2"; shift 2;;
+        *)
+            echo "Uso: $0 [--container NOMBRE] [--dir DIRECTORIO] [--max N]"; exit 1;;
+    esac
+done
 
-BACKUP_DIR="/path/to/backups"                           # Change this to your backup directory
+# Logging
+LOG_FILE="$FULL_BACKUP_DIR/fullBackup_log.txt"
+mkdir -p "$FULL_BACKUP_DIR"
+exec > >(tee -a "$LOG_FILE") 2>&1
 
-DB_USER="root"                                          # Change this to your database user
-DB_NAME="my_database"                           # Change this to your database name
-DB_PASSWORD="password"  # Change this to your database password
+echo "[INFO] Iniciando backup completo $TIMESTAMP para contenedor $CONTAINER_NAME"
 
-# Go to docker compose directory
-cd ..
-
-# Stop the backend container
-echo -e "\nStop backend container"
-docker compose stop backend
-
-# Verify full backups directory
-# Verify directory exists
-if [ ! -d "$FULL_BACKUP_DIR" ]; then
-    echo "Error: Directory '$FULL_BACKUP_DIR' does not exist."
-    exit 1
+# Verificar existencia del contenedor
+if ! docker ps -a --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
+    echo "[ERROR] Contenedor '$CONTAINER_NAME' no encontrado."; exit 1
 fi
+
+# Verificar directorio de backups
+if [ ! -d "$FULL_BACKUP_DIR" ]; then
+    echo "[ERROR] Directorio '$FULL_BACKUP_DIR' no existe."; exit 1
+fi
+
+# Crear backup dentro del contenedor
+docker exec --user root "$CONTAINER_NAME" mariadb-backup --user=root --password="${OMRS_DB_R_PASSWORD:-openmrs_r}" --backup --target-dir="$TEMP_FULL_BACKUP_PATH"
+
+# Copiar backup al host
+docker cp "$CONTAINER_NAME:$TEMP_FULL_BACKUP_PATH" "$FULL_BACKUP_DIR/$BACKUP_NAME"
+
+# Comprimir backup
+tar -czf "$FULL_BACKUP_DIR/$BACKUP_NAME.tar.gz" -C "$FULL_BACKUP_DIR" "$BACKUP_NAME"
+rm -rf "$FULL_BACKUP_DIR/$BACKUP_NAME"
+
+# Rotar backups antiguos
+BACKUP_COUNT=$(ls -1 "$FULL_BACKUP_DIR"/*.tar.gz 2>/dev/null | wc -l)
+if [ "$BACKUP_COUNT" -gt "$MAX_BACKUPS" ]; then
+    ls -1t "$FULL_BACKUP_DIR"/*.tar.gz | tail -n +$((MAX_BACKUPS+1)) | xargs rm -f
+    echo "[INFO] Se eliminaron backups antiguos, manteniendo los últimos $MAX_BACKUPS."
+fi
+
+echo "[OK] Backup completo realizado en '$FULL_BACKUP_DIR/$BACKUP_NAME.tar.gz'"
 
 # List Temporal backups
 fullBackups=($(ls -t "$FULL_BACKUP_DIR"))

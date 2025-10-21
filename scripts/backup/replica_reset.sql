@@ -1,5 +1,6 @@
 SELECT '=== Stopping replication process ===';
 STOP SLAVE;
+-- Script: replica_reset.sql
 RESET SLAVE ALL;
 SELECT '=== Restarting replication process ===';
 CHANGE MASTER TO

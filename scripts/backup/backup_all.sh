@@ -2,8 +2,8 @@
 # PeruHCE Backup Script
 # Realiza backup completo de todos los servicios críticos
 #
-# Uso: ./backup-all.sh
-# Cron: 0 2 * * * /path/to/backup-all.sh
+# Uso: ./backup_all.sh
+# Cron: 0 2 * * * /path/to/backup_all.sh
 
 set -e
 

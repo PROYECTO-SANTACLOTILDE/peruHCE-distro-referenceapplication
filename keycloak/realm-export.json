@@ -37,7 +37,7 @@
             "name": "OpenMRS",
             "enabled": true,
             "clientAuthenticatorType": "client-secret",
-            "secret": "433b9e20-549e-42e7-a05a-6f83dfffa8ba",
+            "secret": "${KEYCLOAK_CLIENT_SECRET}",
             "redirectUris": [
                 "http://localhost/openmrs/*",
                 "http://localhost:8080/openmrs/*",
@@ -129,8 +129,8 @@
             "credentials": [
                 {
                     "type": "password",
-                    "value": "Admin123",
-                    "temporary": false
+                    "value": "${KEYCLOAK_ADMIN_PASSWORD}",
+                    "temporary": true
                 }
             ],
             "realmRoles": [
