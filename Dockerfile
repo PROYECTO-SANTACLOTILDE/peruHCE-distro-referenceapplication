@@ -43,6 +43,7 @@ RUN mvn $MVN_ARGS_SETTINGS clean
 # Replace 'nightly' with the exact version of openmrs-core built for production (if available)
 FROM openmrs/openmrs-core:nightly-amazoncorretto-17
 
+
 # Do not copy the war if using the correct openmrs-core image version
 COPY --from=dev /openmrs/distribution/openmrs_core/openmrs.war /openmrs/distribution/openmrs_core/
 
@@ -50,3 +51,11 @@ COPY --from=dev /openmrs/distribution/openmrs-distro.properties /openmrs/distrib
 COPY --from=dev /openmrs/distribution/openmrs_modules /openmrs/distribution/openmrs_modules
 COPY --from=dev /openmrs/distribution/openmrs_owas /openmrs/distribution/openmrs_owas
 COPY --from=dev  /openmrs/distribution/openmrs_config /openmrs/distribution/openmrs_config
+
+# Copiar script para sustituir variables de entorno en globalproperties
+COPY scripts/utils/globalproperties_envsubst.sh /usr/local/bin/globalproperties_envsubst.sh
+RUN chmod +x /usr/local/bin/globalproperties_envsubst.sh
+
+# Cambiar ENTRYPOINT para hacer sustitución antes de arrancar OpenMRS
+ENTRYPOINT ["/usr/local/bin/globalproperties_envsubst.sh"]
+# El CMD original de la imagen base se mantiene, por lo que OpenMRS arrancará normalmente
