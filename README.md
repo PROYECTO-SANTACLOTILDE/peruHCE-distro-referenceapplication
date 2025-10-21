@@ -1,3 +1,21 @@
+# Autenticación OIDC/Keycloak en el Frontend SPA
+
+El archivo `frontend/config/oauth2.json` ahora utiliza variables de entorno para permitir la configuración dinámica de Keycloak/OIDC al levantar los contenedores.
+
+Ejemplo de variables necesarias (agrega en tu `.env` o como variables de entorno en Docker Compose):
+
+```
+KEYCLOAK_HOST=keycloak.example.com
+KEYCLOAK_REALM=mi_realm
+KEYCLOAK_CLIENT_ID=frontend-spa
+SPA_URL=https://spa.example.com
+```
+
+El script de inicio del frontend (`frontend_startup.sh`) aplicará automáticamente `envsubst` sobre `oauth2.json` para inyectar estos valores antes de iniciar Nginx.
+
+**No es necesario editar manualmente el JSON para cada entorno.**
+
+---
 ## Gestión de credenciales y Docker secrets
 
 Para máxima seguridad, todas las credenciales y claves sensibles deben gestionarse únicamente con Docker secrets. No definas contraseñas ni tokens en archivos .env ni en template.env.
