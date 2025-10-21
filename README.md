@@ -1,3 +1,38 @@
+## Gestión de credenciales y Docker secrets
+
+Para máxima seguridad, todas las credenciales y claves sensibles deben gestionarse únicamente con Docker secrets. No definas contraseñas ni tokens en archivos .env ni en template.env.
+
+### Secrets recomendados:
+
+- OMRS_DB_PASSWORD
+- OMRS_DB_R_PASSWORD
+- OMRS_DB_BACKUP_USER
+- OMRS_DB_BACKUP_PASSWORD
+- MYSQL_ROOT_PASSWORD
+- BACKUP_ENCRYPTION_PASSWORD
+- KEYCLOAK_DB_PASSWORD
+- KEYCLOAK_ADMIN_PASSWORD
+- GHP_USERNAME
+- GHP_PASSWORD
+
+### Ejemplo para crear secrets:
+
+```bash
+echo "<valor>" | docker secret create OMRS_DB_PASSWORD -
+echo "<valor>" | docker secret create OMRS_DB_R_PASSWORD -
+echo "<valor>" | docker secret create OMRS_DB_BACKUP_USER -
+echo "<valor>" | docker secret create OMRS_DB_BACKUP_PASSWORD -
+echo "<valor>" | docker secret create MYSQL_ROOT_PASSWORD -
+echo "<valor>" | docker secret create BACKUP_ENCRYPTION_PASSWORD -
+echo "<valor>" | docker secret create KEYCLOAK_DB_PASSWORD -
+echo "<valor>" | docker secret create KEYCLOAK_ADMIN_PASSWORD -
+echo "<valor>" | docker secret create GHP_USERNAME -
+echo "<valor>" | docker secret create GHP_PASSWORD -
+```
+
+Los scripts y servicios están preparados para leer primero de Docker secrets (ubicados en `/run/secrets/NOMBRE_SECRET`). Si no existe el secret, intentarán usar la variable de entorno correspondiente.
+
+Consulta el archivo `template.env` para ver solo variables no sensibles.
 ## Uso de credenciales seguras con Docker secrets
 
 Para descargar dependencias privadas desde GitHub Packages durante el build de la imagen backend, este proyecto utiliza Docker secrets en lugar de variables de entorno. Esto mejora la seguridad y evita exponer credenciales sensibles.

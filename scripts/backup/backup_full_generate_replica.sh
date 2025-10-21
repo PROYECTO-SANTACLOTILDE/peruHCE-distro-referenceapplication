@@ -14,6 +14,17 @@ if [ -f "$LOG_FILE" ]; then
 fi
 exec > >(tee -a "$LOG_FILE") 2>&1
 
+ # Leer credenciales sensibles desde Docker secrets si existen
+if [ -f /run/secrets/OMRS_DB_BACKUP_USER ]; then
+    export OMRS_DB_BACKUP_USER="$(cat /run/secrets/OMRS_DB_BACKUP_USER)"
+fi
+if [ -f /run/secrets/OMRS_DB_BACKUP_PASSWORD ]; then
+    export OMRS_DB_BACKUP_PASSWORD="$(cat /run/secrets/OMRS_DB_BACKUP_PASSWORD)"
+fi
+if [ -f /run/secrets/BACKUP_ENCRYPTION_PASSWORD ]; then
+    export BACKUP_ENCRYPTION_PASSWORD="$(cat /run/secrets/BACKUP_ENCRYPTION_PASSWORD)"
+fi
+
 # Configuration
 CONTAINER_NAME="peruHCE-db-replic"                      # Change to your MariaDB container name
 BACKUP_DIR="/home/${USER}/peruHCE-fullBackups"          # Change to your desired backup storage location

@@ -18,6 +18,14 @@ BACKUP_NAME="incr_$TIMESTAMP"
 TEMP_FULL_BACKUP_PATH="/backup/full"
 TEMP_INCR_BACKUP_PATH="/backup/inc"
 
+# Leer credenciales sensibles desde Docker secrets si existen
+if [ -f /run/secrets/OMRS_DB_R_PASSWORD ]; then
+  export OMRS_DB_R_PASSWORD="$(cat /run/secrets/OMRS_DB_R_PASSWORD)"
+fi
+if [ -f /run/secrets/BACKUP_ENCRYPTION_PASSWORD ]; then
+  export BACKUP_ENCRYPTION_PASSWORD="$(cat /run/secrets/BACKUP_ENCRYPTION_PASSWORD)"
+fi
+
 # Parseo de argumentos
 while [[ $# -gt 0 ]]; do
     case $1 in
