@@ -63,12 +63,10 @@ services:
   portainer:
     container_name: peruHCE-portainer
     image: portainer/portainer-ce:lts
-    command: -H unix:///var/run/docker.sock --http-enabled --base-url=/portainer
+    command: -H unix:///var/run/docker.sock --http-enabled
     restart: "unless-stopped"
     ports:
-      - "9443:9443" # HTTPS Portainer Web UI
-      - "9000:9000" # HTTP Portainer Web UI
-      - "8000:8000" # Necessary for other reason
+      - "127.0.0.1:9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-data:/data
@@ -97,6 +95,7 @@ services:
       - frontend-network
       - backend-network
       - auth-network
+      - management-network
 
   frontend:
     container_name: peruHCE-frontend
@@ -155,7 +154,7 @@ services:
       # MariaDB master
   db:
     container_name: peruHCE-db-master
-    image: mariadb:11.8
+    image: mariadb:10.11.8
     restart: "unless-stopped"
     command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1"
     #command: "mariadbd --character-set-server=utf8mb3 --collation-server=utf8mb3_general_ci"
@@ -193,7 +192,7 @@ services:
   # MariaDB Replic
   db-replic:
     container_name: peruHCE-db-replic
-    image: mariadb:11.8
+    image: mariadb:10.11.8
     restart: "unless-stopped"
     command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=2 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1 --read-only=1"
     secrets:
@@ -233,13 +232,10 @@ services:
     secrets:
       - pihole_password
     ports:
-      # DNS Ports - Critical for hospital network
       - "53:53/tcp"
       - "53:53/udp"
-      # Web UI Port
-      - "81:80/tcp"
-      # HTTPS Port
-      - "444:443/tcp"
+      - "127.0.0.1:8081:80/tcp"
+      - "127.0.0.1:8444:443/tcp"
     env_file:
       - ./.env
     environment:
@@ -316,6 +312,22 @@ services:
       start_period: 60s
     networks:
       - services-network
+      - dicom-network
+
+  # Lightweight nginx proxy to add CORS headers for Orthanc during dev/testing
+  orthanc-proxy:
+    container_name: peruHCE-orthanc-proxy
+    image: nginx:1.25-alpine
+    restart: "unless-stopped"
+    ports:
+      - "8043:80"
+      
+    volumes:
+      - ./gateway/orthanc-proxy.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - orthanc
+    networks:
+      - services-network
       - backend-network
 
   fua-generator-db:
@@ -353,6 +365,9 @@ services:
       ORTHANC_JSON: |
         {
           "Name": "PeruHCE Orthanc",
+          "HttpServer": {
+            "ExternalRoot": "http://localhost:8043"
+          },
           "RemoteAccessAllowed": true,
           "AuthenticationEnabled": false,
           "RegisteredUsers": {},
@@ -373,7 +388,7 @@ services:
     volumes:
       - orthanc-data:/var/lib/orthanc/db
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8042/system" ]
+      test: [ "CMD-SHELL", "python3 -c 'import http.client; conn = http.client.HTTPConnection(\"localhost\", 8042); conn.request(\"GET\", \"/system\"); res = conn.getresponse(); exit(0 if res.status == 200 else 1)'" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -388,28 +403,9 @@ services:
     restart: "unless-stopped"
     ports:
       - "3000:80"
-    environment:
-      APP_CONFIG: |
-        {
-          "routerBasename": "/",
-          "servers": {
-            "dicomWeb": [
-              {
-                "name": "PeruHCE Orthanc",
-                "wadoUriRoot": "http://orthanc:8042/wado",
-                "qidoRoot": "http://orthanc:8042/dicom-web",
-                "wadoRoot": "http://orthanc:8042/dicom-web",
-                "qidoSupportsIncludeField": true,
-                "imageRendering": "wadors",
-                "thumbnailRendering": "wadors",
-                "requestOptions": {
-                  "requestFromBrowser": true
-                }
-              }
-            ]
-          },
-          "defaultDataSourceName": "dicomWeb"
-        }
+    volumes:
+      # Mount custom app-config.js to configure Orthanc connection
+      - ./ohif/app-config.js:/usr/share/nginx/html/app-config.js:ro
     depends_on:
       - orthanc
     healthcheck:
@@ -441,7 +437,7 @@ services:
       - ./monitoring/prometheus/alerts:/etc/prometheus/alerts:ro
       - prometheus-data:/prometheus
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9090/-/healthy" ]
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -466,7 +462,7 @@ services:
       - ./monitoring/loki/loki-config.yml:/etc/loki/loki-config.yml:ro
       - loki-data:/loki
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3100/ready" ]
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -503,10 +499,10 @@ services:
     image: grafana/grafana:latest
     restart: "unless-stopped"
     ports:
-      - "3001:3000"
+      - "127.0.0.1:3001:3000"
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
-      GF_SECURITY_ADMIN_PASSWORD: eCHV1kOvUQAK7B69snYwyKXUZJZ6LXLu
+      GF_SECURITY_ADMIN_PASSWORD_FILE: /run/secrets/grafana_admin_password
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel
       GF_SERVER_ROOT_URL: http://localhost:3001
       GF_USERS_ALLOW_SIGN_UP: "false"
@@ -526,6 +522,8 @@ services:
     networks:
       - monitoring-network
       - management-network
+    secrets:
+      - grafana_admin_password
 
 volumes:
   keycloak-data: ~

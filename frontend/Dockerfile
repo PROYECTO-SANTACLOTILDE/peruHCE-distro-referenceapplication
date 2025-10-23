@@ -30,8 +30,8 @@ RUN apk update && \
 # clear any default files installed by nginx
 RUN rm -rf /usr/share/nginx/html/*
 
-COPY ../scripts/frontend/frontend_startup.sh /usr/local/bin/frontend_startup.sh
-RUN chmod +x /usr/local/bin/frontend_startup.sh
+COPY startup.sh /usr/local/bin/startup.sh
+RUN chmod +x /usr/local/bin/startup.sh
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
@@ -40,4 +40,4 @@ COPY config/config-openmrs.json /usr/share/nginx/html
 COPY config/config-pucp.json /usr/share/nginx/html
 COPY config/oauth2.json /usr/share/nginx/html
 
-CMD ["/usr/local/bin/frontend_startup.sh"]
+CMD ["/usr/local/bin/startup.sh"]

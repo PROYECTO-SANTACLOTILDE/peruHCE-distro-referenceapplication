@@ -1,94 +1,49 @@
-// Grafana Alloy Configuration for PeruHCE
-// Simplified version - collects all Docker container logs
-// Fixed: 2025-10-20
+// Minimal Grafana Alloy configuration (fixed syntax)
 
-// Logging configuration
 logging {
-  level  = "info"
+  level = "info"
   format = "logfmt"
 }
 
-// Loki client - where to send logs
 loki.write "default" {
   endpoint {
     url = "http://loki:3100/loki/api/v1/push"
     batch_wait = "1s"
-    batch_size = 1048576
+    batch_size = "1MB"
   }
 }
 
-// Docker service discovery
 discovery.docker "containers" {
   host = "unix:///var/run/docker.sock"
   refresh_interval = "5s"
 }
 
-// Collect logs from all Docker containers
 loki.source.docker "docker_logs" {
-  host    = "unix:///var/run/docker.sock"
+  host = "unix:///var/run/docker.sock"
   targets = discovery.docker.containers.targets
 
   forward_to = [loki.process.docker_pipeline.receiver]
-
-  relabel_rules = [
-    // Extract container name
-    {
-      source_labels = ["__meta_docker_container_name"]
-      regex         = "/(.*)"
-      target_label  = "container"
-    },
-    // Extract container ID
-    {
-      source_labels = ["__meta_docker_container_id"]
-      target_label  = "container_id"
-    },
-    // Extract container image
-    {
-      source_labels = ["__meta_docker_container_image"]
-      target_label  = "image"
-    },
-    // Extract service name from compose labels
-    {
-      source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
-      target_label  = "service"
-    },
-    // Extract project name
-    {
-      source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
-      target_label  = "project"
-    },
-    // Extract log stream
-    {
-      source_labels = ["__meta_docker_container_log_stream"]
-      target_label  = "stream"
-    },
-  ]
 
   labels = {
     job = "docker",
   }
 }
 
-// Processing pipeline for all Docker logs
 loki.process "docker_pipeline" {
   forward_to = [loki.write.default.receiver]
 
-  // Parse Docker log format
   stage.docker {}
 
-  // Extract log level if present
   stage.regex {
     expression = "(?P<level>ERROR|WARN|INFO|DEBUG|TRACE)"
   }
 
-  // Set labels from regex extraction
   stage.labels {
     values = {
       level = "level",
     }
   }
 
-  // Add container metadata as labels
   stage.static_labels {
     values = {
       environment = "production",

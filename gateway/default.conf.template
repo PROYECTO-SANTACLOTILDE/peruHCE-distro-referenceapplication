@@ -89,32 +89,17 @@ server {
   location /openmrs {
     proxy_read_timeout 300s;
     proxy_pass http://backend;
-    
-    # Add CORS headers
-    add_header Access-Control-Allow-Origin "*"; # Replace * with specific domains if needed
-    add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
-    add_header Access-Control-Allow-Headers "Origin, Authorization, Content-Type, Accept";
-
-    # Handle preflight OPTIONS requests
-    if ($request_method = 'OPTIONS') {
-      add_header Access-Control-Allow-Origin "*";
-      add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
-      add_header Access-Control-Allow-Headers "Origin, Authorization, Content-Type, Accept";
-      add_header Content-Length 0;
-      add_header Content-Type text/plain;
-      return 204;
-    }
   }
-  
+
   location = /services/fua-generator {
     return 301 /services/fua-generator/;
-    
+
   }
 
   location /services/fua-generator/ {
     proxy_pass http://fua-generator/;
     proxy_redirect http://$host/ /services/fua-generator/;
-    
+
     # Si el upstream falla, devolver 503 con mensaje personalizado
     error_page 502 503 504 = @fua_unavailable;
   }
@@ -205,7 +190,7 @@ server {
   # if serving this via HTTPS, the following is recommended
   #proxy_cookie_flags      $var_proxy_cookie_flags;
   proxy_http_version    1.1;
-  
+
   gzip on;
   gzip_vary on;
   # 1 KiB
@@ -241,20 +226,20 @@ server {
 
   location = /openmrs/spa {
     return 301 /openmrs/spa/;
-    
+
   }
 
-  
+
 
   location = /services/fua-generator {
     return 301 /services/fua-generator/;
-    
+
   }
 
   location /services/fua-generator/ {
     proxy_pass http://fua-generator/;
     proxy_redirect http://$host/ /services/fua-generator/;
-    
+
     # Si el upstream falla, devolver 503 con mensaje personalizado
     error_page 502 503 504 = @fua_unavailable;
   }
@@ -273,7 +258,3 @@ server {
     return 301 /openmrs/spa/home;
   }
 }
-
-
-
-
