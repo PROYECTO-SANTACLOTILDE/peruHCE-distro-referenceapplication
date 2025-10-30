@@ -73,11 +73,9 @@ services:
           proxy_pass http://fua-generator/;
           proxy_redirect http://$host/ /services/fua-generator/;
 
-          # Si el upstream falla, devolver 503 con mensaje personalizado
           error_page 502 503 504 = @fua_unavailable;
         }
 
-        # Location para manejar cuando fua-generator no está disponible
         location @fua_unavailable {
           add_header Content-Type application/json always;
           return 503 '{"error": "FUA Generator service is temporarily unavailable", "status": 503}';
