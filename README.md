@@ -1,4 +1,47 @@
-# Autenticación OIDC/Keycloak en el Frontend SPA
+# peruHCE - Distribución OpenMRS para el Perú
+
+## Tabla de Contenidos
+
+- [Configuración SSL/HTTPS](#configuración-sslhttps)
+- [Autenticación OIDC/Keycloak](#autenticación-oidckeycloak-en-el-frontend-spa)
+- [Gestión de Credenciales](#gestión-de-credenciales-y-docker-secrets)
+
+---
+
+## Configuración SSL/HTTPS
+
+peruHCE incluye soporte completo para SSL/HTTPS con certificados auto-firmados optimizados para redes hospitalarias internas.
+
+### Inicio Rápido con SSL
+
+```bash
+# Iniciar con SSL habilitado
+docker compose -f docker-compose.yml -f docker-compose-prod.yml -f docker-compose.ssl.yml up -d
+
+# Acceder vía HTTPS
+https://localhost
+# o
+https://sihsalus.hsc
+```
+
+### Características de Seguridad
+
+- ✅ Certificados RSA de 4096 bits
+- ✅ Soporte TLS 1.2 y 1.3
+- ✅ Headers de seguridad HTTP (HSTS, CSP, X-Frame-Options, etc.)
+- ✅ Renovación automática opcional
+- ✅ Parámetros Diffie-Hellman de 4096 bits
+- ✅ Soporte para múltiples dominios e IPs
+
+### Documentación Completa
+
+Para configuración avanzada, instalación de certificados en clientes, renovación, y solución de problemas, consulta:
+
+**[📘 Guía Completa de Certificados SSL](SSL-CERTIFICATE-GUIDE.md)**
+
+---
+
+## Autenticación OIDC/Keycloak en el Frontend SPA
 
 El archivo `frontend/config/oauth2.json` ahora utiliza variables de entorno para permitir la configuración dinámica de Keycloak/OIDC al levantar los contenedores.
 

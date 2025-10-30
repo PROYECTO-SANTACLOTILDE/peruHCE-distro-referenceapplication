@@ -4,3 +4,13 @@
 .idea/
 enviromentVariables.env
 .env
+
+# SSL Certificates and private keys
+gateway/ssl/
+*.key
+*.crt
+*.pem
+*.csr
+
+# Certificate generation logs
+scripts/utils/certificate_generate.log
