@@ -199,3 +199,4 @@ volumes:
   gateway-data: ~
   portainer-data: ~
   pihole-data: ~
+  pihole-dnsmaq: ~

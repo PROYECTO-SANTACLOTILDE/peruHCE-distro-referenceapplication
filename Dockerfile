@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ### Dev Stage
-FROM openmrs/openmrs-core:dev-amazoncorretto-17 AS dev
+FROM openmrs/openmrs-core:2.6.0 AS dev
 WORKDIR /openmrs_distro
 
 
@@ -41,7 +41,7 @@ RUN mvn $MVN_ARGS_SETTINGS clean
 
 ### Run Stage
 # Replace 'nightly' with the exact version of openmrs-core built for production (if available)
-FROM openmrs/openmrs-core:nightly-amazoncorretto-17
+FROM openmrs/openmrs-core:2.6.0
 
 
 # Do not copy the war if using the correct openmrs-core image version

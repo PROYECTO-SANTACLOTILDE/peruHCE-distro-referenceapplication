@@ -57,6 +57,32 @@ services:
     networks:
       - services-network
 
+  # Override gateway to include FUA configuration
+  gateway:
+    environment:
+      FUA_CONFIG: |
+        upstream fua-generator {
+          server fua-generator:3000 max_fails=3 fail_timeout=10s;
+        }
+      FUA_LOCATIONS: |
+        location = /services/fua-generator {
+          return 301 /services/fua-generator/;
+        }
+
+        location /services/fua-generator/ {
+          proxy_pass http://fua-generator/;
+          proxy_redirect http://$host/ /services/fua-generator/;
+
+          # Si el upstream falla, devolver 503 con mensaje personalizado
+          error_page 502 503 504 = @fua_unavailable;
+        }
+
+        # Location para manejar cuando fua-generator no está disponible
+        location @fua_unavailable {
+          add_header Content-Type application/json always;
+          return 503 '{"error": "FUA Generator service is temporarily unavailable", "status": 503}';
+        }
+
 volumes:
   db-fua-generator:
     name: peruHCE-db-fua-generator

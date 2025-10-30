@@ -28,10 +28,7 @@ upstream backend {
   server backend:8080 max_fails=0;
 }
 
-upstream fua-generator {
-  server fua-generator:3000 max_fails=3 fail_timeout=10s;
-}
-
+${FUA_CONFIG}
 
 server {
   listen       80;
@@ -93,24 +90,7 @@ server {
     proxy_pass http://backend;
   }
 
-  location = /services/fua-generator {
-    return 301 /services/fua-generator/;
-
-  }
-
-  location /services/fua-generator/ {
-    proxy_pass http://fua-generator/;
-    proxy_redirect http://$host/ /services/fua-generator/;
-
-    # Si el upstream falla, devolver 503 con mensaje personalizado
-    error_page 502 503 504 = @fua_unavailable;
-  }
-
-  # Location para manejar cuando fua-generator no está disponible
-  location @fua_unavailable {
-    add_header Content-Type application/json always;
-    return 503 '{"error": "FUA Generator service is temporarily unavailable", "status": 503}';
-  }
+${FUA_LOCATIONS}
 
   location /portainer {
     return 301 /portainer/;
@@ -167,98 +147,4 @@ server {
   }
 
 
-}
-
-server {
-  listen 443 ssl;
-  server_name 127.0.0.1 192.168.0.200 localhost sihsalus.hsc openmrs.sihsalus.hsc;
-
-  # SSL configuration
-  ssl_certificate     /etc/nginx/ssl/sihsalus-certificate.crt;
-  ssl_certificate_key /etc/nginx/ssl/sihsalus-certificate.key;
-
-  # Recommended security settings
-  ssl_protocols TLSv1.2 TLSv1.3;
-  ssl_ciphers HIGH:!aNULL:!MD5;
-
-  add_header X-Frame-Options "SAMEORIGIN" always;
-  add_header X-XSS-Protection "1; mode=block" always;
-  add_header X-Content-Type-Options "nosniff" always;
-  add_header Content-Security-Policy $csp_header always;
-  add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-
-  proxy_set_header      HOST $host;
-  proxy_set_header      X-Forwarded-Proto $forwarded_proto;
-  proxy_set_header      X-Real-IP $forwarded_ip;
-  proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
-  # if serving this via HTTPS, the following is recommended
-  #proxy_cookie_flags      $var_proxy_cookie_flags;
-  proxy_http_version    1.1;
-
-  gzip on;
-  gzip_vary on;
-  # 1 KiB
-  gzip_min_length 1024;
-  gzip_proxied any;
-  gzip_http_version 1.0;
-  gzip_types  font/eot
-              font/otf
-              font/ttf
-              image/svg+xml
-              text/css
-              text/html
-              text/javascript
-              text/plain
-              text/xml
-              application/atom+xml
-              application/geo+json
-              application/importmap+json
-              application/javascript
-              application/x-javascript
-              application/json
-              application/ld+json
-              application/fhir+json
-              application/fhir+xml
-              application/manifest+json
-              application/rdf+xml
-              application/rss+xml
-              application/xhtml+xml
-              application/xml;
-
-  # all redirects are relative to the gateway
-  absolute_redirect off;
-
-  location = /openmrs/spa {
-    return 301 /openmrs/spa/;
-
-  }
-
-
-
-  location = /services/fua-generator {
-    return 301 /services/fua-generator/;
-
-  }
-
-  location /services/fua-generator/ {
-    proxy_pass http://fua-generator/;
-    proxy_redirect http://$host/ /services/fua-generator/;
-
-    # Si el upstream falla, devolver 503 con mensaje personalizado
-    error_page 502 503 504 = @fua_unavailable;
-  }
-
-  # Location para manejar cuando fua-generator no está disponible
-  location @fua_unavailable {
-    add_header Content-Type application/json always;
-    return 503 '{"error": "FUA Generator service is temporarily unavailable", "status": 503}';
-  }
-
-  location = /openmrs/spa/ {
-    return 301 /openmrs/spa/home;
-  }
-
-  location = / {
-    return 301 /openmrs/spa/home;
-  }
 }
