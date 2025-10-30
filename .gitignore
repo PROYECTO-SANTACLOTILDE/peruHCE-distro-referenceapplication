@@ -2,15 +2,11 @@
 **/.DS_Store
 **/node_modules/
 .idea/
-enviromentVariables.env
-.env
 
-# SSL Certificates and private keys
-gateway/ssl/
-*.key
-*.crt
-*.pem
-*.csr
-
-# Certificate generation logs
-scripts/utils/certificate_generate.log
+# LLM coding agent documentation
+CLAUDE.md
+.claude/
+.cursorrules
+.cursor/
+.aider*
+.clinerules
