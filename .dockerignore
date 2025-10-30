@@ -4,3 +4,4 @@
 **/node
 *.iml
 .idea/
+.env

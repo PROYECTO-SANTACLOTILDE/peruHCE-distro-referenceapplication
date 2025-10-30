@@ -10,3 +10,5 @@ CLAUDE.md
 .cursor/
 .aider*
 .clinerules
+
+.env
