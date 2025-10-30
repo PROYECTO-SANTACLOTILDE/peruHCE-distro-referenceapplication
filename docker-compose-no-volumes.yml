@@ -1,41 +1,72 @@
-version: "3.7"
+# Docker Compose file WITHOUT persistent volumes (for testing/CI)
+# Usage: docker compose -f docker-compose.yml -f docker-compose-no-volumes.yml up -d
+#
+# This file removes all volume mounts for ephemeral testing
+# Data will be LOST when containers are removed
 
 services:
+  gateway:
+    volumes: []
+
+  frontend:
+    volumes: []
+
   backend:
-    image: openmrs/openmrs-reference-application-3-backend:${TAG:-nightly}
-    depends_on:
-      - db
-    secrets:
-      - mysql_openmrs_password
-    environment:
-      OMRS_CONFIG_MODULE_WEB_ADMIN: "true"
-      OMRS_CONFIG_AUTO_UPDATE_DATABASE: "true"
-      OMRS_CONFIG_CREATE_TABLES: "true"
-      OMRS_CONFIG_CONNECTION_SERVER: db
-      OMRS_CONFIG_CONNECTION_DATABASE: openmrs
-      OMRS_CONFIG_CONNECTION_USERNAME: ${OMRS_DB_USER:-openmrs}
-      OMRS_CONFIG_CONNECTION_PASSWORD_FILE: /run/secrets/mysql_openmrs_password
-      OMRS_OCL_TOKEN: ${OMRS_OCL_TOKEN:-openmrs}
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/openmrs" ]
-      timeout: 5s
-    ports:
-      - 8080:8080
+    volumes: []
 
   db:
-    image: mariadb:11.8
-    command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1"
-    secrets:
-      - mysql_root_password
-      - mysql_openmrs_password
-    environment:
-      MYSQL_DATABASE: openmrs
-      MYSQL_USER: ${OMRS_DB_USER:-openmrs}
-      MYSQL_PASSWORD_FILE: /run/secrets/mysql_openmrs_password
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+    volumes: []
 
-secrets:
-  mysql_root_password:
-    file: ./secrets/mysql_root_password.txt
-  mysql_openmrs_password:
-    file: ./secrets/mysql_openmrs_password.txt
+  db-replic:
+    volumes: []
+
+  dns:
+    volumes: []
+
+  portainer:
+    volumes:
+      # Keep docker socket (required for Portainer to work)
+      - /var/run/docker.sock:/var/run/docker.sock
+
+# Override all volumes to be ephemeral (no named volumes)
+volumes:
+  openmrs-frontend:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  openmrs-data:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  db-data:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  db-backup:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  db-data-r:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  db-backup-r:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  gateway-data:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  portainer-data:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  pihole-data:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  pihole-dnsmaq:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs

@@ -16,7 +16,7 @@ peruHCE incluye soporte completo para SSL/HTTPS con certificados auto-firmados o
 
 ```bash
 # Iniciar con SSL habilitado
-docker compose -f docker-compose.yml -f docker-compose-prod.yml -f docker-compose.ssl.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.ssl.yml up -d
 
 # Acceder vía HTTPS
 https://localhost

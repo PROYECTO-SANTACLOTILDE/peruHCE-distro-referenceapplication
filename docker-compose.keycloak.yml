@@ -1,0 +1,92 @@
+# Docker Compose file for Keycloak OIDC/OAuth2 Authentication
+# Usage: docker compose -f docker-compose.yml -f docker-compose.keycloak.yml up -d
+#
+# Provides centralized authentication for peruHCE using Keycloak
+# - Keycloak: Identity and Access Management
+# - PostgreSQL: Database for Keycloak
+
+services:
+  keycloak:
+    container_name: peruHCE-keycloak
+    build:
+      context: ./keycloak
+      dockerfile: Dockerfile
+    restart: "unless-stopped"
+    env_file:
+      - ./.env
+    secrets:
+      - keycloak_admin_password
+      - keycloak_db_password
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD_FILE: /run/secrets/keycloak_admin_password
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${KC_DB_DATABASE:-keycloak}
+      KC_DB_USERNAME: ${KC_DB_USERNAME:-keycloak}
+      KC_DB_PASSWORD_FILE: /run/secrets/keycloak_db_password
+      KC_HOSTNAME: ${KC_HOSTNAME:-localhost}
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+    ports:
+      - "${KEYCLOAK_PORT:-8180}:8080"
+    volumes:
+      - ./keycloak/themes:/opt/keycloak/themes:ro
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ready" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - keycloak-db
+    networks:
+      - auth-network
+      - backend-network
+
+  keycloak-db:
+    container_name: peruHCE-keycloak-db
+    image: postgres:17
+    restart: "unless-stopped"
+    env_file:
+      - ./.env
+    secrets:
+      - keycloak_db_password
+    environment:
+      POSTGRES_DB: ${KC_DB_DATABASE:-keycloak}
+      POSTGRES_USER: ${KC_DB_USERNAME:-keycloak}
+      POSTGRES_PASSWORD_FILE: /run/secrets/keycloak_db_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${KC_DB_USERNAME:-keycloak} -d ${KC_DB_DATABASE:-keycloak}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - auth-network
+
+volumes:
+  keycloak-data:
+    name: peruHCE-keycloak-data
+
+networks:
+  # Red de autenticación - Keycloak y SSO
+  auth-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.23.0.0/24
+
+  # Red de aplicación - Para integración con backend
+  backend-network:
+    external: true
+    name: peruHCE_backend-network
+
+secrets:
+  keycloak_admin_password:
+    file: ./secrets/keycloak_admin_password.txt
+  keycloak_db_password:
+    file: ./secrets/keycloak_db_password.txt

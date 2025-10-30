@@ -1,0 +1,117 @@
+# Docker Compose file for Medical Imaging Stack (DICOM/OHIF/Orthanc)
+# Usage: docker compose -f docker-compose.yml -f docker-compose.imaging.yml up -d
+#
+# Provides medical imaging capabilities for peruHCE:
+# - OHIF: Modern web-based medical imaging viewer
+# - Orthanc: DICOM server and PACS
+# - Orthanc Proxy: Nginx proxy for CORS handling
+
+services:
+  ohif:
+    container_name: peruHCE-ohif
+    image: ohif/app:v3.9.3
+    restart: "unless-stopped"
+    ports:
+      - "3000:80"
+    volumes:
+      # Mount custom app-config.js to configure Orthanc connection
+      - ./ohif/app-config.js:/usr/share/nginx/html/app-config.js:ro
+    depends_on:
+      - orthanc
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - dicom-network
+      - frontend-network
+
+  # Orthanc DICOM Server
+  orthanc:
+    container_name: peruHCE-orthanc
+    image: orthancteam/orthanc:25.8.2
+    restart: "unless-stopped"
+    ports:
+      - "8042:8042" # HTTP port
+      - "4242:4242" # DICOM port
+    environment:
+      ORTHANC_JSON: |
+        {
+          "Name": "PeruHCE Orthanc",
+          "HttpServer": {
+            "ExternalRoot": "http://localhost:8043"
+          },
+          "RemoteAccessAllowed": true,
+          "AuthenticationEnabled": false,
+          "RegisteredUsers": {},
+          "DicomAet": "ORTHANC",
+          "DicomPort": 4242,
+          "DicomWeb": {
+            "Enable": true,
+            "Root": "/dicom-web/",
+            "EnableWado": true,
+            "WadoRoot": "/wado",
+            "Ssl": false
+          },
+          "StableAge": 60,
+          "StrictAetComparison": false,
+          "HttpTimeout": 60,
+          "ConcurrentJobs": 2
+        }
+    volumes:
+      - orthanc-data:/var/lib/orthanc/db
+    healthcheck:
+      test: [ "CMD-SHELL", "python3 -c 'import http.client; conn = http.client.HTTPConnection(\"localhost\", 8042); conn.request(\"GET\", \"/system\"); res = conn.getresponse(); exit(0 if res.status == 200 else 1)'" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - dicom-network
+      - services-network
+
+  # Lightweight nginx proxy to add CORS headers for Orthanc during dev/testing
+  orthanc-proxy:
+    container_name: peruHCE-orthanc-proxy
+    image: nginx:1.25-alpine
+    restart: "unless-stopped"
+    ports:
+      - "8043:80"
+    volumes:
+      - ./gateway/orthanc-proxy.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - orthanc
+    networks:
+      - services-network
+      - backend-network
+
+volumes:
+  orthanc-data:
+    name: peruHCE-orthanc-data
+
+networks:
+  # Red médica - DICOM/Orthanc/OHIF
+  dicom-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.24.0.0/24
+
+  # Red de servicios - Para comunicación inter-servicios
+  services-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.27.0.0/24
+
+  # Red pública - Para OHIF viewer
+  frontend-network:
+    external: true
+    name: peruHCE_frontend-network
+
+  # Red de aplicación - Para integración con backend
+  backend-network:
+    external: true
+    name: peruHCE_backend-network
