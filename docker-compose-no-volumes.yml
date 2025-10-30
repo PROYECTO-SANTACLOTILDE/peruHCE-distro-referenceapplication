@@ -1,72 +1,53 @@
 # Docker Compose file WITHOUT persistent volumes (for testing/CI)
-# Usage: docker compose -f docker-compose.yml -f docker-compose-no-volumes.yml up -d
+# Based on: https://github.com/openmrs/openmrs-distro-referenceapplication/blob/main/docker-compose-no-volumes.yml
 #
-# This file removes all volume mounts for ephemeral testing
-# Data will be LOST when containers are removed
+# This provides a minimal OpenMRS setup without data persistence
+# Useful for quick testing and CI/CD pipelines
 
 services:
-  gateway:
-    volumes: []
-
-  frontend:
-    volumes: []
-
   backend:
-    volumes: []
+    image: openmrs/openmrs-reference-application-3-backend:${TAG:-qa}
+    depends_on:
+      - db
+    secrets:
+      - mysql_openmrs_password
+      - omrs_ocl_token
+    environment:
+      OMRS_CONFIG_MODULE_WEB_ADMIN: "true"
+      OMRS_CONFIG_AUTO_UPDATE_DATABASE: "true"
+      OMRS_CONFIG_CREATE_TABLES: "true"
+      OMRS_CONFIG_CONNECTION_SERVER: db
+      OMRS_CONFIG_CONNECTION_DATABASE: openmrs
+      OMRS_CONFIG_CONNECTION_USERNAME: ${OPENMRS_DB_USER:-openmrs}
+      OMRS_CONFIG_CONNECTION_PASSWORD_FILE: /run/secrets/mysql_openmrs_password
+      OMRS_OCL_TOKEN_FILE: /run/secrets/omrs_ocl_token
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/openmrs" ]
+      timeout: 5s
+    ports:
+      - "8080:8080"
 
   db:
-    volumes: []
+    image: mariadb:11.8
+    command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin"
+    secrets:
+      - mysql_root_password
+      - mysql_openmrs_password
+    environment:
+      MYSQL_DATABASE: openmrs
+      MYSQL_USER: ${OPENMRS_DB_USER:-openmrs}
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_openmrs_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+    healthcheck:
+      test: [ "CMD-SHELL", "mysql --user=${OPENMRS_DB_USER:-openmrs} --password=$$(cat /run/secrets/mysql_openmrs_password) --execute 'SHOW DATABASES;'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  db-replic:
-    volumes: []
-
-  dns:
-    volumes: []
-
-  portainer:
-    volumes:
-      # Keep docker socket (required for Portainer to work)
-      - /var/run/docker.sock:/var/run/docker.sock
-
-# Override all volumes to be ephemeral (no named volumes)
-volumes:
-  openmrs-frontend:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  openmrs-data:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  db-data:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  db-backup:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  db-data-r:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  db-backup-r:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  gateway-data:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  portainer-data:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  pihole-data:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  pihole-dnsmaq:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
+secrets:
+  mysql_root_password:
+    file: ./secrets/mysql_root_password.txt
+  mysql_openmrs_password:
+    file: ./secrets/mysql_openmrs_password.txt
+  omrs_ocl_token:
+    file: ./secrets/omrs_ocl_token.txt
