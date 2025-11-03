@@ -428,12 +428,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
+          <!--
           <execution>
             <id>copy-openmrs-configuration</id>
             <phase>package</phase>
             <configuration>
               <target>
-                <!-- Copy configuration from unpacked content package -->
                 <copy todir="${project.build.directory}/sdk-distro/web/openmrs_config">
                   <fileset dir="${project.build.directory}/content-package/configuration" />
                 </copy>
@@ -443,6 +443,7 @@
               <goal>run</goal>
             </goals>
           </execution>
+          -->
         </executions>
       </plugin>
     </plugins>
