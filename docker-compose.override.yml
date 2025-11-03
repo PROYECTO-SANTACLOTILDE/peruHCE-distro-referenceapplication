@@ -10,7 +10,7 @@ services:
   backend:
     build:
       context: .
-      # ADVERTENCIA: Si usas GHP_USERNAME y GHP_PASSWORD para builds sensibles, considera gestionarlos como Docker secrets o variables de entorno seguras.
+      # Para desarrollo no usar docker secrets (validar muy bien ambos flujos)
       args:
         GHP_USERNAME: ${GHP_USERNAME}
         GHP_PASSWORD: ${GHP_PASSWORD}
