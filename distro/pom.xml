@@ -103,12 +103,13 @@
       <version>${vaccination-schedule.version}</version>
     </dependency>
 
-    <!-- Custom Module: Imaging -->
+    <!-- Custom Module: Imaging
     <dependency>
       <groupId>org.openmrs.module</groupId>
       <artifactId>imaging-omod</artifactId>
       <version>${imaging.version}</version>
     </dependency>
+    -->
 
     <!-- UI Framework Modules (required by imaging) -->
     <dependency>
@@ -299,12 +300,12 @@
       <version>${billing.version}</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>org.openmrs.module</groupId>
       <artifactId>imaging-omod</artifactId>
       <version>${imaging.version}</version>
       <scope>provided</scope>
-    </dependency>
+    </dependency>-->
     <dependency>
       <groupId>org.openmrs.module</groupId>
       <artifactId>appui-omod</artifactId>
@@ -346,7 +347,7 @@
     </dependency>
     -->
 
-    <!-- Peru HCE Content Package -->
+    <!-- Peru HCE Content Package (temporarily disabled for CI/dev builds)
     <dependency>
       <groupId>org.peruhce</groupId>
       <artifactId>peruhce-content</artifactId>
@@ -354,6 +355,7 @@
       <classifier>content</classifier>
       <type>zip</type>
     </dependency>
+    -->
   </dependencies>
 
   <build>
@@ -406,18 +408,20 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
-          <execution>
-            <id>unpack-content-package</id>
-            <phase>package</phase>
-            <goals>
-              <goal>unpack-dependencies</goal>
-            </goals>
-            <configuration>
-              <includeGroupIds>org.peruhce</includeGroupIds>
-              <includeArtifactIds>peruhce-content</includeArtifactIds>
-              <outputDirectory>${project.build.directory}/content-package</outputDirectory>
-            </configuration>
-          </execution>
+          <!--
+              <execution>
+                <id>unpack-content-package</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>unpack-dependencies</goal>
+                </goals>
+                <configuration>
+                  <includeGroupIds>org.peruhce</includeGroupIds>
+                  <includeArtifactIds>peruhce-content</includeArtifactIds>
+                  <outputDirectory>${project.build.directory}/content-package</outputDirectory>
+                </configuration>
+              </execution>
+          -->
         </executions>
       </plugin>
       <plugin>

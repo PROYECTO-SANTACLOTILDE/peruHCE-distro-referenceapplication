@@ -67,6 +67,11 @@ services:
       timeout: 5s
     volumes:
       - openmrs-data:/openmrs/data
+    build:
+      context: .
+      args:
+        GHP_USERNAME: ${GHP_USERNAME}
+        GHP_PASSWORD: ${GHP_PASSWORD}
 
   # MariaDB master
   db:

@@ -1,12 +1,17 @@
 # syntax=docker/dockerfile:1
 
-### Dev Stage
-FROM openmrs/openmrs-core:2.6.0 AS dev
+### Dev Stage 
+FROM openmrs/openmrs-core:${TAG_CORE:-2.7.3-dev} AS dev
 WORKDIR /openmrs_distro
 
+# Setting credentials for Git Hub Maven Package
+ARG GHP_USERNAME
+ARG GHP_PASSWORD
 
-# Usar Docker secrets para credenciales de GitHub Packages
+# Adding Git Hub Maven Package credentials
 COPY credentials/settings.xml.template /root/.m2/settings.xml
+
+RUN cat /root/.m2/settings.xml
 
 ARG MVN_ARGS_SETTINGS="-s /root/.m2/settings.xml -gs /usr/share/maven/ref/settings-docker.xml -U -P distro"
 ARG MVN_ARGS="install"
@@ -15,19 +20,8 @@ ARG MVN_ARGS="install"
 COPY pom.xml ./
 COPY distro ./distro/
 
-ARG CACHE_BUST
-
-# Montar secrets de GitHub y exportar como variables de entorno para Maven
-RUN --mount=type=secret,id=m2settings,target=/usr/share/maven/ref/settings-docker.xml \
-    --mount=type=secret,id=ghp_username,target=/run/secrets/GHP_USERNAME \
-    --mount=type=secret,id=ghp_password,target=/run/secrets/GHP_PASSWORD \
-    export GHP_USERNAME=$(cat /run/secrets/GHP_USERNAME) && \
-    export GHP_PASSWORD=$(cat /run/secrets/GHP_PASSWORD) && \
-    if [[ "$MVN_ARGS" != "deploy" || "$(arch)" = "x86_64" ]]; then \
-    mvn $MVN_ARGS_SETTINGS $MVN_ARGS; \
-    else \
-    mvn $MVN_ARGS_SETTINGS install; \
-    fi
+# Build the distro, but only deploy from the amd64 build
+RUN --mount=type=secret,id=m2settings,target=/usr/share/maven/ref/settings-docker.xml if [[ "$MVN_ARGS" != "deploy" || "$(arch)" = "x86_64" ]]; then mvn $MVN_ARGS_SETTINGS $MVN_ARGS; else mvn $MVN_ARGS_SETTINGS install; fi
 
 RUN cp /openmrs_distro/distro/target/sdk-distro/web/openmrs_core/openmrs.war /openmrs/distribution/openmrs_core/
 
@@ -41,8 +35,7 @@ RUN mvn $MVN_ARGS_SETTINGS clean
 
 ### Run Stage
 # Replace 'nightly' with the exact version of openmrs-core built for production (if available)
-FROM openmrs/openmrs-core:2.6.0
-
+FROM openmrs/openmrs-core:${TAG_CORE:-2.7.3}
 
 # Do not copy the war if using the correct openmrs-core image version
 COPY --from=dev /openmrs/distribution/openmrs_core/openmrs.war /openmrs/distribution/openmrs_core/
@@ -51,11 +44,3 @@ COPY --from=dev /openmrs/distribution/openmrs-distro.properties /openmrs/distrib
 COPY --from=dev /openmrs/distribution/openmrs_modules /openmrs/distribution/openmrs_modules
 COPY --from=dev /openmrs/distribution/openmrs_owas /openmrs/distribution/openmrs_owas
 COPY --from=dev  /openmrs/distribution/openmrs_config /openmrs/distribution/openmrs_config
-
-# Copiar script para sustituir variables de entorno en globalproperties
-COPY scripts/utils/globalproperties_envsubst.sh /usr/local/bin/globalproperties_envsubst.sh
-RUN chmod +x /usr/local/bin/globalproperties_envsubst.sh
-
-# Cambiar ENTRYPOINT para hacer sustitución antes de arrancar OpenMRS
-ENTRYPOINT ["/usr/local/bin/globalproperties_envsubst.sh"]
-# El CMD original de la imagen base se mantiene, por lo que OpenMRS arrancará normalmente
