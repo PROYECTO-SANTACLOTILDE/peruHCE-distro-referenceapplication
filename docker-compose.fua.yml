@@ -10,18 +10,15 @@ services:
     container_name: peruHCE-fua-generator
     image: marcelius733/fua-generator:dev-0.1.4
     restart: "unless-stopped"
-    secrets:
-      - fua_db_password
-      - fua_token
     ports:
       - "3333:3000"
     environment:
       DB_USER: ${PERUHCE_FUA_GEN_DB_USER:-fuagenerator}
-      DB_PASSWORD_FILE: /run/secrets/fua_db_password
+      DB_PASSWORD: ${PERUHCE_FUA_GEN_DB_PASSWORD}
       DB_NAME: ${PERUHCE_FUA_GEN_DB:-fuagenerator}
       DB_HOST: 'fua-generator-db'
       DB_PORT: '5432'
-      TOKEN_FILE: /run/secrets/fua_token
+      TOKEN: ${PERUHCE_FUA_GEN_TOKEN}
     depends_on:
       - fua-generator-db
     healthcheck:
@@ -38,13 +35,11 @@ services:
     container_name: peruHCE-fua-generator-db
     image: postgres:17
     restart: "unless-stopped"
-    secrets:
-      - fua_db_password
     ports:
       - "5433:5432"
     environment:
       POSTGRES_USER: ${PERUHCE_FUA_GEN_DB_USER:-fuagenerator}
-      POSTGRES_PASSWORD_FILE: /run/secrets/fua_db_password
+      POSTGRES_PASSWORD: ${PERUHCE_FUA_GEN_DB_PASSWORD}
       POSTGRES_DB: ${PERUHCE_FUA_GEN_DB:-fuagenerator}
     volumes:
       - db-fua-generator:/var/lib/postgresql/data
@@ -56,7 +51,6 @@ services:
       start_period: 30s
     networks:
       - services-network
-
     # Override gateway to include FUA configuration
   gateway:
     environment:
@@ -94,9 +88,3 @@ networks:
     ipam:
       config:
         - subnet: 172.27.0.0/24
-
-secrets:
-  fua_db_password:
-    file: ./secrets/fua_db_password.txt
-  fua_token:
-    file: ./secrets/fua_token.txt

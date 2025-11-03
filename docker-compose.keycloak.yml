@@ -14,16 +14,13 @@ services:
     restart: "unless-stopped"
     env_file:
       - ./.env
-    secrets:
-      - keycloak_admin_password
-      - keycloak_db_password
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
-      KEYCLOAK_ADMIN_PASSWORD_FILE: /run/secrets/keycloak_admin_password
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${KC_DB_DATABASE:-keycloak}
       KC_DB_USERNAME: ${KC_DB_USERNAME:-keycloak}
-      KC_DB_PASSWORD_FILE: /run/secrets/keycloak_db_password
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
       KC_HOSTNAME: ${KC_HOSTNAME:-localhost}
       KC_HOSTNAME_STRICT: "false"
       KC_HTTP_ENABLED: "true"
@@ -49,12 +46,10 @@ services:
     restart: "unless-stopped"
     env_file:
       - ./.env
-    secrets:
-      - keycloak_db_password
     environment:
       POSTGRES_DB: ${KC_DB_DATABASE:-keycloak}
       POSTGRES_USER: ${KC_DB_USERNAME:-keycloak}
-      POSTGRES_PASSWORD_FILE: /run/secrets/keycloak_db_password
+      POSTGRES_PASSWORD: ${KC_DB_PASSWORD}
     ports:
       - "5434:5432"
     volumes:
@@ -84,9 +79,3 @@ networks:
   backend-network:
     external: true
     name: peruHCE_backend-network
-
-secrets:
-  keycloak_admin_password:
-    file: ./secrets/keycloak_admin_password.txt
-  keycloak_db_password:
-    file: ./secrets/keycloak_db_password.txt

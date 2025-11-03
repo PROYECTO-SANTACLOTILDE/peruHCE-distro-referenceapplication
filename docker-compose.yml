@@ -49,9 +49,6 @@ services:
     container_name: peruHCE-backend
     image: openmrs/openmrs-reference-application-3-backend:${TAG:-qa}
     restart: "unless-stopped"
-    secrets:
-      - mysql_openmrs_password
-      - omrs_ocl_token
     ports:
       - "8080:8080"
     depends_on:
@@ -63,8 +60,8 @@ services:
       OMRS_CONFIG_CONNECTION_SERVER: db
       OMRS_CONFIG_CONNECTION_DATABASE: openmrs
       OMRS_CONFIG_CONNECTION_USERNAME: ${OPENMRS_DB_USER:-openmrs}
-      OMRS_CONFIG_CONNECTION_PASSWORD_FILE: /run/secrets/mysql_openmrs_password
-      OMRS_OCL_TOKEN_FILE: /run/secrets/omrs_ocl_token
+      OMRS_CONFIG_CONNECTION_PASSWORD: ${MYSQL_OPENMRS_PASSWORD}
+      OMRS_OCL_TOKEN: ${OMRS_OCL_TOKEN}
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/openmrs" ]
       timeout: 5s
@@ -77,13 +74,8 @@ services:
     image: mariadb:11.8
     restart: "unless-stopped"
     command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1"
-    secrets:
-      - mysql_root_password
-      - mysql_openmrs_password
-      - mysql_repl_password
-      - mysql_backup_password
     healthcheck:
-      test: [ "CMD-SHELL", "mysql --user=${OMRS_DB_USER:-openmrs} --password=$$(cat /run/secrets/mysql_openmrs_password) --execute 'SHOW DATABASES;'" ]
+      test: [ "CMD-SHELL", "mysql --user=${OMRS_DB_USER:-openmrs} --password=${MYSQL_OPENMRS_PASSWORD} --execute 'SHOW DATABASES;'" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -91,12 +83,12 @@ services:
     environment:
       MYSQL_DATABASE: openmrs
       MYSQL_USER: ${OMRS_DB_USER:-openmrs}
-      MYSQL_PASSWORD_FILE: /run/secrets/mysql_openmrs_password
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_PASSWORD: ${MYSQL_OPENMRS_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       OMRS_DB_REPL_USER: ${OMRS_DB_REPL_USER:-openmrs_repl}
-      OMRS_DB_REPL_PASSWORD_FILE: /run/secrets/mysql_repl_password
+      OMRS_DB_REPL_PASSWORD: ${OMRS_DB_REPL_PASSWORD}
       OMRS_DB_BACKUP_USER: ${OMRS_DB_BACKUP_USER:-openmrs_backup}
-      OMRS_DB_BACKUP_PASSWORD_FILE: /run/secrets/mysql_backup_password
+      OMRS_DB_BACKUP_PASSWORD: ${OMRS_DB_BACKUP_PASSWORD}
     ports:
       - "3307:3306" # 3307 for host
     volumes:
@@ -110,23 +102,18 @@ services:
     image: mariadb:11.8
     restart: "unless-stopped"
     command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=2 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1 --read-only=1"
-    secrets:
-      - mysql_root_password
-      - mysql_openmrs_password
-      - mysql_repl_password
-      - mysql_backup_password
     healthcheck:
-      test: [ "CMD-SHELL", "mysql --user=${OMRS_DB_USER:-openmrs} --password=$$(cat /run/secrets/mysql_openmrs_password) --execute 'SHOW DATABASES;'" ]
+      test: [ "CMD-SHELL", "mysql --user=${OMRS_DB_USER:-openmrs} --password=${MYSQL_OPENMRS_PASSWORD} --execute 'SHOW DATABASES;'" ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       OMRS_DB_REPL_USER: ${OMRS_DB_REPL_USER:-openmrs_repl}
-      OMRS_DB_REPL_PASSWORD_FILE: /run/secrets/mysql_repl_password
+      OMRS_DB_REPL_PASSWORD: ${OMRS_DB_REPL_PASSWORD}
       OMRS_DB_BACKUP_USER: ${OMRS_DB_BACKUP_USER:-openmrs_backup}
-      OMRS_DB_BACKUP_PASSWORD_FILE: /run/secrets/mysql_backup_password
+      OMRS_DB_BACKUP_PASSWORD: ${OMRS_DB_BACKUP_PASSWORD}
     depends_on:
       - db
     ports:
@@ -141,8 +128,6 @@ services:
     container_name: peruHCE-dns
     image: pihole/pihole:2025.03.0
     restart: "unless-stopped"
-    secrets:
-      - pihole_password
     ports:
       # DNS Ports - Critical for hospital network
       - "53:53/tcp"
@@ -153,7 +138,7 @@ services:
       - "444:443/tcp"
     environment:
       TZ: 'America/Lima'
-      FTLCONF_webserver_api_password_FILE: /run/secrets/pihole_password
+      FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
       FTLCONF_dns_listeningMode: 'all'
       ROOT_DNS_: '8.8.8.8;8.8.4.4;1.1.1.1'
       DNSSEC: 'true'
@@ -175,23 +160,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-secrets:
-  mysql_root_password:
-    file: ./secrets/mysql_root_password.txt
-  mysql_openmrs_password:
-    file: ./secrets/mysql_openmrs_password.txt
-  mysql_repl_password:
-    file: ./secrets/mysql_repl_password.txt
-  mysql_backup_password:
-    file: ./secrets/mysql_backup_password.txt
-  pihole_password:
-    file: ./secrets/pihole_password.txt
-  omrs_ocl_token:
-    file: ./secrets/omrs_ocl_token.txt
-  ghp_username:
-    file: ./secrets/ghp_username.txt
-  ghp_password:
-    file: ./secrets/ghp_password.txt
 
 volumes:
   openmrs-frontend: ~
