@@ -188,6 +188,10 @@ secrets:
     file: ./secrets/pihole_password.txt
   omrs_ocl_token:
     file: ./secrets/omrs_ocl_token.txt
+  ghp_username:
+    file: ./secrets/ghp_username.txt
+  ghp_password:
+    file: ./secrets/ghp_password.txt
 
 volumes:
   openmrs-frontend: ~
