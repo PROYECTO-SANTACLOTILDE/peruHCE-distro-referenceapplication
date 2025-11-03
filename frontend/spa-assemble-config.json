@@ -22,6 +22,7 @@
     "@openmrs/esm-patient-banner-app": "next",
     "@openmrs/esm-patient-chart-app": "next",
     "@openmrs/esm-patient-conditions-app": "next",
+    "@openmrs/esm-patient-imaging-app": "1.0.6",
     "@openmrs/esm-patient-flags-app": "next",
     "@openmrs/esm-patient-forms-app": "next",
     "@openmrs/esm-patient-immunizations-app": "next",
