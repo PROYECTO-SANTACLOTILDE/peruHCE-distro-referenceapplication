@@ -438,7 +438,7 @@
               <target>
                 <mkdir dir="${project.build.directory}/sdk-distro/web/openmrs_config"/>
                 <copy todir="${project.build.directory}/sdk-distro/web/openmrs_config">
-                  <fileset dir="${project.basedir}/distro/configuration"/>
+                  <fileset dir="${project.basedir}/configuration"/>
                 </copy>
               </target>
             </configuration>
