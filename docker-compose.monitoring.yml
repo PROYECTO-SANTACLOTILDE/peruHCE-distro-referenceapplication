@@ -61,7 +61,7 @@ services:
       start_period: 30s
     networks:
       - monitoring-network
-      - backend-network
+      - default
 
   loki:
     container_name: peruHCE-loki
@@ -71,7 +71,7 @@ services:
       - "127.0.0.1:3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
-      - ./monitoring/loki/loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - ./monitoring/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
       - loki-data:/loki
     healthcheck:
       test: [ "CMD", "wget", "-q", "--spider", "http://localhost:3100/ready" ]
@@ -91,6 +91,7 @@ services:
     volumes:
       - ./monitoring/alloy/config.alloy:/etc/alloy/config.alloy:ro
       - /var/log:/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - alloy-data:/var/lib/alloy
     command:
       - run
@@ -102,8 +103,7 @@ services:
       - prometheus
     networks:
       - monitoring-network
-      - backend-network
-      - frontend-network
+      - default
 
 volumes:
   prometheus-data:
@@ -130,12 +130,8 @@ networks:
       config:
         - subnet: 172.26.0.0/24
 
-  # Red de aplicación - Para scraping de métricas
-  backend-network:
+  # Red de aplicación - Para scraping de métricas y recolección de logs
+  # Usando la red por defecto del proyecto
+  default:
     external: true
-    name: peruHCE_backend-network
-
-  # Red pública - Para recolección de logs
-  frontend-network:
-    external: true
-    name: peruHCE_frontend-network
+    name: peruhce-distro-referenceapplication_default
