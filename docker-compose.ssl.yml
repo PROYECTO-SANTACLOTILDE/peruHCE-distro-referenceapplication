@@ -11,7 +11,6 @@ services:
     build:
       context: ./certbot
       dockerfile: Dockerfile
-    restart: "unless-stopped"
     environment:
       # SSL Mode: 'dev' for one-time generation, 'prod' for auto-renewal daemon
       SSL_MODE: ${SSL_MODE:-dev}
@@ -42,6 +41,8 @@ services:
       context: ./gateway
       dockerfile: Dockerfile
     image: peruhce-gateway:latest
+    ports:
+      - "443:443"
     environment:
       # Enable SSL configuration
       CERT_WEB_DOMAIN_COMMON_NAME: ${CERT_WEB_DOMAIN_COMMON_NAME:-sihsalus.hsc}
