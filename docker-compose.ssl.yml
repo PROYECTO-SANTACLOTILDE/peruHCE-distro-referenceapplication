@@ -51,8 +51,6 @@ services:
       # Mount certificate directories
       - letsencrypt-data:/etc/letsencrypt:ro
       - certbot-data:/var/www/certbot:rw
-    depends_on:
-      - certbot
 
 volumes:
   # Volume for SSL certificates
