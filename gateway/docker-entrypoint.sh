@@ -17,9 +17,5 @@ else
     cp /etc/nginx/conf-templates/default.conf.template /etc/nginx/templates/default.conf.template
 fi
 
-# Process template with environment variables
-export FUA_CONFIG FUA_LOCATIONS
-envsubst '$FUA_CONFIG $FUA_LOCATIONS' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
-
 # Execute the original nginx entrypoint
 exec /docker-entrypoint.sh "$@"
