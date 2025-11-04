@@ -1,0 +1,105 @@
+# Promtail Configuration for PeruHCE
+# Collects logs from Docker containers and system
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+  log_level: info
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+    timeout: 10s
+    batchwait: 1s
+    batchsize: 1048576
+
+scrape_configs:
+  # Docker container logs
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+        filters:
+          - name: label
+            values: ["com.docker.compose.project=peruhce-distro-referenceapplication"]
+
+    relabel_configs:
+      # Container name
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+
+      # Container ID
+      - source_labels: ['__meta_docker_container_id']
+        target_label: 'container_id'
+
+      # Container image
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: 'stream'
+
+      # Service name from compose
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        target_label: 'service'
+
+      # Project name
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_project']
+        target_label: 'project'
+
+    pipeline_stages:
+      # Parse timestamp
+      - docker: {}
+
+      # Extract log level (INFO, ERROR, WARN, DEBUG)
+      - regex:
+          expression: '.*\[(?P<level>(INFO|ERROR|WARN|WARNING|DEBUG|FATAL))\].*'
+
+      # Add level as label
+      - labels:
+          level:
+
+      # Parse JSON logs (if applicable)
+      - json:
+          expressions:
+            timestamp: time
+            message: msg
+            level: level
+            service: service
+
+      # Add timestamp
+      - timestamp:
+          source: timestamp
+          format: RFC3339Nano
+          fallback_formats:
+            - "2006-01-02T15:04:05.999999999Z07:00"
+            - "2006-01-02T15:04:05Z07:00"
+
+      # Drop health check logs (reduce noise)
+      - drop:
+          expression: '.*(healthcheck|health_check).*'
+          drop_counter_reason: healthcheck
+
+  # System logs (optional - for production systems)
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          host: peruhce-server
+          __path__: /var/log/*.log
+
+    pipeline_stages:
+      - match:
+          selector: '{job="varlogs"}'
+          stages:
+            - regex:
+                expression: '(?P<timestamp>\w+ \d+ \d+:\d+:\d+) (?P<hostname>\S+) (?P<service>\w+)\[(?P<pid>\d+)\]: (?P<message>.*)'
+            - labels:
+                service:
+                hostname:
+            - timestamp:
+                source: timestamp
+                format: "Jan _2 15:04:05"
+                location: "America/Lima"

@@ -1,0 +1,67 @@
+# Docker Compose file for Centralized Logging Stack
+# Usage: docker compose -f docker-compose.yml -f docker-compose.logging.yml up -d
+#
+# Stack components:
+# - Loki: Log aggregation system
+# - Promtail: Log collector agent
+# - Grafana: Visualization (integrates with existing monitoring stack)
+
+services:
+  # Loki - Log Aggregation System
+  loki:
+    container_name: peruHCE-loki
+    image: grafana/loki:2.9.0
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki-data:/loki
+      - ./config/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+    networks:
+      - monitoring-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3100/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Promtail - Log Collector Agent
+  promtail:
+    container_name: peruHCE-promtail
+    image: grafana/promtail:2.9.0
+    restart: unless-stopped
+    volumes:
+      # Docker logs
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # System logs (optional)
+      - /var/log:/var/log:ro
+      # Promtail configuration
+      - ./config/promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+      # Positions file (track what's been read)
+      - promtail-positions:/tmp
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      loki:
+        condition: service_healthy
+    networks:
+      - monitoring-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9080/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  loki-data:
+    name: peruHCE-loki-data
+  promtail-positions:
+    name: peruHCE-promtail-positions
+
+networks:
+  monitoring-network:
+    name: peruHCE-monitoring-network
+    driver: bridge
