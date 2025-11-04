@@ -69,7 +69,7 @@
     <vaccination-schedule.version>1.0.9</vaccination-schedule.version>
 
     <!-- Peru HCE Content Package -->
-    <peruhce-content.version>1.0.0-SNAPSHOT</peruhce-content.version>
+    <!-- <peruhce-content.version>1.0.0-SNAPSHOT</peruhce-content.version>-->
   </properties>
 
   <dependencies>
