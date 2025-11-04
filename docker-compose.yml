@@ -83,7 +83,7 @@ services:
     restart: "unless-stopped"
     command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=1 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1"
     healthcheck:
-      test: [ "CMD-SHELL", "mysql --user=${OMRS_DB_USER:-openmrs} --password=${MYSQL_OPENMRS_PASSWORD} --execute 'SHOW DATABASES;'" ]
+      test: [ "CMD-SHELL", "mariadb --user=${OMRS_DB_USER:-openmrs} --password=${MYSQL_OPENMRS_PASSWORD} --execute 'SHOW DATABASES;'" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -111,7 +111,7 @@ services:
     restart: "unless-stopped"
     command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=2 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1 --read-only=1"
     healthcheck:
-      test: [ "CMD-SHELL", "mysql --user=${OMRS_DB_USER:-openmrs} --password=${MYSQL_OPENMRS_PASSWORD} --execute 'SHOW DATABASES;'" ]
+      test: [ "CMD-SHELL", "mariadb --user=${OMRS_DB_USER:-openmrs} --password=${MYSQL_OPENMRS_PASSWORD} --execute 'SHOW DATABASES;'" ]
       interval: 10s
       timeout: 5s
       retries: 5
