@@ -14,11 +14,6 @@ map $http_x_real_ip $forwarded_ip {
   default $remote_addr;
 }
 
-map $forwarded_proto $var_proxy_cookie_flags {
-  https   "JSESSIONID secure samesite=strict";
-  default "off";
-}
-
 upstream frontend {
   # always assume the frontend will be available
   server frontend max_fails=0;
@@ -28,9 +23,10 @@ upstream backend {
   server backend:8080 max_fails=0;
 }
 
-upstream fua-generator {
-  server fua-generator:3000 max_fails=3 fail_timeout=10s;
-}
+# Commented out - enable if fua-generator service is available
+# upstream fua-generator {
+#   server fua-generator:3000 max_fails=3 fail_timeout=10s;
+# }
 
 # HTTP server - redirect to HTTPS
 server {
@@ -76,7 +72,7 @@ server {
   proxy_set_header      X-Forwarded-Proto https;
   proxy_set_header      X-Real-IP $forwarded_ip;
   proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_cookie_flags    $var_proxy_cookie_flags;
+  proxy_cookie_flags    JSESSIONID secure samesite=strict;
   proxy_http_version    1.1;
 
   # Gzip compression
@@ -123,24 +119,24 @@ server {
     proxy_pass http://backend;
   }
 
-  # FUA Generator Service
-  location = /services/fua-generator {
-    return 301 /services/fua-generator/;
-  }
+  # FUA Generator Service - Commented out (enable if fua-generator service is available)
+  # location = /services/fua-generator {
+  #   return 301 /services/fua-generator/;
+  # }
 
-  location /services/fua-generator/ {
-    proxy_pass http://fua-generator/;
-    proxy_redirect http://$host/ /services/fua-generator/;
+  # location /services/fua-generator/ {
+  #   proxy_pass http://fua-generator/;
+  #   proxy_redirect http://$host/ /services/fua-generator/;
+  #
+  #   # Si el upstream falla, devolver 503 con mensaje personalizado
+  #   error_page 502 503 504 = @fua_unavailable;
+  # }
 
-    # Si el upstream falla, devolver 503 con mensaje personalizado
-    error_page 502 503 504 = @fua_unavailable;
-  }
-
-  # Location para manejar cuando fua-generator no está disponible
-  location @fua_unavailable {
-    add_header Content-Type application/json always;
-    return 503 '{"error": "FUA Generator service is temporarily unavailable", "status": 503}';
-  }
+  # # Location para manejar cuando fua-generator no está disponible
+  # location @fua_unavailable {
+  #   add_header Content-Type application/json always;
+  #   return 503 '{"error": "FUA Generator service is temporarily unavailable", "status": 503}';
+  # }
 
   # Portainer
   location /portainer {

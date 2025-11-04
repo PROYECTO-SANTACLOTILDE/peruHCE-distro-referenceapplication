@@ -38,9 +38,14 @@ services:
 
   # Gateway with SSL support
   gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    image: peruhce-gateway:latest
     environment:
       # Enable SSL configuration
       CERT_WEB_DOMAIN_COMMON_NAME: ${CERT_WEB_DOMAIN_COMMON_NAME:-sihsalus.hsc}
+      FRAME_ANCESTORS: ${FRAME_ANCESTORS:-https://dyaku.minsa.gob.pe/fhir}
     volumes:
       # Mount certificate directories
       - letsencrypt-data:/etc/letsencrypt:ro
