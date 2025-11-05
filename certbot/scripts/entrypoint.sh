@@ -130,9 +130,9 @@ fi
 
 # Create strong DH parameters
 if [ ! -e "${CERTBOT_DATA_PATH}/conf/ssl-dhparams.pem" ]; then
-    log_info "Creating strong DH parameters (4096 bits)..."
+    log_info "Creating strong DH parameters (${CERT_RSA_KEY_SIZE} bits)..."
     log_info "This may take several minutes..."
-    openssl dhparam -out "${CERTBOT_DATA_PATH}/conf/ssl-dhparams.pem" 4096
+    openssl dhparam -out "${CERTBOT_DATA_PATH}/conf/ssl-dhparams.pem" ${CERT_RSA_KEY_SIZE}
     log_info "DH parameters created successfully!"
 fi
 
