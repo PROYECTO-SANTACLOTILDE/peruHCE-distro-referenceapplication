@@ -25,7 +25,7 @@ services:
       - "8080:8080"
 
   db:
-    image: mariadb:11.8
+    image: mariadb:10.11.7
     command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin"
     environment:
       MYSQL_DATABASE: openmrs
