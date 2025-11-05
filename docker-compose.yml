@@ -9,6 +9,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-data:/data
+
   gateway:
     container_name: peruHCE-gateway
     image: openmrs/openmrs-reference-application-3-gateway:${TAG:-qa}
@@ -76,7 +77,6 @@ services:
         GHP_USERNAME: ${GHP_USERNAME}
         GHP_PASSWORD: ${GHP_PASSWORD}
 
-  # MariaDB master
   db:
     container_name: peruHCE-db-master
     image: mariadb:10.11.7
@@ -104,7 +104,6 @@ services:
       - db-data:/var/lib/mysql
       - db-backup:/backup
 
-  # MariaDB Replic
   db-replic:
     container_name: peruHCE-db-replic
     image: mariadb:10.11.7
@@ -131,7 +130,6 @@ services:
       - db-data-r:/var/lib/mysql
       - db-backup-r:/backup
 
-  # DNS Server
   dns:
     container_name: peruHCE-dns
     image: pihole/pihole:2025.03.0

@@ -137,7 +137,6 @@ networks:
         - subnet: 172.26.0.0/24
 
   # Red de aplicación - Para scraping de métricas y recolección de logs
-  # Usando la red por defecto del proyecto
+  # Usando la red por defecto del proyecto (se crea automáticamente)
   default:
-    external: true
     name: peruhce-distro-referenceapplication_default
