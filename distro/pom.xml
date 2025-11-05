@@ -31,6 +31,7 @@
     <webservices.rest.version>3.0.0-SNAPSHOT</webservices.rest.version>
     <addresshierarchy.version>2.21.0</addresshierarchy.version>
     <idgen.version>4.14.0</idgen.version>
+    <!--TODO: LEGACY UI TIENE UN BUG IMPORTANTE PERO SENCILLO, YA EXISTE EL FIX PERO TODAVIA NO LA NUEVA VERSION CON ESE FIX APLICADO POR EL MOMENTO SE ESTA HACIENDO UN WORKAROUND EN ESE MODULO-->
     <legacyui.version>1.23.0</legacyui.version>
     <metadatamapping.version>1.6.0</metadatamapping.version>
     <openconceptlab.version>2.4.0</openconceptlab.version>
