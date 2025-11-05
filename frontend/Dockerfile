@@ -40,4 +40,10 @@ COPY config/config-openmrs.json /usr/share/nginx/html
 COPY config/config-pucp.json /usr/share/nginx/html
 COPY config/oauth2.json /usr/share/nginx/html
 
+# Copy custom branding assets (logos, favicon, etc.)
+COPY src/main/resources/primary-logo.png /usr/share/nginx/html/
+COPY src/main/resources/alternative-logo.png /usr/share/nginx/html/
+COPY src/main/resources/login-logo.svg /usr/share/nginx/html/
+COPY src/main/resources/favicon.ico /usr/share/nginx/html/
+
 CMD ["/usr/local/bin/startup.sh"]
