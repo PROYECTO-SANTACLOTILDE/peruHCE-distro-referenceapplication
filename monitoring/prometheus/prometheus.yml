@@ -33,21 +33,21 @@ scrape_configs:
   #       labels:
   #         service: 'docker'
 
-  # cAdvisor for container metrics
-  - job_name: 'cadvisor'
-    static_configs:
-      - targets: ['cadvisor:8080']
-        labels:
-          service: 'cadvisor'
+  # cAdvisor for container metrics (not deployed)
+  # - job_name: 'cadvisor'
+  #   static_configs:
+  #     - targets: ['cadvisor:8080']
+  #       labels:
+  #         service: 'cadvisor'
 
-  # OpenMRS Backend metrics (if exposed via actuator/prometheus endpoint)
-  - job_name: 'openmrs-backend'
-    metrics_path: '/openmrs/metrics'
-    static_configs:
-      - targets: ['backend:8080']
-        labels:
-          service: 'openmrs-backend'
-          application: 'peruhce'
+  # OpenMRS Backend metrics (actuator endpoint not available yet)
+  # - job_name: 'openmrs-backend'
+  #   metrics_path: '/openmrs/metrics'
+  #   static_configs:
+  #     - targets: ['backend:8080']
+  #       labels:
+  #         service: 'openmrs-backend'
+  #         application: 'peruhce'
 
   # MariaDB Exporter (if configured)
   # - job_name: 'mariadb-master'
@@ -64,21 +64,21 @@ scrape_configs:
   #         service: 'mariadb'
   #         instance: 'replica'
 
-  # Keycloak metrics (if exposed)
-  - job_name: 'keycloak'
-    metrics_path: '/metrics'
-    static_configs:
-      - targets: ['keycloak:8080']
-        labels:
-          service: 'keycloak'
+  # Keycloak metrics (service not deployed)
+  # - job_name: 'keycloak'
+  #   metrics_path: '/metrics'
+  #   static_configs:
+  #     - targets: ['keycloak:8080']
+  #       labels:
+  #         service: 'keycloak'
 
-  # Orthanc metrics (if prometheus plugin installed)
-  - job_name: 'orthanc'
-    metrics_path: '/metrics'
-    static_configs:
-      - targets: ['orthanc:8042']
-        labels:
-          service: 'orthanc'
+  # Orthanc metrics (service not deployed)
+  # - job_name: 'orthanc'
+  #   metrics_path: '/metrics'
+  #   static_configs:
+  #     - targets: ['orthanc:8042']
+  #       labels:
+  #         service: 'orthanc'
 
   # Grafana metrics
   - job_name: 'grafana'
