@@ -33,14 +33,7 @@ scrape_configs:
   #       labels:
   #         service: 'docker'
 
-  # cAdvisor for container metrics (not deployed)
-  # - job_name: 'cadvisor'
-  #   static_configs:
-  #     - targets: ['cadvisor:8080']
-  #       labels:
-  #         service: 'cadvisor'
-
-  # OpenMRS Backend metrics (actuator endpoint not available yet)
+  # OpenMRS Backend metrics (JMX exporter - requires configuration)
   # - job_name: 'openmrs-backend'
   #   metrics_path: '/openmrs/metrics'
   #   static_configs:

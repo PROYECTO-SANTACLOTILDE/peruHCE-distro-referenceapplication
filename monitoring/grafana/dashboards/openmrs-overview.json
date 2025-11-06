@@ -25,7 +25,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
+                "uid": "${DS_PROMETHEUS}"
             },
             "fieldConfig": {
                 "defaults": {
@@ -102,7 +102,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PBFA97CFB590B2093"
+                        "uid": "${DS_PROMETHEUS}"
                     },
                     "editorMode": "code",
                     "expr": "up",
@@ -117,7 +117,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
+                "uid": "${DS_PROMETHEUS}"
             },
             "fieldConfig": {
                 "defaults": {
@@ -215,7 +215,7 @@
                 {
                     "datasource": {
                         "type": "loki",
-                        "uid": "P8E80F9AEF21F6940"
+                        "uid": "${DS_LOKI}"
                     },
                     "editorMode": "code",
                     "expr": "{job=\"docker\"}",
@@ -229,7 +229,7 @@
         {
             "datasource": {
                 "type": "loki",
-                "uid": "P8E80F9AEF21F6940"
+                "uid": "${DS_LOKI}"
             },
             "fieldConfig": {
                 "defaults": {
@@ -302,7 +302,7 @@
                 {
                     "datasource": {
                         "type": "loki",
-                        "uid": "P8E80F9AEF21F6940"
+                        "uid": "${DS_LOKI}"
                     },
                     "editorMode": "code",
                     "expr": "sum by (level) (count_over_time({job=\"docker\"}[5m]))",
@@ -316,7 +316,7 @@
         {
             "datasource": {
                 "type": "loki",
-                "uid": "P8E80F9AEF21F6940"
+                "uid": "${DS_LOKI}"
             },
             "gridPos": {
                 "h": 8,
@@ -339,7 +339,7 @@
                 {
                     "datasource": {
                         "type": "loki",
-                        "uid": "P8E80F9AEF21F6940"
+                        "uid": "${DS_LOKI}"
                     },
                     "editorMode": "code",
                     "expr": "{job=\"docker\"} |= \"ERROR\"",
@@ -360,7 +360,44 @@
         "monitoring"
     ],
     "templating": {
-        "list": []
+        "list": [
+            {
+                "current": {
+                    "selected": false,
+                    "text": "Prometheus",
+                    "value": "Prometheus"
+                },
+                "hide": 0,
+                "includeAll": false,
+                "label": "Prometheus",
+                "multi": false,
+                "name": "DS_PROMETHEUS",
+                "options": [],
+                "query": "prometheus",
+                "refresh": 1,
+                "regex": "",
+                "skipUrlSync": false,
+                "type": "datasource"
+            },
+            {
+                "current": {
+                    "selected": false,
+                    "text": "Loki",
+                    "value": "Loki"
+                },
+                "hide": 0,
+                "includeAll": false,
+                "label": "Loki",
+                "multi": false,
+                "name": "DS_LOKI",
+                "options": [],
+                "query": "loki",
+                "refresh": 1,
+                "regex": "",
+                "skipUrlSync": false,
+                "type": "datasource"
+            }
+        ]
     },
     "time": {
         "from": "now-15m",
