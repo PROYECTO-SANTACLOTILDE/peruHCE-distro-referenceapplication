@@ -1,7 +1,3 @@
-================================================================================
-TAREAS PENDIENTES - peruHCE
-================================================================================
-
 PROBLEMAS CRITICOS
 ==================
 
@@ -151,14 +147,4 @@ ROADMAP Y PROXIMOS PASOS
    - Validar y estabilizar FUA Generator
 
 
-NOTAS IMPORTANTES
-=================
-
-- Este documento debe actualizarse conforme se completen las tareas
-- Priorizar la estabilizacion de versiones SNAPSHOT antes de produccion
-- Mantener documentacion actualizada del README principal
-- Testear exhaustivamente la compatibilidad de imagenes
-
-================================================================================
-Ultima actualizacion: 2025-11-05
-================================================================================
+corregir el SSL para pruebas de desarrollo
