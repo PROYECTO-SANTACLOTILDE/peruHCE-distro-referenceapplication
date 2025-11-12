@@ -22,6 +22,8 @@
     <distro.openmrsModulesDir>${distro.baseDir}/openmrs_modules</distro.openmrsModulesDir>
     <distro.spaDir>${distro.baseDir}/spa</distro.spaDir>
     <distro.spaConfigDir>${distro.baseDir}/spa_config</distro.spaConfigDir>
+    <sihsalus.content.version>1.0.0</sihsalus.content.version>
+    <sihsalus.content.url>https://github.com/PROYECTO-SANTACLOTILDE/sihsalus-content-referenceapplication/releases/download/v${sihsalus.content.version}/sihsalus-${sihsalus.content.version}-SNAPSHOT.zip</sihsalus.content.url>
     <openmrs.version>2.8.1</openmrs.version>
     <initializer.version>2.9.0</initializer.version>
     <fhir2.version>2.8.0-SNAPSHOT</fhir2.version>
@@ -419,6 +421,26 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
+            <id>download-sihsalus-content</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <echo message="Downloading SIH SALUS content package from GitHub..."/>
+                <mkdir dir="${project.build.directory}/content-download"/>
+                <get src="${sihsalus.content.url}"
+                     dest="${project.build.directory}/content-download/sihsalus-content.zip"
+                     verbose="true"
+                     usetimestamp="true"/>
+                <echo message="Extracting SIH SALUS content package..."/>
+                <unzip src="${project.build.directory}/content-download/sihsalus-content.zip"
+                       dest="${project.build.directory}/sihsalus-content"/>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
             <id>copy-openmrs-configuration</id>
             <phase>package</phase>
             <goals>
@@ -427,8 +449,24 @@
             <configuration>
               <target>
                 <mkdir dir="${project.build.directory}/sdk-distro/web/openmrs_config"/>
+                <!-- Copy SIH SALUS backend configuration -->
+                <echo message="Copying SIH SALUS backend configuration to openmrs_config..."/>
                 <copy todir="${project.build.directory}/sdk-distro/web/openmrs_config">
-                  <fileset dir="${project.basedir}/configuration"/>
+                  <fileset dir="${project.build.directory}/sihsalus-content/configuration/backend_configuration"/>
+                </copy>
+                <!-- Copy SIH SALUS frontend configuration -->
+                <echo message="Copying SIH SALUS frontend configuration..."/>
+                <copy todir="${project.build.directory}/sdk-distro/web" failonerror="false">
+                  <fileset dir="${project.build.directory}/sihsalus-content/configuration/frontend_configuration"/>
+                </copy>
+                <!-- Copy content.properties -->
+                <copy file="${project.build.directory}/sihsalus-content/content.properties"
+                      todir="${project.build.directory}/sdk-distro/web/openmrs_config"
+                      failonerror="false"/>
+                <!-- Copy local overrides (if they exist) - these will overwrite content package files -->
+                <echo message="Copying local configuration overrides (if any)..."/>
+                <copy todir="${project.build.directory}/sdk-distro/web/openmrs_config" failonerror="false" overwrite="true">
+                  <fileset dir="${project.basedir}/configuration" erroronmissingdir="false"/>
                 </copy>
               </target>
             </configuration>

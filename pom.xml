@@ -180,6 +180,14 @@
       </snapshots>
     </repository>
 
+    <repository>
+      <id>github-sihsalus-content</id>
+      <url>https://maven.pkg.github.com/PROYECTO-SANTACLOTILDE/sihsalus-content-referenceapplication</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+
   </repositories>
 
   <pluginRepositories>
