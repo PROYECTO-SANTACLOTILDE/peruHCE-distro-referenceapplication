@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -22,8 +20,9 @@
     <distro.openmrsModulesDir>${distro.baseDir}/openmrs_modules</distro.openmrsModulesDir>
     <distro.spaDir>${distro.baseDir}/spa</distro.spaDir>
     <distro.spaConfigDir>${distro.baseDir}/spa_config</distro.spaConfigDir>
-    <sihsalus.content.version>1.0.0</sihsalus.content.version>
-    <sihsalus.content.url>https://github.com/PROYECTO-SANTACLOTILDE/sihsalus-content-referenceapplication/releases/download/v${sihsalus.content.version}/sihsalus-${sihsalus.content.version}-SNAPSHOT.zip</sihsalus.content.url>
+
+    <!-- track module versions
+         we do so here so that we can utilise Maven to track updates, etc. -->    
     <openmrs.version>2.8.1</openmrs.version>
     <initializer.version>2.9.0</initializer.version>
     <fhir2.version>2.8.0</fhir2.version>
@@ -65,7 +64,8 @@
     <!-- <datafilter.version>2.2.0</datafilter.version> -->
     <!-- <oauth2login.version>1.6.0</oauth2login.version> -->
     <!-- <vaccination-schedule.version>1.0.9</vaccination-schedule.version> -->
-
+    <sihsalus.content.version>1.0.0</sihsalus.content.version>
+    <sihsalus.content.url>https://github.com/PROYECTO-SANTACLOTILDE/sihsalus-content-referenceapplication/releases/download/v${sihsalus.content.version}/sihsalus-${sihsalus.content.version}-SNAPSHOT.zip</sihsalus.content.url>
   </properties>
 
   <dependencies>
