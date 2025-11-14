@@ -47,8 +47,6 @@ services:
       timeout: 5s
     depends_on:
       - backend
-    volumes:
-      - openmrs-frontend:/usr/share/nginx/html/
 
   backend:
     container_name: peruHCE-backend
@@ -172,7 +170,6 @@ services:
       start_period: 60s
 
 volumes:
-  openmrs-frontend: ~
   openmrs-data: ~
   db-data: ~
   db-backup: ~
