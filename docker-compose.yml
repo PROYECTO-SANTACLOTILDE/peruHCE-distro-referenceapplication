@@ -8,6 +8,7 @@ services:
       - backend
     ports:
       - "80:80"
+      - "443:443"
     environment:
       FRAME_ANCESTORS: ${FRAME_ANCESTORS:-}
       FUA_CONFIG: ${FUA_CONFIG:-}
@@ -35,8 +36,6 @@ services:
       timeout: 5s
     depends_on:
       - backend
-    volumes:
-      - openmrs-frontend:/usr/share/nginx/html/
 
   backend:
     container_name: peruHCE-backend
@@ -56,8 +55,11 @@ services:
       OMRS_CONFIG_CONNECTION_PASSWORD: ${MYSQL_OPENMRS_PASSWORD}
       OMRS_OCL_TOKEN: ${OMRS_OCL_TOKEN}
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/openmrs" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/openmrs/health/started" ]
+      interval: 10s
       timeout: 5s
+      retries: 48
+      start_period: 120s
     volumes:
       - openmrs-data:/openmrs/data
     build:
@@ -94,7 +96,6 @@ services:
     
 
 volumes:
-  openmrs-frontend: ~
   openmrs-data: ~
   db-data: ~
   db-data-r: ~
