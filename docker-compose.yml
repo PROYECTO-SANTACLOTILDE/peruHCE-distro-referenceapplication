@@ -19,6 +19,7 @@ services:
       - backend
     ports:
       - "80:80"
+      - "443:443"
     environment:
       FRAME_ANCESTORS: ${FRAME_ANCESTORS:-}
       FUA_CONFIG: ${FUA_CONFIG:-}
