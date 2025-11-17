@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="sihsalus-api" tests="2" time="0.378">
+  <testsuite name="Login" id="6b78d048-243f-42c4-be82-e0bcbb003427" timestamp="2025-11-17T00:04:36.904Z" tests="2" failures="0" errors="0" time="0.220">
+    <testcase name="Status 200" time="0.220" classname="Login"/>
+    <testcase name="Autenticado" time="0.220" classname="Login"/>
+  </testsuite>
+  <testsuite name="Buscar paciente" id="6e662548-8a44-4b81-98b6-aca96dc4d839" timestamp="2025-11-17T00:04:36.904Z" tests="2" failures="0" errors="0" time="0.158">
+    <testcase name="Status 200" time="0.158" classname="BuscarPaciente"/>
+    <testcase name="Devuelve campo results" time="0.158" classname="BuscarPaciente"/>
+  </testsuite>
+</testsuites>
