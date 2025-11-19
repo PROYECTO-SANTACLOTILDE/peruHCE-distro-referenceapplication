@@ -1,15 +1,4 @@
 services:
-  portainer:
-    container_name: peruHCE-portainer
-    image: portainer/portainer-ce:lts
-    restart: "unless-stopped"
-    ports:
-      - "9443:9443" # HTTPS Portainer Web UI
-      - "9000:9000" # HTTP Portainer Web UI
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer-data:/data
-
   gateway:
     container_name: peruHCE-gateway
     image: openmrs/openmrs-reference-application-3-gateway:${TAG:-qa}
@@ -24,8 +13,8 @@ services:
       FRAME_ANCESTORS: ${FRAME_ANCESTORS:-}
       FUA_CONFIG: ${FUA_CONFIG:-}
       FUA_LOCATIONS: ${FUA_LOCATIONS:-}
-    volumes:
-      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+    #volumes:
+    #  - "/var/run/docker.sock:/tmp/docker.sock:ro"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost/" ]
       interval: 30s
@@ -55,7 +44,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db-replic
+      - db
     environment:
       OMRS_CONFIG_MODULE_WEB_ADMIN: "true"
       OMRS_CONFIG_AUTO_UPDATE_DATABASE: "true"
@@ -106,76 +95,8 @@ services:
       - db-data:/var/lib/mysql
       - db-backup:/backup
 
-  db-replic:
-    container_name: peruHCE-db-replic
-    image: mariadb:10.11.7
-    restart: "unless-stopped"
-    command: "mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --server-id=2 --log-bin=mysql-bin --binlog-format=ROW --sync-binlog=1 --log-slave-updates=1 --read-only=1"
-    healthcheck:
-      test: [ "CMD-SHELL", "mariadb --user=${OMRS_DB_USER:-openmrs} --password=${MYSQL_OPENMRS_PASSWORD} --execute 'SHOW DATABASES;'" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      OMRS_DB_REPL_USER: ${OMRS_DB_REPL_USER:-openmrs_repl}
-      OMRS_DB_REPL_PASSWORD: ${OMRS_DB_REPL_PASSWORD}
-      OMRS_DB_BACKUP_USER: ${OMRS_DB_BACKUP_USER:-openmrs_backup}
-      OMRS_DB_BACKUP_PASSWORD: ${OMRS_DB_BACKUP_PASSWORD}
-    depends_on:
-      - db
-    ports:
-      - "3308:3306" # 3308 for host
-    volumes:
-      - ./scripts/database/db_init_slave.sh:/docker-entrypoint-initdb.d/db_init_slave.sh
-      - db-data-r:/var/lib/mysql
-      - db-backup-r:/backup
-
-  dns:
-    container_name: peruHCE-dns
-    image: pihole/pihole:2025.03.0
-    restart: "unless-stopped"
-    ports:
-      # DNS Ports - Critical for hospital network
-      - "53:53/tcp"
-      - "53:53/udp"
-      # Web UI Port
-      - "81:80/tcp"
-      # HTTPS Port
-      - "444:443/tcp"
-    environment:
-      TZ: 'America/Lima'
-      FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
-      FTLCONF_dns_listeningMode: 'all'
-      ROOT_DNS_: '8.8.8.8;8.8.4.4;1.1.1.1'
-      DNSSEC: 'true'
-      DNS_BOGUS_PRIV: 'false'
-      DNS_FQDN_REQUIRED: 'false'
-      REV_SERVER: 'true'
-      REV_SERVER_DOMAIN: 'hospital.local'
-      REV_SERVER_TARGET: ${HOSPITAL_GATEWAY:-192.168.1.1}
-      REV_SERVER_CIDR: ${HOSPITAL_NETWORK:-192.168.1.0/24}
-      CACHE_SIZE: '10000'
-      QUERY_LOGGING: 'true'
-    volumes:
-      - pihole-data:/etc/pihole
-      - pihole-dnsmaq:/etc/dnsmasq.d
-      - ./dns/custom.list:/etc/pihole/custom.list:ro
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost/admin/" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
 volumes:
   openmrs-data: ~
   db-data: ~
   db-backup: ~
-  db-data-r: ~
-  db-backup-r: ~
   gateway-data: ~
-  portainer-data: ~
-  pihole-data: ~
-  pihole-dnsmaq: ~

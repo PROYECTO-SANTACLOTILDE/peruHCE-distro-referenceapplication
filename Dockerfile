@@ -1,12 +1,13 @@
 # syntax=docker/dockerfile:1
 
 ### Dev Stage 
-FROM openmrs/openmrs-core:2.8.x-dev-amazoncorretto-21 AS dev
+FROM openmrs/openmrs-core:${TAG_CORE:-2.7.3-dev} AS dev
 WORKDIR /openmrs_distro
 
 # Setting credentials for Git Hub Maven Package
 ARG GHP_USERNAME
 ARG GHP_PASSWORD
+
 ARG MVN_ARGS_SETTINGS="-s /root/.m2/settings.xml -gs /usr/share/maven/ref/settings-docker.xml -U -P distro"
 ARG MVN_ARGS="install"
 
@@ -41,7 +42,7 @@ RUN cp -R /openmrs_distro/distro/target/sdk-distro/web/openmrs_config /openmrs/d
 
 ### Run Stage
 # Replace 'nightly' with the exact version of openmrs-core built for production (if available)
-FROM openmrs/openmrs-core:2.8.x-amazoncorretto-21
+FROM openmrs/openmrs-core:${TAG_CORE:-2.7.3}
 
 # Do not copy the war if using the correct openmrs-core image version
 COPY --from=dev /openmrs/distribution/openmrs_core/openmrs.war /openmrs/distribution/openmrs_core/

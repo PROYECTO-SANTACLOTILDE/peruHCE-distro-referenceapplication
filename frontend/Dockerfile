@@ -37,8 +37,8 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=dev /app/spa /usr/share/nginx/html
 COPY config/config-openmrs.json /usr/share/nginx/html
-COPY config/config-pucp.json /usr/share/nginx/html
-COPY config/oauth2.json /usr/share/nginx/html
+#COPY config/config-pucp.json /usr/share/nginx/html
+#COPY config/oauth2.json /usr/share/nginx/html
 
 # Copy custom branding assets (logos, favicon, etc.)
 COPY src/main/resources/primary-logo.png /usr/share/nginx/html/
