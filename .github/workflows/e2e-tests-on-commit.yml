@@ -39,7 +39,7 @@ jobs:
           for i in {1..40}; do
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/openmrs/login.htm || echo "000")
             echo "Attempt $i - HTTP $STATUS"
-            if [ "$STATUS" = "200" ]; then
+            if [ "$STATUS" = "200" ] || [ "$STATUS" = "302" ]; then
               echo "OpenMRS is up!"
               exit 0
             fi
