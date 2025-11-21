@@ -1,0 +1,43 @@
+name: E2E Tests (Playwright)
+
+on:
+  push:
+    branches: [ tesis_pruebasAut ]
+  pull_request:
+  workflow_dispatch:  # para poder lanzarlo manualmente también
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    # BASE_URL para Playwright 
+    env:
+      BASE_URL: ${{ 'http://localhost/openmrs' }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Playwright deps
+        run: |
+          cd ui-tests
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: |
+          cd ui-tests
+          npm run test:e2e
+
+      # Si se configura Playwright para generar reportes HTML, se suben aquí
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: ui-tests/playwright-report
