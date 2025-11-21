@@ -2,22 +2,53 @@ name: E2E Tests (Playwright)
 
 on:
   push:
-    branches: [ tesis_pruebasAut ]
+    branches: [ tesis-pruebasAut ]
   pull_request:
-  workflow_dispatch:  # para poder lanzarlo manualmente también
+    branches: [ tesis-pruebasAut ]
+  workflow_dispatch:
 
 jobs:
   e2e:
     runs-on: ubuntu-latest
 
-    # BASE_URL para Playwright 
-    env:
-      BASE_URL: ${{ 'http://localhost/openmrs' }}
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      # 1) Crear un .env mínimo para que docker-compose tenga credenciales
+      - name: Create .env for docker-compose
+        run: |
+          cat > .env <<EOF
+          MYSQL_ROOT_PASSWORD=openmrs
+          MYSQL_OPENMRS_PASSWORD=openmrs
+          OMRS_DB_REPL_PASSWORD=openmrs
+          OMRS_DB_BACKUP_PASSWORD=openmrs
+          TAG=3.2.1
+          EOF
+
+      # 2) Levantar el stack de OpenMRS (db + backend + frontend + gateway)
+      - name: Start OpenMRS stack with Docker Compose
+        run: |
+          docker compose -f docker-compose.yml up -d db backend frontend gateway
+          docker compose ps
+
+      # 3) Esperar a que la Legacy UI esté disponible
+      - name: Wait for OpenMRS legacy login
+        run: |
+          echo "Waiting for OpenMRS to be ready..."
+          for i in {1..40}; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/openmrs/login.htm || echo "000")
+            echo "Attempt $i - HTTP $STATUS"
+            if [ "$STATUS" = "200" ]; then
+              echo "OpenMRS is up!"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "OpenMRS did not become ready in time"
+          exit 1
+
+      # 4) Preparar Node + Playwright
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -29,15 +60,18 @@ jobs:
           npm install
           npx playwright install --with-deps chromium
 
+      # 5) Ejecutar los tests E2E
       - name: Run Playwright tests
+        env:
+          BASE_URL: http://localhost/openmrs
         run: |
           cd ui-tests
           npm run test:e2e
 
-      # Si se configura Playwright para generar reportes HTML, se suben aquí
+      # 6) Subir reporte 
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: ui-tests/playwright-report
+          path: ui-tests/test-results/
