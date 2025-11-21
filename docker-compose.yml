@@ -13,8 +13,8 @@ services:
       FRAME_ANCESTORS: ${FRAME_ANCESTORS:-}
       FUA_CONFIG: ${FUA_CONFIG:-}
       FUA_LOCATIONS: ${FUA_LOCATIONS:-}
-    #volumes:
-    #  - "/var/run/docker.sock:/tmp/docker.sock:ro"
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost/" ]
       interval: 30s
@@ -24,12 +24,14 @@ services:
 
   frontend:
     container_name: peruHCE-frontend
-    image: openmrs/openmrs-reference-application-3-frontend:${TAG:-qa}
+    #image: openmrs/openmrs-reference-application-3-frontend:${TAG:-qa}
+    build:
+      context: ./frontend
     restart: "unless-stopped"
     environment:
       SPA_PATH: /openmrs/spa
       API_URL: /openmrs
-      SPA_CONFIG_URLS: /openmrs/spa/config-openmrs.json,/openmrs/spa/config-pucp.json
+      SPA_CONFIG_URLS: /openmrs/spa/config-openmrs.json,/openmrs/spa/config-pucp.json,
       SPA_DEFAULT_LOCALE: es
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost/" ]
